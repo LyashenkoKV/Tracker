@@ -7,7 +7,16 @@
 
 import UIKit
 
+protocol TrackersViewControllerProtocol: AnyObject {
+    var categories: [TrackerCategory] { get set }
+    var completedTrackers: [TrackerRecord] { get set }
+}
+
 final class TrackersViewController: UIViewController {
+    
+    private var presenter: TrackersPresenterProtocol?
+    var categories: [TrackerCategory] = []
+    var completedTrackers: [TrackerRecord] = []
     
     private let showSelectedDay: String = {
         let dateFormatter = DateFormatter()
@@ -33,6 +42,7 @@ final class TrackersViewController: UIViewController {
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Поиск"
+        searchBar.tintColor = .systemBlue
         searchBar.backgroundImage = UIImage()
         searchBar.searchTextField.layer.borderWidth = 0
         searchBar.searchTextField.layer.borderColor = UIColor.clear.cgColor
@@ -116,12 +126,13 @@ final class TrackersViewController: UIViewController {
         
         return barButtonItem
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         setupConstraints()
         updatePlaceholderView()
+        presenter?.viewDidLoad()
     }
     
     private func setupConstraints() {
@@ -194,22 +205,6 @@ extension TrackersViewController {
     }
 }
 
-// MARK: - UICollectionViewDelegate
-extension TrackersViewController: UICollectionViewDelegate {
+extension TrackersViewController: TrackersViewControllerProtocol {
     
-}
-
-// MARK: - UICollectionViewDataSource
-extension TrackersViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let itemCount = 0
-        
-        return itemCount
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.reuseIdentifier, for: indexPath)
-        
-        return cell
-    }
 }
