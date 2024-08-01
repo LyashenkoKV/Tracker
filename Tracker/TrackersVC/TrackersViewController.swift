@@ -18,10 +18,23 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
-    private let showSelectedDay: String = {
+    private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = " dd.MM.yy "
-        return dateFormatter.string(from: Date())
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        return dateFormatter
+    }()
+    
+    private lazy var datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .date
+        picker.preferredDatePickerStyle = .compact
+        picker.locale = Locale(identifier: "ru_RU")
+        picker.tintColor = .ypBlack
+        picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        return picker
     }()
     
     private lazy var navigationBar: UINavigationController = {
@@ -105,8 +118,10 @@ final class TrackersViewController: UIViewController {
         return stackView
     }()
     
+    // MARK: - BarButtonItems
     private lazy var addNewTrackerButtonItem: UIBarButtonItem = {
         let button = createCustomButton(
+            self, 
             imageName: "plus",
             title: nil,
             backgroundColor: nil,
@@ -117,13 +132,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var calendarButtonItem: UIBarButtonItem = {
-        let button = createCustomButton(
-            imageName: nil,
-            title: showSelectedDay,
-            backgroundColor: .ypLightGray,
-            action: #selector(rightBarButtonTapped))
-        let barButtonItem = UIBarButtonItem(customView: button)
-        
+        let barButtonItem = UIBarButtonItem(customView: datePicker)
         return barButtonItem
     }()
     
@@ -133,6 +142,7 @@ final class TrackersViewController: UIViewController {
         setupConstraints()
         updatePlaceholderView()
         presenter?.viewDidLoad()
+        
     }
     
     private func setupConstraints() {
@@ -173,6 +183,7 @@ extension TrackersViewController {
     }
     
     private func createCustomButton(
+        _ target: Any?,
         imageName: String?,
         title: String?,
         backgroundColor: UIColor?,
@@ -185,7 +196,7 @@ extension TrackersViewController {
             if let title = title {
                 button.setTitle(title, for: .normal)
             }
-            button.addTarget(self, action: action, for: .touchUpInside)
+            button.addTarget(target, action: action, for: .touchUpInside)
             button.backgroundColor = backgroundColor
             button.tintColor = .ypBlack
             button.layer.cornerRadius = 8
@@ -195,13 +206,13 @@ extension TrackersViewController {
         }
     
     @objc private func leftBarButtonTapped() {
-        print("Left bar button tapped")
+        print("Добавить треккер")
         // TODO
     }
     
-    @objc private func rightBarButtonTapped() {
-        print("Right bar button tapped")
-        // TODO
+    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+        let selectedDate = sender.date
+        dateFormatter.string(from: selectedDate)
     }
 }
 
