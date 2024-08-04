@@ -10,13 +10,22 @@ import UIKit
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
     var completedTrackers: [TrackerRecord] { get set }
+    func reloadData()
 }
 
 final class TrackersViewController: UIViewController {
     
     private var presenter: TrackersPresenterProtocol?
+    
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
+    
+   let params = GeometricParams(
+        cellCount: 1,
+        leftInset: 10,
+        rightInset: 10,
+        cellSpacing: 10
+    )
     
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -97,12 +106,11 @@ final class TrackersViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: view.frame.width - 20, height: 50)
         layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.accessibilityIdentifier = "TrackersCollectionView"
-        collectionView.register(TrackersCollectionViewCell.self, 
-                                forCellWithReuseIdentifier: TrackersCollectionViewCell.reuseIdentifier)
         return collectionView
     }()
     
@@ -120,12 +128,10 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - BarButtonItems
     private lazy var addNewTrackerButtonItem: UIBarButtonItem = {
-        let button = createCustomButton(
-            self, 
-            imageName: "plus",
-            title: nil,
-            backgroundColor: nil,
-            action: #selector(leftBarButtonTapped))
+        let button = UIButton()
+        button.tintColor = .ypBlack
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.addTarget(self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
         let barButtonItem = UIBarButtonItem(customView: button)
         
         return barButtonItem
@@ -143,6 +149,21 @@ final class TrackersViewController: UIViewController {
         updatePlaceholderView()
         presenter?.viewDidLoad()
         
+        self.collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionHeaderView.reuseIdentifier
+        )
+        
+        self.collectionView.register(
+            TrackersCardCell.self,
+            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
+        )
+    }
+    
+    func configure(_ presenter: TrackersPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
     }
     
     private func setupConstraints() {
@@ -168,8 +189,13 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
-    private func updatePlaceholderView() {
-        let hasData = collectionView.numberOfItems(inSection: 0) > 0
+    func updatePlaceholderView() {
+        let hasData = categories.contains { category in
+            if case .category(_, let trackers) = category {
+                return !trackers.isEmpty
+            }
+            return false
+        }
         collectionView.isHidden = !hasData
         placeholderView.isHidden = hasData
     }
@@ -182,32 +208,19 @@ extension TrackersViewController {
         return navigationBar
     }
     
-    private func createCustomButton(
-        _ target: Any?,
-        imageName: String?,
-        title: String?,
-        backgroundColor: UIColor?,
-        action: Selector) -> UIButton {
-            let button = UIButton(type: .system)
-            
-            if let imageName = imageName {
-                button.setImage(UIImage(systemName: imageName), for: .normal)
-            }
-            if let title = title {
-                button.setTitle(title, for: .normal)
-            }
-            button.addTarget(target, action: action, for: .touchUpInside)
-            button.backgroundColor = backgroundColor
-            button.tintColor = .ypBlack
-            button.layer.cornerRadius = 8
-            button.layer.masksToBounds = true
-            button.sizeToFit()
-            return button
-        }
-    
     @objc private func leftBarButtonTapped() {
-        print("Добавить треккер")
-        // TODO
+        let newTracker = Tracker.tracker(
+            id: UUID(),
+            name: "New Tracker",
+            color: .ypGreen,
+            emoji: "😀",
+            schedule: .dates(["01.08.2024"])
+        )
+
+        presenter?.addTracker(newTracker, categotyTitle: "Default Category")
+        collectionView.reloadData()
+        updatePlaceholderView()
+        print("Add tracker")
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -217,5 +230,7 @@ extension TrackersViewController {
 }
 
 extension TrackersViewController: TrackersViewControllerProtocol {
-    
+    func reloadData() {
+        collectionView.reloadData()
+    }
 }

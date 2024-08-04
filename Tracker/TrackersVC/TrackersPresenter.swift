@@ -32,10 +32,9 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
         var newCategories: [TrackerCategory] = []
-        
         var categoryExists = false
         
-        view?.categories.forEach { category in
+        for category in view?.categories ?? [] {
             if case .category(let title, var trackers) = category, title == categotyTitle {
                 trackers.append(tracker)
                 newCategories.append(.category(title: title, trackers: trackers))
@@ -48,6 +47,15 @@ extension TrackersPresenter: TrackersPresenterProtocol {
             newCategories.append(.category(title: categotyTitle, trackers: [tracker]))
         }
         view?.categories = newCategories
+        
+        DispatchQueue.main.async { [ weak self ] in
+            guard let self else { return }
+            if let vc = self.view as? TrackersViewController {
+                print("Reloading data")
+                vc.reloadData()
+                vc.updatePlaceholderView()
+            }
+        }
     }
     
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
