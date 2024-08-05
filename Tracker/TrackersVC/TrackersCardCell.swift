@@ -59,10 +59,30 @@ final class TrackersCardCell: UICollectionViewCell {
     private lazy var horizontalStack: UIStackView = {
         let view = UIView()
         view.widthAnchor.constraint(equalToConstant: 5).isActive = true
+        
+        let dateLabelContainer = UIView()
+        dateLabelContainer.addSubview(dateLabel)
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dateLabel.leadingAnchor.constraint(equalTo: dateLabelContainer.leadingAnchor, constant: 8),
+            dateLabel.trailingAnchor.constraint(equalTo: dateLabelContainer.trailingAnchor),
+            dateLabel.topAnchor.constraint(equalTo: dateLabelContainer.topAnchor),
+            dateLabel.bottomAnchor.constraint(equalTo: dateLabelContainer.bottomAnchor)
+        ])
+        
+        let selectButtonContainer = UIView()
+        selectButtonContainer.addSubview(selectButton)
+        selectButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            selectButton.leadingAnchor.constraint(equalTo: selectButtonContainer.leadingAnchor),
+            selectButton.trailingAnchor.constraint(equalTo: selectButtonContainer.trailingAnchor, constant: -12),
+            selectButton.topAnchor.constraint(equalTo: selectButtonContainer.topAnchor),
+            selectButton.bottomAnchor.constraint(equalTo: selectButtonContainer.bottomAnchor)
+        ])
+        
         let stack = UIStackView(arrangedSubviews: [
-            view,
-            dateLabel,
-            selectButton
+            dateLabelContainer,
+            selectButtonContainer
         ])
         stack.axis = .horizontal
         stack.spacing = 8
@@ -81,7 +101,6 @@ final class TrackersCardCell: UICollectionViewCell {
         let button = UIButton()
         button.layer.cornerRadius = 17
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.backgroundColor = .ypGreen
         button.tintColor = .ypWhite
         button.widthAnchor.constraint(equalToConstant: 34).isActive = true
         button.heightAnchor.constraint(equalToConstant: 34).isActive = true
@@ -102,10 +121,10 @@ final class TrackersCardCell: UICollectionViewCell {
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-            mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            mainVerticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
+            mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor),
+            mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            mainVerticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
@@ -114,6 +133,7 @@ final class TrackersCardCell: UICollectionViewCell {
             nameLabel.text = name
             self.emoji.text = emoji
             messageStack.backgroundColor = color
+            selectButton.backgroundColor = color
             
             switch date {
             case .dates(let dates):

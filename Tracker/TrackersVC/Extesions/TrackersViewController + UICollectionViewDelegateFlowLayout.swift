@@ -16,7 +16,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let totalWidth = collectionView.frame.width - params.leftInset - params.rightInset
         let width = (totalWidth - params.cellSpacing) / 2
-        return CGSize(width: width, height: width * 2 / 3 + 36 + 16)
+        return CGSize(width: width, height: width * 2 / 3 + 34)
     }
 
     func collectionView(
