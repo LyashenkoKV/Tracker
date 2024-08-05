@@ -10,6 +10,8 @@ import UIKit
 final class TrackersCardCell: UICollectionViewCell {
     static let reuseIdentifier = "TrackersCell"
     
+    var selectButtonTappedHandler: (() -> Void)?
+    
     private lazy var mainVerticalStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             messageStack,
@@ -71,13 +73,13 @@ final class TrackersCardCell: UICollectionViewCell {
         ])
         
         let selectButtonContainer = UIView()
-        selectButtonContainer.addSubview(selectButton)
-        selectButton.translatesAutoresizingMaskIntoConstraints = false
+        selectButtonContainer.addSubview(completeButton)
+        completeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            selectButton.leadingAnchor.constraint(equalTo: selectButtonContainer.leadingAnchor),
-            selectButton.trailingAnchor.constraint(equalTo: selectButtonContainer.trailingAnchor, constant: -12),
-            selectButton.topAnchor.constraint(equalTo: selectButtonContainer.topAnchor),
-            selectButton.bottomAnchor.constraint(equalTo: selectButtonContainer.bottomAnchor)
+            completeButton.leadingAnchor.constraint(equalTo: selectButtonContainer.leadingAnchor),
+            completeButton.trailingAnchor.constraint(equalTo: selectButtonContainer.trailingAnchor, constant: -12),
+            completeButton.topAnchor.constraint(equalTo: selectButtonContainer.topAnchor),
+            completeButton.bottomAnchor.constraint(equalTo: selectButtonContainer.bottomAnchor)
         ])
         
         let stack = UIStackView(arrangedSubviews: [
@@ -97,13 +99,14 @@ final class TrackersCardCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var selectButton: UIButton = {
+    private lazy var completeButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 17
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .ypWhite
         button.widthAnchor.constraint(equalToConstant: 34).isActive = true
         button.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -128,12 +131,21 @@ final class TrackersCardCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with tracker: Tracker) {
+    @objc private func completeButtonTapped() {
+        selectButtonTappedHandler?()
+    }
+    
+    func configure(with tracker: Tracker, isCompleted: Bool) {
         if case .tracker(_, let name, let color, let emoji, let date) = tracker {
             nameLabel.text = name
             self.emoji.text = emoji
             messageStack.backgroundColor = color
-            selectButton.backgroundColor = color
+            completeButton.backgroundColor = color
+            
+            let buttonImageName = isCompleted ? "checkmark" : "plus"
+            let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
+            completeButton.setImage(UIImage(systemName: buttonImageName), for: .normal)
+            completeButton.backgroundColor = buttonColor
             
             switch date {
             case .dates(let dates):

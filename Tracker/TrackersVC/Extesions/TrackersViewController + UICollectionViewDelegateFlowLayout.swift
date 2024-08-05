@@ -25,7 +25,6 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
         let size = CGSize(width: collectionView.frame.width, height: 50)
-        print("Header Size: \(size)")
         return size
     }
 }

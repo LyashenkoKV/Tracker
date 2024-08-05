@@ -51,7 +51,6 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         DispatchQueue.main.async { [ weak self ] in
             guard let self else { return }
             if let vc = self.view as? TrackersViewController {
-                print("Reloading data")
                 vc.reloadData()
                 vc.updatePlaceholderView()
             }
@@ -59,22 +58,28 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
-        view?.completedTrackers.append(.record(trackerId: trackerId, date: date))
+        guard let view = view else { return }
+        if !isTrackerCompleted(trackerId, date: date) {
+            view.completedTrackers.append(.record(trackerId: trackerId, date: date))
+            view.reloadData()
+        }
     }
     
     func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
-        if let index = view?.completedTrackers.firstIndex(where: {
+        guard let view = view else { return }
+        if let index = view.completedTrackers.firstIndex(where: {
             if case .record(let id, let recordDate) = $0 {
                 return id == trackerId && recordDate == date
             }
             return false
         }) {
-            view?.completedTrackers.remove(at: index)
+            view.completedTrackers.remove(at: index)
+            view.reloadData()
         }
     }
     
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool {
-        guard let view else { return false }
+        guard let view = view else { return false }
         return view.completedTrackers.contains(where: {
             if case .record(let id, let recordDate) = $0 {
                 return id == trackerId && recordDate == date

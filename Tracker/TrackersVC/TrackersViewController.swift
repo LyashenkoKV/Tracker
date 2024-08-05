@@ -15,7 +15,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
 
 final class TrackersViewController: UIViewController {
     
-    private var presenter: TrackersPresenterProtocol?
+    var presenter: TrackersPresenterProtocol?
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
@@ -27,7 +27,7 @@ final class TrackersViewController: UIViewController {
          cellSpacing: 10
      )
     
-    private lazy var dateFormatter: DateFormatter = {
+    lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
@@ -193,9 +193,9 @@ extension TrackersViewController {
         )
 
         presenter?.addTracker(newTracker, categotyTitle: "Default Category")
+        
         collectionView.reloadData()
         updatePlaceholderView()
-        print("Add tracker")
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
