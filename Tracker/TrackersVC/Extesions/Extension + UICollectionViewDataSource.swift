@@ -26,7 +26,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCardCell.reuseIdentifier, for: indexPath) as? TrackersCardCell else { return UICollectionViewCell() }
         if case .category(_, let trackers) = categories[indexPath.section] {
             let tracker = trackers[indexPath.row]
-            let currentDate = dateFormatter.string(from: Date())
+            let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
             
             var trackerId: UUID?
             if case .tracker(let id, _, _, _, _) = tracker {
@@ -35,32 +35,17 @@ extension TrackersViewController: UICollectionViewDataSource {
             
             guard let id = trackerId else { return UICollectionViewCell() }
             
-            let isCompleted = presenter?.isTrackerCompleted(id, date: currentDate) ?? false
-            cell.configure(with: tracker, isCompleted: isCompleted)
+            let isCompleted = presenter?.isTrackerCompleted(id, date: currentDateString) ?? false
+            
+            cell.configure(with: tracker, countComplete: completedTrackers, isCompleted: isCompleted)
+            
             
             cell.selectButtonTappedHandler = { [weak self] in
-                self?.handleTrackerSelection(tracker, isCompleted: isCompleted)
+                guard let self else { return }
+                self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompleted)
             }
         }
         return cell
-    }
-    
-    private func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool) {
-        var trackerId: UUID?
-        if case .tracker(let id, _, _, _, _) = tracker {
-            trackerId = id
-        }
-        
-        guard let id = trackerId else { return }
-        
-        let currentDate = dateFormatter.string(from: Date())
-        
-        if isCompleted {
-            presenter?.trackerCompletedUnmark(id, date: currentDate)
-        } else {
-            presenter?.trackerCompletedMark(id, date: currentDate)
-        }
-        reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

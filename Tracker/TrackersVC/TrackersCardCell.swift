@@ -63,28 +63,28 @@ final class TrackersCardCell: UICollectionViewCell {
         view.widthAnchor.constraint(equalToConstant: 5).isActive = true
         
         let dateLabelContainer = UIView()
-        dateLabelContainer.addSubview(dateLabel)
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabelContainer.addSubview(counterLabel)
+        counterLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dateLabel.leadingAnchor.constraint(equalTo: dateLabelContainer.leadingAnchor, constant: 8),
-            dateLabel.trailingAnchor.constraint(equalTo: dateLabelContainer.trailingAnchor),
-            dateLabel.topAnchor.constraint(equalTo: dateLabelContainer.topAnchor),
-            dateLabel.bottomAnchor.constraint(equalTo: dateLabelContainer.bottomAnchor)
+            counterLabel.leadingAnchor.constraint(equalTo: dateLabelContainer.leadingAnchor, constant: 8),
+            counterLabel.trailingAnchor.constraint(equalTo: dateLabelContainer.trailingAnchor),
+            counterLabel.topAnchor.constraint(equalTo: dateLabelContainer.topAnchor),
+            counterLabel.bottomAnchor.constraint(equalTo: dateLabelContainer.bottomAnchor)
         ])
         
-        let selectButtonContainer = UIView()
-        selectButtonContainer.addSubview(completeButton)
+        let completeButtonContainer = UIView()
+        completeButtonContainer.addSubview(completeButton)
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            completeButton.leadingAnchor.constraint(equalTo: selectButtonContainer.leadingAnchor),
-            completeButton.trailingAnchor.constraint(equalTo: selectButtonContainer.trailingAnchor, constant: -12),
-            completeButton.topAnchor.constraint(equalTo: selectButtonContainer.topAnchor),
-            completeButton.bottomAnchor.constraint(equalTo: selectButtonContainer.bottomAnchor)
+            completeButton.leadingAnchor.constraint(equalTo: completeButtonContainer.leadingAnchor),
+            completeButton.trailingAnchor.constraint(equalTo: completeButtonContainer.trailingAnchor, constant: -12),
+            completeButton.topAnchor.constraint(equalTo: completeButtonContainer.topAnchor),
+            completeButton.bottomAnchor.constraint(equalTo: completeButtonContainer.bottomAnchor)
         ])
         
         let stack = UIStackView(arrangedSubviews: [
             dateLabelContainer,
-            selectButtonContainer
+            completeButtonContainer
         ])
         stack.axis = .horizontal
         stack.spacing = 8
@@ -92,7 +92,7 @@ final class TrackersCardCell: UICollectionViewCell {
         return stack
     }()
     
-    private lazy var dateLabel: UILabel = {
+    private lazy var counterLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .ypBlack
@@ -135,31 +135,33 @@ final class TrackersCardCell: UICollectionViewCell {
         selectButtonTappedHandler?()
     }
     
-    func configure(with tracker: Tracker, isCompleted: Bool) {
+    func configure(with tracker: Tracker, countComplete: [TrackerRecord], isCompleted: Bool) {
         if case .tracker(_, let name, let color, let emoji, let date) = tracker {
             nameLabel.text = name
             self.emoji.text = emoji
             messageStack.backgroundColor = color
             completeButton.backgroundColor = color
             
-            let buttonImageName = isCompleted ? "checkmark" : "plus"
+            let buttonImage = isCompleted ? "checkmark" : "plus"
             let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
-            completeButton.setImage(UIImage(systemName: buttonImageName), for: .normal)
+            completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
             completeButton.backgroundColor = buttonColor
             
-            switch date {
+            let countDays = countComplete.count
+            var day = ""
+            
+            if countDays == 1 {
+                day = "День"
+            } else if (2...4).contains(countDays) {
+                day = "Дня"
+            } else {
+                day = "Дней"
+            }
+            counterLabel.text = ("\(countDays) \(day)")
+            
+            switch date { // надо подумать как прикрутить dates и надо ли!
             case .dates(let dates):
-                let countDays = dates.count
-                var day = ""
-                
-                if (1...3).contains(countDays) {
-                    day = "День"
-                } else if countDays == 4 {
-                    day = "Дня"
-                } else {
-                    day = "Дней"
-                }
-                dateLabel.text = ("\(countDays) \(day)")
+               print(dates)
             }
         }
     }

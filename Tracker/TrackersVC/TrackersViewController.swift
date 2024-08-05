@@ -10,6 +10,7 @@ import UIKit
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
     var completedTrackers: [TrackerRecord] { get set }
+    var currentDate: Date { get set }
     func reloadData()
 }
 
@@ -19,6 +20,7 @@ final class TrackersViewController: UIViewController {
     
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
+    var currentDate: Date = Date()
     
     let params = GeometricParams(
          cellCount: 1,
@@ -26,13 +28,6 @@ final class TrackersViewController: UIViewController {
          rightInset: 10,
          cellSpacing: 10
      )
-    
-    lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yy"
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        return dateFormatter
-    }()
     
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -184,12 +179,19 @@ extension TrackersViewController {
     }
     
     @objc private func leftBarButtonTapped() {
+        
+        guard let currentDateString = presenter?
+            .dateFormatter
+            .string(from: currentDate) else {
+            return
+        }
+        
         let newTracker = Tracker.tracker(
             id: UUID(),
             name: "New Tracker",
             color: .ypGreen,
             emoji: "😀",
-            schedule: .dates(["01.08.2024"])
+            schedule: .dates([currentDateString])
         )
 
         presenter?.addTracker(newTracker, categotyTitle: "Default Category")
@@ -199,8 +201,8 @@ extension TrackersViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
-        dateFormatter.string(from: selectedDate)
+        currentDate = sender.date
+        collectionView.reloadData()
     }
 }
 

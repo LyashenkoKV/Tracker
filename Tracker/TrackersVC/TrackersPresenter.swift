@@ -9,15 +9,24 @@ import UIKit
 
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
+    var dateFormatter: DateFormatter { get }
     func viewDidLoad()
     func addTracker(_ tracker: Tracker, categotyTitle: String)
     func trackerCompletedMark(_ trackerId: UUID, date: String)
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
+    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
 }
 
 final class TrackersPresenter {
     weak var view: TrackersViewControllerProtocol?
+    
+    lazy var dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yy"
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        return dateFormatter
+    }()
     
     init(view: TrackersViewControllerProtocol) {
         self.view = view
@@ -86,5 +95,23 @@ extension TrackersPresenter: TrackersPresenterProtocol {
             }
             return false
         })
+    }
+    
+    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool) {
+        var trackerId: UUID?
+        if case .tracker(let id, _, _, _, _) = tracker {
+            trackerId = id
+        }
+        
+        guard let id = trackerId else { return }
+        
+        let currentDateString = dateFormatter.string(from: view?.currentDate ?? Date())
+        
+        if isCompleted {
+            trackerCompletedUnmark(id, date: currentDateString)
+        } else {
+            trackerCompletedMark(id, date: currentDateString)
+        }
+        view?.reloadData()
     }
 }
