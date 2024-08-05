@@ -17,7 +17,6 @@ final class TrackersCardCell: UICollectionViewCell {
         ])
         stack.axis = .vertical
         stack.alignment = .fill
-        stack.layoutMargins = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
         return stack
     }()
     
@@ -33,6 +32,7 @@ final class TrackersCardCell: UICollectionViewCell {
         stack.layer.masksToBounds = true
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = UIEdgeInsets(top: 12, left: 12, bottom: 10, right: 12)
+        stack.heightAnchor.constraint(equalToConstant: 90).isActive = true
         return stack
     }()
     
@@ -40,6 +40,7 @@ final class TrackersCardCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypWhite
+        label.numberOfLines = 0
         return label
     }()
     
@@ -101,7 +102,7 @@ final class TrackersCardCell: UICollectionViewCell {
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             mainVerticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
@@ -126,7 +127,6 @@ final class TrackersCardCell: UICollectionViewCell {
                 } else {
                     day = "Дней"
                 }
-                
                 dateLabel.text = ("\(countDays) \(day)")
             }
         }

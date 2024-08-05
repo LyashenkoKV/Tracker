@@ -20,16 +20,16 @@ final class TrackersViewController: UIViewController {
     var categories: [TrackerCategory] = []
     var completedTrackers: [TrackerRecord] = []
     
-   let params = GeometricParams(
-        cellCount: 1,
-        leftInset: 10,
-        rightInset: 10,
-        cellSpacing: 10
-    )
+    let params = GeometricParams(
+         cellCount: 1,
+         leftInset: 10,
+         rightInset: 10,
+         cellSpacing: 10
+     )
     
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = " dd.MM.yy "
+        dateFormatter.dateFormat = "dd.MM.yy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
         return dateFormatter
     }()
@@ -46,29 +46,14 @@ final class TrackersViewController: UIViewController {
         return picker
     }()
     
-    private lazy var navigationBar: UINavigationController = {
-        let navigationController = UINavigationController(rootViewController: self)
-        navigationItem.leftBarButtonItem = addNewTrackerButtonItem
-        navigationItem.rightBarButtonItem = calendarButtonItem
-        return navigationController
-    }()
-    
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .ypBlack
-        label.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        label.text = " Трекеры"
-        return label
-    }()
-    
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Поиск"
-        searchBar.tintColor = .systemBlue
-        searchBar.backgroundImage = UIImage()
-        searchBar.searchTextField.layer.borderWidth = 0
-        searchBar.searchTextField.layer.borderColor = UIColor.clear.cgColor
-        return searchBar
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController()
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.barTintColor = .systemBlue
+        searchController.searchBar.tintColor = .systemBlue
+        searchController.searchBar.delegate = self
+        searchController.delegate = self
+        return searchController
     }()
     
     private lazy var placeholderView: UIView = {
@@ -104,26 +89,11 @@ final class TrackersViewController: UIViewController {
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.frame.width - 20, height: 50)
-        layout.minimumLineSpacing = 10
-        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.accessibilityIdentifier = "TrackersCollectionView"
         return collectionView
-    }()
-    
-    private lazy var verticalStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            titleLabel,
-            searchBar,
-            collectionView,
-            placeholderView
-        ])
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        return stackView
     }()
     
     // MARK: - BarButtonItems
@@ -142,8 +112,10 @@ final class TrackersViewController: UIViewController {
         return barButtonItem
     }()
     
+    // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Трекеры"
         view.backgroundColor = .ypWhite
         setupConstraints()
         updatePlaceholderView()
@@ -167,25 +139,22 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        [titleLabel,
-         searchBar,
-         collectionView,
-         placeholderView,
-         verticalStackView
-        ].forEach {
+        [collectionView, placeholderView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-        
-        view.addSubview(verticalStackView)
+
+        [collectionView, placeholderView].forEach {
+            view.addSubview($0)
+        }
         
         NSLayoutConstraint.activate([
-            verticalStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            verticalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            
-            titleLabel.heightAnchor.constraint(equalToConstant: 41),
-            searchBar.heightAnchor.constraint(equalToConstant: 36)
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+
+            placeholderView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholderView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
@@ -205,7 +174,13 @@ final class TrackersViewController: UIViewController {
 extension TrackersViewController {
     
     func setupNavigationBar() -> UINavigationController {
-        return navigationBar
+        let navigationController = UINavigationController(rootViewController: self)
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationItem.searchController = searchController
+        navigationItem.searchController?.searchBar.placeholder = "Поиск"
+        navigationItem.leftBarButtonItem = addNewTrackerButtonItem
+        navigationItem.rightBarButtonItem = calendarButtonItem
+        return navigationController
     }
     
     @objc private func leftBarButtonTapped() {
@@ -229,8 +204,27 @@ extension TrackersViewController {
     }
 }
 
+// MARK: - TrackersViewControllerProtocol
 extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
         collectionView.reloadData()
+        updatePlaceholderView()
+    }
+}
+
+// MARK: - UISearchControllerDelegate, UISearchBarDelegate
+extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegate {
+    func willPresentSearchController(_ searchController: UISearchController) {
+        DispatchQueue.main.async {
+            self.updateCancelButtonTitle()
+        }
+    }
+    
+    private func updateCancelButtonTitle() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Тут есть проблема с обновлением тайтла кнопки
+            if let cancelButton = self.searchController.searchBar.value(forKey: "cancelButton") as? UIButton {
+                cancelButton.setTitle("Отменить", for: .normal)
+            }
+        }
     }
 }

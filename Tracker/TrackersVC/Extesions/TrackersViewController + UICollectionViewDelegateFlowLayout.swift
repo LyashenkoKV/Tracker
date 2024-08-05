@@ -8,35 +8,7 @@
 import UIKit
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumInteritemSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return params.cellSpacing
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        minimumLineSpacingForSectionAt section: Int
-    ) -> CGFloat {
-        return params.cellSpacing
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
-        return UIEdgeInsets(
-            top: 10,
-            left: params.leftInset,
-            bottom: 10,
-            right: params.rightInset
-        )
-    }
-    
+   
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -45,5 +17,15 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         let totalWidth = collectionView.frame.width - params.leftInset - params.rightInset
         let width = (totalWidth - params.cellSpacing) / 2
         return CGSize(width: width, height: width * 2 / 3 + 36 + 16)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
+        let size = CGSize(width: collectionView.frame.width, height: 50)
+        print("Header Size: \(size)")
+        return size
     }
 }

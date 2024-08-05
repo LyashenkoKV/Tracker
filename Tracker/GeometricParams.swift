@@ -2,7 +2,7 @@
 //  GeometricParams.swift
 //  Tracker
 //
-//  Created by Konstantin Lyashenko on 02.08.2024.
+//  Created by Konstantin Lyashenko on 05.08.2024.
 //
 
 import Foundation

@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2411D66A2C5BCDE80031C584 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6692C5BCDE80031C584 /* SectionHeaderView.swift */; };
-		2411D66C2C5CD0C90031C584 /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D66B2C5CD0C90031C584 /* GeometricParams.swift */; };
 		2411D66E2C5CD39A0031C584 /* TrackersViewController + UICollectionViewDelegateFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D66D2C5CD39A0031C584 /* TrackersViewController + UICollectionViewDelegateFlowLayout.swift */; };
+		2411D6712C60CAD00031C584 /* GeometricParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6702C60CACF0031C584 /* GeometricParams.swift */; };
 		243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DB2C525B3500B0F1D3 /* AppDelegate.swift */; };
 		243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */; };
 		243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DF2C525B3500B0F1D3 /* MainViewController.swift */; };
@@ -30,8 +30,8 @@
 
 /* Begin PBXFileReference section */
 		2411D6692C5BCDE80031C584 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
-		2411D66B2C5CD0C90031C584 /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		2411D66D2C5CD39A0031C584 /* TrackersViewController + UICollectionViewDelegateFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackersViewController + UICollectionViewDelegateFlowLayout.swift"; sourceTree = "<group>"; };
+		2411D6702C60CACF0031C584 /* GeometricParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometricParams.swift; sourceTree = "<group>"; };
 		243024D82C525B3500B0F1D3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		243024DB2C525B3500B0F1D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 				243024E62C525B3700B0F1D3 /* LaunchScreen.storyboard */,
 				243024E92C525B3700B0F1D3 /* Info.plist */,
 				243024F62C5292AD00B0F1D3 /* Logger.swift */,
-				2411D66B2C5CD0C90031C584 /* GeometricParams.swift */,
+				2411D6702C60CACF0031C584 /* GeometricParams.swift */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -219,7 +219,6 @@
 				247E50012C577E2700630037 /* Extension + UICollectionDelegate.swift in Sources */,
 				243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */,
 				247E504E2C58DC4800630037 /* Tracker.swift in Sources */,
-				2411D66C2C5CD0C90031C584 /* GeometricParams.swift in Sources */,
 				243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */,
 				243024FB2C53C4A500B0F1D3 /* TrackersCardCell.swift in Sources */,
 				247E50522C58DC7700630037 /* TrackerRecord.swift in Sources */,
@@ -227,6 +226,7 @@
 				2411D66A2C5BCDE80031C584 /* SectionHeaderView.swift in Sources */,
 				243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */,
 				243024F52C5289B500B0F1D3 /* StatisticViewController.swift in Sources */,
+				2411D6712C60CAD00031C584 /* GeometricParams.swift in Sources */,
 				247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */,
 				243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */,
 				247E4FFF2C577DC800630037 /* Extension + UICollectionViewDataSource.swift in Sources */,
