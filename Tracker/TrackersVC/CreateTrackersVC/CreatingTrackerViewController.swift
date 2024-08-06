@@ -17,7 +17,8 @@ final class CreatingTrackerViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
         tableView.register(ButtonCell.self, forCellReuseIdentifier: ButtonCell.reuseIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
+        tableView.register(EmojiCell.self, forCellReuseIdentifier: EmojiCell.reuseIdentifier)
+        tableView.register(ColorsViewCell.self, forCellReuseIdentifier: ColorsViewCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
         tableView.rowHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = 0

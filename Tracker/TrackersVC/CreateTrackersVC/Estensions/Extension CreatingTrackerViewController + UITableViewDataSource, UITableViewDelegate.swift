@@ -13,7 +13,9 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
         return TrackerSection.allCases.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int) -> Int {
         guard let trackerSection = TrackerSection(rawValue: section) else {
             return 0
         }
@@ -27,14 +29,19 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
         }
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
 
         switch trackerSection {
         case .textView:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: TextViewCell.reuseIdentifier, for: indexPath) as? TextViewCell else {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: TextViewCell.reuseIdentifier,
+                for: indexPath
+            ) as? TextViewCell else {
                 return UITableViewCell()
             }
             cell.backgroundColor = .clear
@@ -48,34 +55,73 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
                 return UITableViewCell()
             }
             configureButtonCell(cell, at: indexPath)
+            
             return cell
-
-        case .emoji, .color:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+            
+        case .emoji:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: EmojiCell.reuseIdentifier,
+                for: indexPath
+            ) as? EmojiCell else {
+                return UITableViewCell()
+            }
             configureDefaultCell(cell, for: trackerSection)
+            cell.backgroundColor = .clear
+            return cell
+            
+        case .color:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: ColorsViewCell.reuseIdentifier,
+                for: indexPath
+            ) as? ColorsViewCell else {
+                return UITableViewCell()
+            }
+            configureDefaultCell(cell, for: trackerSection)
+            cell.backgroundColor = .clear
             return cell
         }
-    }
-
-    private func configureButtonCell(_ cell: ButtonCell, at indexPath: IndexPath) {
-        cell.layer.masksToBounds = true
-        cell.layer.cornerRadius = 15
-        if indexPath.row == 0 {
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        } else {
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
-        cell.accessoryType = .disclosureIndicator
-        if #available(iOS 14.0, *) {
-            var content = cell.defaultContentConfiguration()
-            content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-            cell.contentConfiguration = content
-        } else {
-            cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+    
+    private func configureButtonCell(
+        _ cell: ButtonCell,
+        at indexPath: IndexPath) {
+            cell.layer.masksToBounds = true
+            cell.layer.cornerRadius = 15
+            if indexPath.row == 0 {
+                cell.layer.maskedCorners = [
+                    .layerMinXMinYCorner,
+                    .layerMaxXMinYCorner
+                ]
+            } else {
+                cell.layer.maskedCorners = [
+                    .layerMinXMaxYCorner,
+                    .layerMaxXMaxYCorner
+                ]
+            }
+            cell.accessoryType = .disclosureIndicator
+            if #available(iOS 14.0, *) {
+                var content = cell.defaultContentConfiguration()
+                content.text = indexPath.row == 0 ? "Категория" : "Расписание"
+                cell.contentConfiguration = content
+            } else {
+                cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+            }
+            
+            let separator = UIView(frame: CGRect(
+                x: 20,
+                y: cell.frame.height - 1,
+                width: cell.frame.width,
+                height: 1)
+            )
+            separator.backgroundColor = .lightGray
+            if indexPath.row == 0 {
+                cell.addSubview(separator)
+            }
         }
-    }
-
-    private func configureDefaultCell(_ cell: UITableViewCell, for section: TrackerSection) {
+    
+    private func configureDefaultCell(
+        _ cell: UITableViewCell,
+        for section: TrackerSection) {
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
             content.text = section.headerTitle
