@@ -186,24 +186,30 @@ extension TrackersViewController {
     
     // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
-        guard let currentDateString = presenter?
-            .dateFormatter
-            .string(from: currentDate) else {
-            return
-        }
+        let typeTrackersVC = TypeTrackersViewController()
+        let navController = UINavigationController(rootViewController: typeTrackersVC)
+        navController.modalPresentationStyle = .formSheet
+        self.present(navController, animated: true, completion: nil)
         
-        let newTracker = Tracker.tracker(
-            id: UUID(),
-            name: "New Tracker",
-            color: .ypGreen,
-            emoji: "😀",
-            schedule: .dates([currentDateString])
-        )
-
-        presenter?.addTracker(newTracker, categotyTitle: "Default Category")
-        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
-        collectionView.reloadData()
-        updatePlaceholderView()
+//        guard let currentDateString = presenter?
+//            .dateFormatter
+//            .string(from: currentDate) else {
+//            return
+//        }
+//        
+//        let newTracker = Tracker.tracker(
+//            id: UUID(),
+//            name: "New Tracker",
+//            color: .ypGreen,
+//            emoji: "😀",
+//            schedule: .dates([currentDateString])
+//        )
+//
+//        presenter?.addTracker(newTracker, categotyTitle: "Default Category")
+//        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
+//        collectionView.reloadData()
+//        updatePlaceholderView()
+        
     }
     
     // Обработка изменения даты в пикере
