@@ -16,6 +16,7 @@ protocol TrackersPresenterProtocol {
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
+    func isDateValidForCompletion(date: Date) -> Bool
 }
 
 final class TrackersPresenter {
@@ -113,5 +114,9 @@ extension TrackersPresenter: TrackersPresenterProtocol {
             trackerCompletedMark(id, date: currentDateString)
         }
         view?.reloadData()
+    }
+    
+    func isDateValidForCompletion(date: Date) -> Bool {
+        return date <= Date()
     }
 }

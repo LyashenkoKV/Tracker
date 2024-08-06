@@ -135,7 +135,10 @@ final class TrackersCardCell: UICollectionViewCell {
         selectButtonTappedHandler?()
     }
     
-    func configure(with tracker: Tracker, countComplete: [TrackerRecord], isCompleted: Bool) {
+    func configure(with tracker: Tracker, 
+                   countComplete: [TrackerRecord],
+                   isCompleted: Bool,
+                   isDateValidForCompletion: Bool) {
         if case .tracker(_, let name, let color, let emoji, let date) = tracker {
             nameLabel.text = name
             self.emoji.text = emoji
@@ -146,6 +149,7 @@ final class TrackersCardCell: UICollectionViewCell {
             let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
             completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
             completeButton.backgroundColor = buttonColor
+            completeButton.isEnabled = isDateValidForCompletion
             
             let countDays = countComplete.count
             var day = ""

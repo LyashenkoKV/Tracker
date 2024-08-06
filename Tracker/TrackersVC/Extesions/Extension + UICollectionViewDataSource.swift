@@ -36,13 +36,20 @@ extension TrackersViewController: UICollectionViewDataSource {
             guard let id = trackerId else { return UICollectionViewCell() }
             
             let isCompleted = presenter?.isTrackerCompleted(id, date: currentDateString) ?? false
+            let isDateValidForCompletion = presenter?.isDateValidForCompletion(date: currentDate) ?? false
             
-            cell.configure(with: tracker, countComplete: completedTrackers, isCompleted: isCompleted)
-            
+            cell.configure(with: tracker, 
+                           countComplete: completedTrackers,
+                           isCompleted: isCompleted,
+                           isDateValidForCompletion: isDateValidForCompletion)
             
             cell.selectButtonTappedHandler = { [weak self] in
                 guard let self else { return }
-                self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompleted)
+                if isDateValidForCompletion {
+                    self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompleted)
+                } else {
+                    print("Нельзя отметить будущую дату как выполненную")
+                }
             }
         }
         return cell
