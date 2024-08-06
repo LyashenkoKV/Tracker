@@ -20,8 +20,8 @@ final class TypeTrackersViewController: UIViewController {
         return button
     }
     
-    private lazy var habitButton = createButton(with: "Привычка", action: #selector(createTracker))
-    private lazy var irregularEventButton = createButton(with: "Нерегулярное событие", action: #selector(createTracker))
+    private lazy var habitButton = createButton(with: "Привычка", action: #selector(createNewTracker))
+    private lazy var irregularEventButton = createButton(with: "Нерегулярное событие", action: #selector(createNewTracker))
     
     private lazy var stackButtons: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
@@ -32,7 +32,7 @@ final class TypeTrackersViewController: UIViewController {
         stack.spacing = 16
         return stack
     }()
-
+// MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
@@ -60,7 +60,12 @@ final class TypeTrackersViewController: UIViewController {
         ])
     }
     
-    @objc private func createTracker() {
-        
+    @objc private func createNewTracker() {
+        let newTrackersVC = CreatingTrackerViewController(title: "Новая привычка")
+        let navController = UINavigationController(rootViewController: newTrackersVC)
+        navController.modalPresentationStyle = .formSheet
+        self.present(navController, animated: true, completion: nil)
     }
+    
+    
 }

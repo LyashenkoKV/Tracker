@@ -18,14 +18,10 @@ final class TrackersViewController: UIViewController {
     
     var presenter: TrackersPresenterProtocol?
     
-    // Список категорий трекеров
     var categories: [TrackerCategory] = []
-    // Список завершённых трекеров
     var completedTrackers: Set<TrackerRecord> = []
-    // Текущая дата
     var currentDate: Date = Date()
     
-    // Параметры геометрии для ячеек
     let params = GeometricParams(
         cellCount: 1,
         leftInset: 10,
@@ -121,7 +117,7 @@ final class TrackersViewController: UIViewController {
         updatePlaceholderView()
         presenter?.viewDidLoad()
         
-        self.collectionView.register(
+        self.collectionView.register( // Перенести в свойство
             SectionHeaderView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: SectionHeaderView.reuseIdentifier
@@ -209,7 +205,6 @@ extension TrackersViewController {
 //        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
 //        collectionView.reloadData()
 //        updatePlaceholderView()
-        
     }
     
     // Обработка изменения даты в пикере
