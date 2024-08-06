@@ -12,6 +12,6 @@ import Foundation
 //    let date: String
 //}
 
-enum TrackerRecord {
+enum TrackerRecord: Hashable {
     case record(trackerId: UUID, date: String)
 }

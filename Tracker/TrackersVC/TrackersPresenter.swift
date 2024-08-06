@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+// MARK: - Protocol
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
     var dateFormatter: DateFormatter { get }
@@ -18,7 +18,7 @@ protocol TrackersPresenterProtocol {
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
     func isDateValidForCompletion(date: Date) -> Bool
 }
-
+// MARK: - Object
 final class TrackersPresenter {
     weak var view: TrackersViewControllerProtocol?
     
@@ -37,7 +37,7 @@ final class TrackersPresenter {
 extension TrackersPresenter: TrackersPresenterProtocol {
     
     func viewDidLoad() {
-        
+        // Нужен ли мне тут viewDidLoad
     }
     
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
@@ -70,7 +70,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
         guard let view = view else { return }
         if !isTrackerCompleted(trackerId, date: date) {
-            view.completedTrackers.append(.record(trackerId: trackerId, date: date))
+            view.completedTrackers.insert(.record(trackerId: trackerId, date: date))
             view.reloadData()
         }
     }

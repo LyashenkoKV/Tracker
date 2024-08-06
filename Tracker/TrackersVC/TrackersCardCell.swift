@@ -136,7 +136,7 @@ final class TrackersCardCell: UICollectionViewCell {
     }
     
     func configure(with tracker: Tracker, 
-                   countComplete: [TrackerRecord],
+                   countComplete: Set<TrackerRecord>,
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool) {
         if case .tracker(_, let name, let color, let emoji, let date) = tracker {

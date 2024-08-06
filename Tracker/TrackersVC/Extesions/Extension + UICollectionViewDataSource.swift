@@ -23,7 +23,9 @@ extension TrackersViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCardCell.reuseIdentifier, for: indexPath) as? TrackersCardCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TrackersCardCell.reuseIdentifier,
+            for: indexPath) as? TrackersCardCell else { return UICollectionViewCell() }
         if case .category(_, let trackers) = categories[indexPath.section] {
             let tracker = trackers[indexPath.row]
             let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
@@ -55,9 +57,15 @@ extension TrackersViewController: UICollectionViewDataSource {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath) -> UICollectionReusableView {
         
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeaderView.reuseIdentifier, for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
+        guard let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: SectionHeaderView.reuseIdentifier,
+            for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
         if case .category(let title, _) = categories[indexPath.section] {
             header.addTitle(title)
         }

@@ -6,28 +6,32 @@
 //
 
 import UIKit
-
+// MARK: - Protocol
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
-    var completedTrackers: [TrackerRecord] { get set }
+    var completedTrackers: Set<TrackerRecord> { get set }
     var currentDate: Date { get set }
     func reloadData()
 }
-
+// MARK: - Object
 final class TrackersViewController: UIViewController {
     
     var presenter: TrackersPresenterProtocol?
     
+    // Список категорий трекеров
     var categories: [TrackerCategory] = []
-    var completedTrackers: [TrackerRecord] = []
+    // Список завершённых трекеров
+    var completedTrackers: Set<TrackerRecord> = []
+    // Текущая дата
     var currentDate: Date = Date()
     
+    // Параметры геометрии для ячеек
     let params = GeometricParams(
-         cellCount: 1,
-         leftInset: 10,
-         rightInset: 10,
-         cellSpacing: 10
-     )
+        cellCount: 1,
+        leftInset: 10,
+        rightInset: 10,
+        cellSpacing: 10
+    )
     
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -154,6 +158,7 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
+    // Обновление состояния плейсхолдера
     func updatePlaceholderView() {
         let hasData = categories.contains { category in
             if case .category(_, let trackers) = category {
@@ -179,8 +184,8 @@ extension TrackersViewController {
         return navigationController
     }
     
+    // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
-        
         guard let currentDateString = presenter?
             .dateFormatter
             .string(from: currentDate) else {
@@ -196,11 +201,12 @@ extension TrackersViewController {
         )
 
         presenter?.addTracker(newTracker, categotyTitle: "Default Category")
-        
+        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
         collectionView.reloadData()
         updatePlaceholderView()
     }
     
+    // Обработка изменения даты в пикере
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         currentDate = sender.date
         collectionView.reloadData()

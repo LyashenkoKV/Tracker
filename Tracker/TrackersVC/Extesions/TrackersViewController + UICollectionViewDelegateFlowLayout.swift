@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
    
     func collectionView(
