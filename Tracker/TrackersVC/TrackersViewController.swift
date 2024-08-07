@@ -52,35 +52,9 @@ final class TrackersViewController: UIViewController {
         return searchController
     }()
     
-    private lazy var placeholderView: UIView = {
-        let view = UIView()
-        view.isHidden = true
-        
-        let imageView = UIImageView(image: UIImage(named: "Error"))
-        imageView.contentMode = .scaleAspectFit
-        imageView.frame.size.height = 80
-        imageView.frame.size.width = 80
-        
-        let label = UILabel()
-        label.text = "Что будем отслеживать?"
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .ypBlack
-        label.textAlignment = .center
-        
-        let stackView = UIStackView(arrangedSubviews: [imageView, label])
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 10
-        
-        view.addSubview(stackView)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
-        return view
+    private lazy var placeholder: Placeholder = {
+        let placeholder = Placeholder(image: UIImage(named: "Error"), text: "Что будем отслеживать?")
+        return placeholder
     }()
     
     private lazy var collectionView: UICollectionView = {
@@ -135,11 +109,11 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        [collectionView, placeholderView].forEach {
+        [collectionView, placeholder.view].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        [collectionView, placeholderView].forEach {
+        [collectionView, placeholder.view].forEach {
             view.addSubview($0)
         }
         
@@ -149,8 +123,8 @@ final class TrackersViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
 
-            placeholderView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholderView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
@@ -163,7 +137,7 @@ final class TrackersViewController: UIViewController {
             return false
         }
         collectionView.isHidden = !hasData
-        placeholderView.isHidden = hasData
+        placeholder.view.isHidden = hasData
     }
 }
 

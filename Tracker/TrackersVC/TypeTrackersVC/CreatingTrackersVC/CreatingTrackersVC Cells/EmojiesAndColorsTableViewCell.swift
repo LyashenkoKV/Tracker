@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CollectionTableViewCell: UITableViewCell {
+final class EmojiesAndColorsTableViewCell: UITableViewCell {
     static let reuseIdentifier = "CollectionTableViewCell"
     
     private let params = GeometricParams(
@@ -24,13 +24,27 @@ final class CollectionTableViewCell: UITableViewCell {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = params.cellSpacing
         layout.minimumInteritemSpacing = params.cellSpacing
-        layout.sectionInset = UIEdgeInsets(top: 0, left: params.leftInset, bottom: 0, right: params.rightInset)
+        layout.sectionInset = UIEdgeInsets(
+            top: 0, 
+            left: params.leftInset,
+            bottom: 0, 
+            right: params.rightInset
+        )
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .clear
-        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.reuseIdentifier)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isScrollEnabled = false
+        collectionView.register(
+            EmojiesAndColorsCollectionViewCell.self,
+            forCellWithReuseIdentifier: EmojiesAndColorsCollectionViewCell.reuseIdentifier
+        )
         return collectionView
     }()
     
@@ -62,18 +76,27 @@ final class CollectionTableViewCell: UITableViewCell {
 }
 
 // MARK: - UICollectionViewDelegate
-extension CollectionTableViewCell: UICollectionViewDelegate {
+extension EmojiesAndColorsTableViewCell: UICollectionViewDelegate {
     
 }
 
 // MARK: - UICollectionViewDataSource
-extension CollectionTableViewCell: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension EmojiesAndColorsTableViewCell: UICollectionViewDataSource {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         return elements.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.reuseIdentifier, for: indexPath) as? CollectionViewCell else {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: EmojiesAndColorsCollectionViewCell.reuseIdentifier,
+            for: indexPath
+        ) as? EmojiesAndColorsCollectionViewCell else {
             return UICollectionViewCell()
         }
         let element = elements[indexPath.item]
@@ -83,13 +106,7 @@ extension CollectionTableViewCell: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let paddingSpace = params.cellSpacing * (CGFloat(params.cellCount) + 1)
-//        let availableWidth = collectionView.frame.width - paddingSpace
-//        let widthPerItem = availableWidth / CGFloat(params.cellCount)
-//        return CGSize(width: widthPerItem, height: widthPerItem)
-//    }
+extension EmojiesAndColorsTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -116,20 +133,6 @@ extension CollectionTableViewCell: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-//        let availableWidth = collectionView.frame.width - params.paddingWidth
-//        print("\(collectionView.frame.width) - \(params.paddingWidth) = \(availableWidth)")
-//        let cellWidth =  availableWidth / CGFloat(params.cellCount)
-//        print("\(availableWidth) / \(CGFloat(params.cellCount)) = \(cellWidth)")
-//        let height: CGFloat
-//        // Рассчитаем высоту.
-//        if indexPath.row % 6 < 2 {
-//            print("\(indexPath.row % 6 < 2)")
-//            height = 2 / 3
-//        } else {
-//            height = 1 / 3
-//        }
-//        return CGSize(width: cellWidth,
-//                      height: cellWidth * height)
         let availableWidth = collectionView.frame.width - params.paddingWidth
         let cellWidth =  availableWidth / CGFloat(params.cellCount)
         return CGSize(width: cellWidth,

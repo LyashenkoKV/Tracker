@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CollectionViewCell: UICollectionViewCell {
+final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "CollectionViewCell"
     
     private let emojiLabel: UILabel = {
@@ -34,12 +34,15 @@ final class CollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with element: String, isEmoji: Bool) {
-        if isEmoji {
-            emojiLabel.text = element
-            contentView.backgroundColor = .clear
-        } else {
-            emojiLabel.text = ""
-            contentView.backgroundColor = UIColor(hex: element)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if isEmoji {
+                self.emojiLabel.text = element
+                contentView.backgroundColor = .clear
+            } else {
+                self.emojiLabel.text = ""
+                contentView.backgroundColor = UIColor(hex: element)
+            }
         }
     }
 }

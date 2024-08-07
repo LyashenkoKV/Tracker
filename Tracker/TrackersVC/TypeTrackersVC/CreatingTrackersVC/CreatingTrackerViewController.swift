@@ -17,11 +17,13 @@ final class CreatingTrackerViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
         tableView.register(ButtonCell.self, forCellReuseIdentifier: ButtonCell.reuseIdentifier)
-        tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: CollectionTableViewCell.reuseIdentifier)
+        tableView.register(EmojiesAndColorsTableViewCell.self, forCellReuseIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier)
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
         tableView.sectionFooterHeight = 0
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
         return tableView
     }()
     
@@ -57,7 +59,7 @@ final class CreatingTrackerViewController: UIViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
