@@ -24,7 +24,7 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
             return 1
         case .buttons:
             return 2
-        case .emoji, .color:
+        case .emoji, .color, .createButtons:
             return 1
         }
     }
@@ -60,20 +60,29 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
             
         case .emoji:
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiCell.reuseIdentifier,
+                withIdentifier: CollectionTableViewCell.reuseIdentifier,
                 for: indexPath
-            ) as? EmojiCell else {
+            ) as? CollectionTableViewCell else {
                 return UITableViewCell()
             }
-            configureDefaultCell(cell, for: trackerSection)
-            cell.backgroundColor = .clear
+            cell.configure(with: emojies, isEmoji: true)
             return cell
             
         case .color:
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: ColorsViewCell.reuseIdentifier,
+                withIdentifier: CollectionTableViewCell.reuseIdentifier,
                 for: indexPath
-            ) as? ColorsViewCell else {
+            ) as? CollectionTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.configure(with: colors, isEmoji: false)
+            return cell
+            
+        case .createButtons:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: CreateButtonsViewCell.reuseIdentifier,
+                for: indexPath
+            ) as? CreateButtonsViewCell else {
                 return UITableViewCell()
             }
             configureDefaultCell(cell, for: trackerSection)
@@ -81,6 +90,23 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
             return cell
         }
         }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
+            return UITableView.automaticDimension
+        }
+        
+        switch trackerSection {
+        case .textView:
+            return UITableView.automaticDimension
+        case .buttons:
+            return UITableView.automaticDimension
+        case .emoji, .color:
+            return 200
+        case .createButtons:
+            return UITableView.automaticDimension
+        }
+    }
     
     private func configureButtonCell(
         _ cell: ButtonCell,
@@ -130,5 +156,19 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
         } else {
             cell.textLabel?.text = section.headerTitle
         }
+        }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        guard let trackerSection = TrackerSection(rawValue: section) else {
+            return nil
+        }
+        return trackerSection.headerTitle
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard let trackerSection = TrackerSection(rawValue: section), trackerSection.headerTitle != nil else {
+            return 0
+        }
+        return 44
     }
 }

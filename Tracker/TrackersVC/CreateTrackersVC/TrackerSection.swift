@@ -12,6 +12,7 @@ enum TrackerSection: Int, CaseIterable {
     case buttons
     case emoji
     case color
+    case createButtons
 
     var headerTitle: String? {
         switch self {
@@ -23,6 +24,8 @@ enum TrackerSection: Int, CaseIterable {
             return "Emoji"
         case .color:
             return "Цвет"
+        case .createButtons:
+            return nil
         }
     }
 }

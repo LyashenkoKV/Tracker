@@ -17,14 +17,25 @@ final class CreatingTrackerViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
         tableView.register(ButtonCell.self, forCellReuseIdentifier: ButtonCell.reuseIdentifier)
-        tableView.register(EmojiCell.self, forCellReuseIdentifier: EmojiCell.reuseIdentifier)
-        tableView.register(ColorsViewCell.self, forCellReuseIdentifier: ColorsViewCell.reuseIdentifier)
+        tableView.register(CollectionTableViewCell.self, forCellReuseIdentifier: CollectionTableViewCell.reuseIdentifier)
+        tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = 0
         tableView.separatorStyle = .none
         return tableView
     }()
+    
+    var emojies = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🌴", "😪"
+    ]
+    
+    var colors = [
+        "#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4",
+        "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
+        "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"
+    ]
 
     init(title: String) {
         self.titleVC = title
