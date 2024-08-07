@@ -20,6 +20,14 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupUI() {
         contentView.addSubview(emojiLabel)
         contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 10
@@ -27,10 +35,6 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     func configure(with element: String, isEmoji: Bool) {

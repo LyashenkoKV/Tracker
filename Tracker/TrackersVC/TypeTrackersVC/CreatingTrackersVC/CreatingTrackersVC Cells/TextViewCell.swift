@@ -56,6 +56,10 @@ final class TextViewCell: UITableViewCell, UITextViewDelegate {
             textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
+    
+    func getText() -> UITextView {
+        return textView
+    }
 }
 
 // MARK: - Extension

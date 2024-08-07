@@ -9,19 +9,25 @@ import UIKit
 
 final class TypeTrackersViewController: UIViewController {
     
-    private func createButton(with title: String, action: Selector) -> UIButton {
-        let button = UIButton()
-        button.setTitle(title, for: .normal)
-        button.backgroundColor = .ypBlack
-        button.setTitleColor(.ypWhite, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.layer.cornerRadius = 20
-        button.addTarget(self, action: action, for: .touchUpInside)
-        return button
-    }
+    private lazy var habitButton = UIButton(
+        title: "Привычка",
+        backgroundColor: .ypBlack,
+        titleColor: .ypWhite,
+        cornerRadius: 20,
+        font: UIFont.systemFont(ofSize: 16),
+        target: self,
+        action: #selector(createNewTracker)
+    )
     
-    private lazy var habitButton = createButton(with: "Привычка", action: #selector(createNewTracker))
-    private lazy var irregularEventButton = createButton(with: "Нерегулярное событие", action: #selector(createNewTracker))
+    private lazy var irregularEventButton = UIButton(
+        title: "Нерегулярное событие",
+        backgroundColor: .ypBlack,
+        titleColor: .ypWhite,
+        cornerRadius: 20,
+        font: UIFont.systemFont(ofSize: 16),
+        target: self,
+        action: #selector(createNewTracker)
+    )
     
     private lazy var stackButtons: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [

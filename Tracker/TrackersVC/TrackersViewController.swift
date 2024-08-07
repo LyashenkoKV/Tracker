@@ -128,7 +128,6 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
-    // Обновление состояния плейсхолдера
     func updatePlaceholderView() {
         let hasData = categories.contains { category in
             if case .category(_, let trackers) = category {
