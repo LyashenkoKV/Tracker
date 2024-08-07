@@ -31,20 +31,6 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
     
     func tableView(
         _ tableView: UITableView,
-        heightForFooterInSection section: Int
-    ) -> CGFloat {
-        return 30
-    }
-    
-    func tableView(
-        _ tableView: UITableView,
-        viewForFooterInSection section: Int
-    ) -> UIView? {
-        return UIView()
-    }
-    
-    func tableView(
-        _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
                 return UITableViewCell()
@@ -58,6 +44,7 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
                 ) as? TextViewCell else {
                     return UITableViewCell()
                 }
+                cell.delegate = self
                 cell.backgroundColor = .clear
                 cell.selectionStyle = .none
                 return cell
@@ -163,19 +150,6 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
                 cell.addSubview(separator)
             }
         }
-//    
-//    private func configureDefaultCell(
-//        _ cell: UITableViewCell,
-//        for section: TrackerSection) {
-//            if #available(iOS 14.0, *) {
-//                var content = cell.defaultContentConfiguration()
-//                content.text = section.headerTitle
-//                content.textProperties.color = .ypBlack
-//                cell.contentConfiguration = content
-//            } else {
-//                cell.textLabel?.text = section.headerTitle
-//            }
-//        }
     
     func tableView(
         _ tableView: UITableView,
@@ -224,4 +198,39 @@ extension CreatingTrackerViewController: UITableViewDataSource, UITableViewDeleg
             }
             return 44
         }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let trackerSection = TrackerSection(rawValue: section),
+              let footerTitle = trackerSection.footerTitle else {
+            return nil
+        }
+        
+        let footerView = UIView()
+        footerView.backgroundColor = .clear
+        
+        let footerLabel = UILabel()
+        footerLabel.translatesAutoresizingMaskIntoConstraints = false
+        footerLabel.text = footerTitle
+        footerLabel.textColor = .ypRed
+        footerLabel.font = UIFont.systemFont(ofSize: 17)
+        footerLabel.textAlignment = .center
+        
+        footerView.addSubview(footerLabel)
+        
+        NSLayoutConstraint.activate([
+            footerLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 16),
+            footerLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -16),
+            footerLabel.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
+            footerLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8)
+        ])
+        
+        return footerView
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        heightForFooterInSection section: Int
+    ) -> CGFloat {
+        return 50
+    }
 }

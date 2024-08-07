@@ -9,7 +9,7 @@ import UIKit
 
 final class CreatingTrackerViewController: UIViewController {
 
-    private let titleVC: String?
+    private var titleVC: String?
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -20,7 +20,6 @@ final class CreatingTrackerViewController: UIViewController {
         tableView.register(EmojiesAndColorsTableViewCell.self, forCellReuseIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier)
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
-        tableView.sectionFooterHeight = 0
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -60,9 +59,19 @@ final class CreatingTrackerViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+    }
+}
+
+extension CreatingTrackerViewController: TextViewCellDelegate {
+    func textViewCellDidBeginEditing(_ cell: TextViewCell) {
+        self.title = "Создание привычки"
+    }
+    
+    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        // TODO
     }
 }

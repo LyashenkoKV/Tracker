@@ -42,6 +42,7 @@ final class CreateButtonsViewCell: UITableViewCell {
         stack.backgroundColor = .clear
         stack.spacing = 8
         stack.alignment = .center
+        stack.distribution = .fillEqually
         return stack
     }()
     
@@ -67,9 +68,7 @@ final class CreateButtonsViewCell: UITableViewCell {
             buttonStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             buttonStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            cancelButton.widthAnchor.constraint(equalToConstant: (contentView.frame.width + 32) / 2),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
-            
             createButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }

@@ -6,9 +6,18 @@
 //
 
 import UIKit
+// MARK: - Protocol
+protocol TextViewCellDelegate: AnyObject {
+    func textViewCellDidBeginEditing(_ cell: TextViewCell)
+    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?)
+}
 
+// MARK: - Object
 final class TextViewCell: UITableViewCell, UITextViewDelegate {
+    
     static let reuseIdentifier = "TextViewCell"
+    
+    weak var delegate: TextViewCellDelegate?
     
     private let placeholderText = "Введите название трекера"
     
@@ -47,12 +56,16 @@ final class TextViewCell: UITableViewCell, UITextViewDelegate {
             textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
-    
+}
+
+// MARK: - Extension
+extension TextViewCell {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == placeholderText {
             textView.text = nil
             textView.textColor = .black
         }
+        delegate?.textViewCellDidBeginEditing(self)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -60,5 +73,6 @@ final class TextViewCell: UITableViewCell, UITextViewDelegate {
             textView.text = placeholderText
             textView.textColor = .lightGray
         }
+        delegate?.textViewCellDidEndEditing(self, text: textView.text)
     }
 }

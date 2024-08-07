@@ -28,4 +28,13 @@ enum TrackerSection: Int, CaseIterable {
             return nil
         }
     }
+    
+    var footerTitle: String? {
+        switch self {
+        case .textView:
+            return "Ограничение 38 символов"
+        case .buttons, .emoji, .color, .createButtons:
+            return nil
+        }
+    }
 }
