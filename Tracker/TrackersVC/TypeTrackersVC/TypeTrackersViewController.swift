@@ -9,23 +9,24 @@ import UIKit
 
 final class TypeTrackersViewController: UIViewController {
     
-    private lazy var habitButton = UIButton(
-        title: "Привычка",
-        backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
-        cornerRadius: 20,
-        font: UIFont.systemFont(ofSize: 16),
-        target: self,
+    private func addNewButton(with title: String, action: Selector) -> UIButton {
+        return UIButton(
+            title: title,
+            backgroundColor: .ypBlack,
+            titleColor: .ypWhite,
+            cornerRadius: 20,
+            font: UIFont.systemFont(ofSize: 16),
+            target: self,
+            action: action
+        )
+    }
+    
+    private lazy var habitButton = addNewButton(
+        with: "Привычка",
         action: #selector(createNewTracker)
     )
-    
-    private lazy var irregularEventButton = UIButton(
-        title: "Нерегулярное событие",
-        backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
-        cornerRadius: 20,
-        font: UIFont.systemFont(ofSize: 16),
-        target: self,
+    private lazy var irregularEventButton = addNewButton(
+        with: "Нерегулярное событие",
         action: #selector(createNewTracker)
     )
     
@@ -38,6 +39,7 @@ final class TypeTrackersViewController: UIViewController {
         stack.spacing = 16
         return stack
     }()
+    
 // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +74,4 @@ final class TypeTrackersViewController: UIViewController {
         navController.modalPresentationStyle = .formSheet
         self.present(navController, animated: true, completion: nil)
     }
-    
-    
 }

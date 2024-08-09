@@ -16,5 +16,11 @@ import UIKit
 //}
 
 enum Tracker {
-    case tracker(id: UUID, name: String, color: UIColor, emoji: String, schedule: Schedule)
+    case tracker(
+        id: UUID,
+        name: String,
+        color: UIColor,
+        emoji: String,
+        schedule: Schedule
+    )
 }

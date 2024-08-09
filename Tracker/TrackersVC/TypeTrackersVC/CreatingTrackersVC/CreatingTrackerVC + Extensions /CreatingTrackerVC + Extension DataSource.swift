@@ -111,12 +111,15 @@ extension CreatingTrackerViewController: UITableViewDataSource {
                 ]
             }
             cell.accessoryType = .disclosureIndicator
+            
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
+                content.secondaryText = indexPath.row == 0 ? categorySubtitle : ""
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+                cell.detailTextLabel?.text = indexPath.row == 0 ? categorySubtitle : ""
             }
             
             let separator = UIView(frame: CGRect(

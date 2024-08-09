@@ -11,6 +11,7 @@ final class CreatingTrackerViewController: UIViewController {
 
     private var titleVC: String?
     var isFooterVisible = false
+    var categorySubtitle = ""
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -54,12 +55,12 @@ final class CreatingTrackerViewController: UIViewController {
         self.title = titleVC
         setupLayout()
     }
-
+    
     private func setupLayout() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
@@ -67,11 +68,32 @@ final class CreatingTrackerViewController: UIViewController {
     }
 }
 
+// MARK: - TextViewCellDelegate
 extension CreatingTrackerViewController: TextViewCellDelegate {
+    func textViewCellDidReachLimit(_ cell: TextViewCell) {
+        isFooterVisible = true
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    func textViewCellDidFallBelowLimit(_ cell: TextViewCell) {
+        isFooterVisible = false
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         self.title = "Создание привычки"
     }
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {}
+}
+
+// MARK: - CategorySelectionDelegate
+extension CreatingTrackerViewController: CategorySelectionDelegate {
+    func didSelectCategories(_ categories: [String]) {
+        self.categorySubtitle = categories.joined(separator: ", ")
+        tableView.reloadData()
+    }
 }

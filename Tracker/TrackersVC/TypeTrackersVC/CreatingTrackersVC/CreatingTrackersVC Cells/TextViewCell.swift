@@ -11,6 +11,9 @@ protocol TextViewCellDelegate: AnyObject, UITextViewDelegate {
     func textViewCellDidBeginEditing(_ cell: TextViewCell)
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?)
     func textViewCellDidChange(_ cell: TextViewCell)
+    
+    func textViewCellDidReachLimit(_ cell: TextViewCell)
+    func textViewCellDidFallBelowLimit(_ cell: TextViewCell)
 }
 
 // MARK: - Object
@@ -86,5 +89,21 @@ extension TextViewCell: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         delegate?.textViewCellDidChange(self)
+        
+        if textView.text.count == 38 {
+            delegate?.textViewCellDidReachLimit(self)
+        } else if textView.text.count < 38 {
+            delegate?.textViewCellDidFallBelowLimit(self)
+        }
+    }
+    
+    func textView(
+        _ textView: UITextView,
+        shouldChangeTextIn range: NSRange,
+        replacementText text: String
+    ) -> Bool {
+        let currentText = textView.text ?? ""
+        let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        return prospectiveText.count <= 38
     }
 }

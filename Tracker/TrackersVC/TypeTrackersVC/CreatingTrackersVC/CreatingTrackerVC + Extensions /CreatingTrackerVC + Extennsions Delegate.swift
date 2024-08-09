@@ -109,12 +109,20 @@ extension CreatingTrackerViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForFooterInSection section: Int
     ) -> CGFloat {
-        return 50
+        guard let trackerSection = TrackerSection(rawValue: section) else { return 0 }
+        
+        switch trackerSection {
+        case .textView:
+            return isFooterVisible ? 50 : 0
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             let categoryVC = CategoryViewController()
+            categoryVC.delegate = self
             let navController = UINavigationController(rootViewController: categoryVC)
             navController.modalPresentationStyle = .formSheet
             self.present(navController, animated: true, completion: nil)

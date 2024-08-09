@@ -13,5 +13,5 @@ import Foundation
 //}
 
 enum Schedule {
-    case dates([String])
+    case dayOfTheWeek([String])
 }

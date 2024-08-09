@@ -7,14 +7,22 @@
 
 import UIKit
 
+protocol CategorySelectionDelegate: AnyObject {
+    func didSelectCategories(_ categories: [String])
+}
+
 final class CategoryViewController: UIViewController {
     
+    weak var delegate: CategorySelectionDelegate?
+    
     private let buttonTitle = "Добавить категорию"
+    private let placeholderText = "Введите название категории"
     
     private var categories: [String] = []
-    private var isAddingCategory = false
+    private var selectedCategories: [String] = []
     
-    private let placeholderText = "Введите название категории"
+    
+    private var isAddingCategory = false
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -139,7 +147,7 @@ extension CategoryViewController: UITableViewDataSource {
             cell.backgroundColor = .ypWhiteGray
             cell.selectionStyle = .none
             cell.tintColor = .systemBlue
-            cell.accessoryType = .checkmark
+//            cell.accessoryType = .checkmark
             
             let totalRows = categories.count
             
@@ -182,15 +190,31 @@ extension CategoryViewController: UITableViewDataSource {
                 ])
             }
         }
+    
+    func addSelectedCategory(_ category: String) {
+        return selectedCategories.append(category)
+    }
 }
 
 // MARK: - UITableViewDelegate
 extension CategoryViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedCategory = categories[indexPath.row]
+        selectedCategories.append(selectedCategory)
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell {
+            cell.accessoryType = .checkmark
+        }
+        delegate?.didSelectCategories(selectedCategories)
+        dismiss(animated: true)
+    }
 }
 
 // MARK: - UITextViewDelegate
 extension CategoryViewController: TextViewCellDelegate {
+    func textViewCellDidReachLimit(_ cell: TextViewCell) {}
+    func textViewCellDidFallBelowLimit(_ cell: TextViewCell) {}
+    
     func textViewCellDidChange(_ cell: TextViewCell) {
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
@@ -199,4 +223,3 @@ extension CategoryViewController: TextViewCellDelegate {
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {}
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {}
 }
-

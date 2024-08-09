@@ -13,5 +13,8 @@ import Foundation
 //}
 
 enum TrackerCategory {
-    case category(title: String, trackers: [Tracker])
+    case category(
+        title: String,
+        trackers: [Tracker]
+    )
 }
