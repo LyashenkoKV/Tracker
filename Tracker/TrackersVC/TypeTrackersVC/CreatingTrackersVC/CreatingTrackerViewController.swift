@@ -68,15 +68,10 @@ final class CreatingTrackerViewController: UIViewController {
 }
 
 extension CreatingTrackerViewController: TextViewCellDelegate {
-    func textViewCellDidChange(_ cell: TextViewCell) {
-        
-    }
+    func textViewCellDidChange(_ cell: TextViewCell) {}
     
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         self.title = "Создание привычки"
     }
-    
-    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
-        // TODO
-    }
+    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {}
 }

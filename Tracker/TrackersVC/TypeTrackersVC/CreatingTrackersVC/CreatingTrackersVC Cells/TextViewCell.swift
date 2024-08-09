@@ -21,6 +21,7 @@ final class TextViewCell: UITableViewCell {
     weak var delegate: TextViewCellDelegate?
     
     private let placeholderText = "Введите название трекера"
+    private var isVisiblePlaceholder = true
     
     private let textView: UITextView = {
         let textView = UITextView()
@@ -66,9 +67,10 @@ final class TextViewCell: UITableViewCell {
 // MARK: - Extension
 extension TextViewCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == placeholderText {
+        if isVisiblePlaceholder {
             textView.text = nil
             textView.textColor = .black
+            isVisiblePlaceholder = false
         }
         delegate?.textViewCellDidBeginEditing(self)
     }
@@ -77,6 +79,7 @@ extension TextViewCell: UITextViewDelegate {
         if textView.text.isEmpty {
             textView.text = placeholderText
             textView.textColor = .lightGray
+            isVisiblePlaceholder = true
         }
         delegate?.textViewCellDidEndEditing(self, text: textView.text)
     }

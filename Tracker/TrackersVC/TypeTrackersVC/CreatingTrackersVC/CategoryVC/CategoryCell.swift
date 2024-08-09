@@ -32,8 +32,10 @@ final class CategoryCell: UITableViewCell {
         contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 10
         NSLayoutConstraint.activate([
-            categoryLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            categoryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            categoryLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 26),
+            categoryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -27),
+            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            categoryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
