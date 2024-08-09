@@ -77,6 +77,7 @@ extension CreatingTrackerViewController: UITableViewDelegate {
         }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
         guard let trackerSection = TrackerSection(rawValue: section),
               let footerTitle = trackerSection.footerTitle else {
             return nil

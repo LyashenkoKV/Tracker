@@ -7,13 +7,14 @@
 
 import UIKit
 // MARK: - Protocol
-protocol TextViewCellDelegate: AnyObject {
+protocol TextViewCellDelegate: AnyObject, UITextViewDelegate {
     func textViewCellDidBeginEditing(_ cell: TextViewCell)
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?)
+    func textViewCellDidChange(_ cell: TextViewCell)
 }
 
 // MARK: - Object
-final class TextViewCell: UITableViewCell, UITextViewDelegate {
+final class TextViewCell: UITableViewCell {
     
     static let reuseIdentifier = "TextViewCell"
     
@@ -63,7 +64,7 @@ final class TextViewCell: UITableViewCell, UITextViewDelegate {
 }
 
 // MARK: - Extension
-extension TextViewCell {
+extension TextViewCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == placeholderText {
             textView.text = nil
@@ -78,5 +79,9 @@ extension TextViewCell {
             textView.textColor = .lightGray
         }
         delegate?.textViewCellDidEndEditing(self, text: textView.text)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        delegate?.textViewCellDidChange(self)
     }
 }

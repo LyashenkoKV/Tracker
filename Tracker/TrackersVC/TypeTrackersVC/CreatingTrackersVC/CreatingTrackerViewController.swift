@@ -10,6 +10,7 @@ import UIKit
 final class CreatingTrackerViewController: UIViewController {
 
     private var titleVC: String?
+    var isFooterVisible = false
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -67,6 +68,10 @@ final class CreatingTrackerViewController: UIViewController {
 }
 
 extension CreatingTrackerViewController: TextViewCellDelegate {
+    func textViewCellDidChange(_ cell: TextViewCell) {
+        
+    }
+    
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         self.title = "Создание привычки"
     }

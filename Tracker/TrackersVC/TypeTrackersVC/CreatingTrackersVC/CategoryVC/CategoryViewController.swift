@@ -14,6 +14,8 @@ final class CategoryViewController: UIViewController {
     private var categories: [String] = []
     private var isAddingCategory = false
     
+    private let placeholderText = "Введите название категории"
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
@@ -118,7 +120,6 @@ extension CategoryViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         if isAddingCategory {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TextViewCell.reuseIdentifier, for: indexPath) as? TextViewCell else { return UITableViewCell() }
-            //cell.getText().delegate = self
             cell.delegate = self
             return cell
         } else {
@@ -136,6 +137,12 @@ extension CategoryViewController: UITableViewDelegate {
 
 // MARK: - UITextViewDelegate
 extension CategoryViewController: TextViewCellDelegate {
+    func textViewCellDidChange(_ cell: TextViewCell) {
+        guard let text = cell.getText().text else { return }
+        addCategoryButton.isEnabled = !text.isEmpty
+        addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
+    }
+    
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         
     }
@@ -144,9 +151,9 @@ extension CategoryViewController: TextViewCellDelegate {
         
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        addCategoryButton.isEnabled = !textView.text.isEmpty
-        addCategoryButton.backgroundColor = textView.text.isEmpty ? .ypGray : .ypBlack
-    }
+//    func textViewDidChange(_ textView: UITextView) {
+//        addCategoryButton.isEnabled = !textView.text.isEmpty
+//        addCategoryButton.backgroundColor = textView.text.isEmpty ? .ypGray : .ypBlack
+//    }
 }
 
