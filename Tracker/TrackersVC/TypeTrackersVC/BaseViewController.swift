@@ -145,16 +145,18 @@ class BaseTrackerViewController: UIViewController {
             categories = []
         }
     }
-    
-    func addCategory(_ category: String) {
-        categories.append(category)
-        saveCategoriesToUserDefaults()
-    }
-    
+  
     func updateUI() {}
     
     // Метод TextViewCellDelegate выношу из расширения, потому что дочерний класс его не видит
     func textViewCellDidChange(_ cell: TextViewCell) {}
+}
+
+extension BaseTrackerViewController: CategorySelectionDelegate {
+    func didSelectCategory(_ category: String) {
+        self.categorySubtitle = category
+        tableView.reloadRows(at: [IndexPath(row: 0, section: TrackerSection.buttons.rawValue)], with: .automatic)
+    }
 }
 
 // MARK: - TextViewCellDelegate
@@ -171,10 +173,13 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         tableView.endUpdates()
     }
     
- 
-    
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
-        // Обработка начала редактирования
+        switch viewControllerType {
+        case .creatingTracker:
+            self.title = "Создание привычки"
+        default:
+            break
+        }
     }
     
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
@@ -185,7 +190,7 @@ extension BaseTrackerViewController: TextViewCellDelegate {
 
 // MARK: - UITableViewDataSource
 extension BaseTrackerViewController: UITableViewDataSource {
-    
+    // Устанавливаю количесво секций в каждом VC
     func numberOfSections(in tableView: UITableView) -> Int {
         switch viewControllerType {
         case .typeTrackers:
@@ -198,7 +203,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return 0
         }
     }
-    
+    // Устанавливаю количесво ячеек в каждой секции VC
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
@@ -229,6 +234,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         switch viewControllerType {
+        // Ставлю две ячейки в TypeTrackersVC
         case .typeTrackers:
             let cell = UITableViewCell()
             if indexPath.section == 0 {
@@ -243,7 +249,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             cell.clipsToBounds = true
             cell.selectionStyle = .none
             return cell
-            
+        // Заполняю данные в ячейки в секциях CreatingTrackersVC
         case .creatingTracker:
             guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
                 return UITableViewCell()
@@ -290,6 +296,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 }
                 return cell
             }
+        // Данные для ячеек CategoryVC
         case .category:
             if isAddingCategory {
                 guard let cell = tableView.dequeueReusableCell(
@@ -309,14 +316,14 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     return UITableViewCell()
                 }
                 cell.configure(with: categories[indexPath.row])
-                configureButtonCell(cell, at: indexPath)
+                configureCategoryCell(cell, at: indexPath)
                 return cell
             }
         case .none:
             return UITableViewCell()
         }
     }
-    
+    // Конфигурация ячеек ButtonCell, с настройкой скругления Top первой ячейки и Bottom второй
     private func configureButtonCell(
         _ cell: UITableViewCell,
         at indexPath: IndexPath) {
@@ -341,17 +348,17 @@ extension BaseTrackerViewController: UITableViewDataSource {
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                content.secondaryText = indexPath.row == 0 ? categorySubtitle : ""
+                content.secondaryText = indexPath.row == 0 && !isAddingCategory ? categorySubtitle : ""
+                print("indexPath.row == 0: \(indexPath.row == 0), !isAddingCategory: \(!isAddingCategory), categorySubtitle: \(categorySubtitle)")
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                cell.detailTextLabel?.text = indexPath.row == 0 ? categorySubtitle : ""
+                cell.detailTextLabel?.text = indexPath.row == 0 && !isAddingCategory ? categorySubtitle : ""
             }
-            
             configureSeparator(cell, is: indexPath.row == 0)
         }
-    
-    private func configureButtonCell(
+    // Конфигурация ячеек CategoryCell, с настройкой скругления Top первой ячейки и Bottom последней
+    private func configureCategoryCell(
         _ cell: CategoryCell,
         at indexPath: IndexPath) {
             cell.layer.masksToBounds = true
@@ -387,7 +394,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             
             configureSeparator(cell, is: indexPath.row < categories.count - 1)
         }
-    
+    // Настройка сепаратора (для визуального разделения ячеек)
     private func configureSeparator(_ cell: UITableViewCell, is row: Bool) {
         if row {
             let separator = UIView()
@@ -413,6 +420,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         switch viewControllerType {
+        // Действия при нажатии на ячейки в TypeTrackersVC
         case .typeTrackers:
             if indexPath.section == 0 {
                 let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker)
@@ -426,12 +434,13 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true, completion: nil)
             }
-            
+        // Действия при нажатии на ячейки в CreatingTrackersVC
         case .creatingTracker:
             if indexPath.section == TrackerSection.buttons.rawValue {
                 if indexPath.row == 0 {
                     // Переход к выбору категории
                     let categoryVC = CategoryViewController(type: .category)
+                    categoryVC.delegate = self
                     let navController = UINavigationController(rootViewController: categoryVC)
                     navController.modalPresentationStyle = .formSheet
                     self.present(navController, animated: true, completion: nil)
@@ -439,20 +448,12 @@ extension BaseTrackerViewController: UITableViewDelegate {
                     // Переход к выбору расписания
                 }
             }
+        // Действия при нажатии на ячейки в CategoryVC
         case .category:
             if !isAddingCategory {
-                if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell {
-                    cell.accessoryType = .checkmark
-                }
+                
                 let selectedCategory = categories[indexPath.row]
                 selectedCategories.append(selectedCategory)
-                //self.selectedCategories = categories
-                self.categorySubtitle = selectedCategory
-                
-                print(categorySubtitle)
-                
-                tableView.reloadData()
-                dismiss(animated: true)
             }
         case .none:
             break
@@ -460,6 +461,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     }
     
     // MARK: - Header
+    // Настройка хедера
     func tableView(
         _ tableView: UITableView,
         titleForHeaderInSection section: Int) -> String? {
@@ -542,6 +544,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             }
         }
     // MARK: - Footer
+    // Настройка футера
     func tableView(
         _ tableView: UITableView,
         viewForFooterInSection section: Int) -> UIView? {
@@ -611,6 +614,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     }
     
     // MARK: - heightForRowAt
+    // Настройка высоты ячеек в зависимости от секции и VC
     func tableView(
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath) -> CGFloat {

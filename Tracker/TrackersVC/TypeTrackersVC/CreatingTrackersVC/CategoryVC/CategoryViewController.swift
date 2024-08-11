@@ -238,7 +238,13 @@ import UIKit
 //    func textViewCellDidBeginEditing(_ cell: TextViewCell) {}
 //    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {}
 //}
+protocol CategorySelectionDelegate: AnyObject {
+    func didSelectCategory(_ category: String)
+}
+
 final class CategoryViewController: BaseTrackerViewController {
+    
+    weak var delegate: CategorySelectionDelegate?
     
     // MARK: - UI Elements
     private lazy var placeholder: Placeholder = {
@@ -321,8 +327,6 @@ final class CategoryViewController: BaseTrackerViewController {
         super.updateUI()
         placeholder.view.isHidden = !categories.isEmpty
         addCategoryButton.isEnabled = !isAddingCategory
-        print("Categories count: \(categories.count)")
-        print("Placeholder is hidden: \(placeholder.view.isHidden)")
 
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
         addCategoryButton.setTitle(isAddingCategory ? "Готово" : "Добавить категорию", for: .normal)
@@ -334,5 +338,21 @@ final class CategoryViewController: BaseTrackerViewController {
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
+    }
+}
+// MARK: - UITableVIewDelegate
+extension CategoryViewController {
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath) {
+        if !isAddingCategory {
+            if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell {
+                cell.accessoryType = .checkmark
+            }
+            
+            let selectedCategory = categories[indexPath.row]
+            delegate?.didSelectCategory(selectedCategory)
+            dismiss(animated: true)
+        }
     }
 }
