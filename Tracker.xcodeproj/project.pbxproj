@@ -25,7 +25,7 @@
 		2411D69D2C63AB770031C584 /* UIButton + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D69C2C63AB770031C584 /* UIButton + Extensions.swift */; };
 		2411D69F2C63B6670031C584 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D69E2C63B6670031C584 /* CategoryCell.swift */; };
 		2411D6A12C63C7080031C584 /* CreatingTrackerVC + Extennsions Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A02C63C7080031C584 /* CreatingTrackerVC + Extennsions Delegate.swift */; };
-		2411D6A32C660C520031C584 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A22C660C520031C584 /* BaseViewController.swift */; };
+		2411D6A82C674B370031C584 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A72C674B370031C584 /* BaseViewController.swift */; };
 		243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DB2C525B3500B0F1D3 /* AppDelegate.swift */; };
 		243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */; };
 		243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DF2C525B3500B0F1D3 /* MainViewController.swift */; };
@@ -63,7 +63,7 @@
 		2411D69C2C63AB770031C584 /* UIButton + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton + Extensions.swift"; sourceTree = "<group>"; };
 		2411D69E2C63B6670031C584 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		2411D6A02C63C7080031C584 /* CreatingTrackerVC + Extennsions Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreatingTrackerVC + Extennsions Delegate.swift"; sourceTree = "<group>"; };
-		2411D6A22C660C520031C584 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		2411D6A72C674B370031C584 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		243024D82C525B3500B0F1D3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		243024DB2C525B3500B0F1D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 		2411D6722C621C3B0031C584 /* TypeTrackersVC */ = {
 			isa = PBXGroup;
 			children = (
-				2411D6A22C660C520031C584 /* BaseViewController.swift */,
+				2411D6A72C674B370031C584 /* BaseViewController.swift */,
 				2411D6732C621C6E0031C584 /* TypeTrackersViewController.swift */,
 				2411D6752C622DD60031C584 /* CreatingTrackersVC */,
 			);
@@ -119,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				2411D6992C63AA650031C584 /* CategoryVC */,
+				2411D6A62C6683E70031C584 /* ScheduleVC */,
 				2411D6762C622E200031C584 /* CreatingTrackerViewController.swift */,
 				2411D68A2C626AF60031C584 /* TrackerSection.swift */,
 				2411D6782C6232CA0031C584 /* CreatingTrackerVC + Extensions  */,
@@ -173,6 +174,13 @@
 				2411D69E2C63B6670031C584 /* CategoryCell.swift */,
 			);
 			path = CategoryVC;
+			sourceTree = "<group>";
+		};
+		2411D6A62C6683E70031C584 /* ScheduleVC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ScheduleVC;
 			sourceTree = "<group>";
 		};
 		243024CF2C525B3500B0F1D3 = {
@@ -322,7 +330,7 @@
 			files = (
 				247E50012C577E2700630037 /* TrackersViewController + Extension Delegate.swift in Sources */,
 				243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */,
-				2411D6A32C660C520031C584 /* BaseViewController.swift in Sources */,
+				2411D6A82C674B370031C584 /* BaseViewController.swift in Sources */,
 				247E504E2C58DC4800630037 /* Tracker.swift in Sources */,
 				243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */,
 				2411D69F2C63B6670031C584 /* CategoryCell.swift in Sources */,

@@ -155,7 +155,12 @@ extension TrackersViewController {
     
     // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
-        let typeTrackersVC = TypeTrackersViewController()
+//        let typeTrackersVC = TypeTrackersViewController()
+//        let navController = UINavigationController(rootViewController: typeTrackersVC)
+//        navController.modalPresentationStyle = .formSheet
+//        self.present(navController, animated: true, completion: nil)
+        
+        let typeTrackersVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackersVC)
         navController.modalPresentationStyle = .formSheet
         self.present(navController, animated: true, completion: nil)
@@ -171,8 +176,9 @@ extension TrackersViewController {
 //            name: "New Tracker",
 //            color: .ypGreen,
 //            emoji: "😀",
-//            schedule: .dates([currentDateString])
+//            schedule: .dayOfTheWeek([currentDateString])
 //        )
+        
 //
 //        presenter?.addTracker(newTracker, categotyTitle: "Default Category")
 //        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
