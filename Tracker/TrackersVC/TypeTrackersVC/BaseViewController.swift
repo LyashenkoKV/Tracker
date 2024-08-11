@@ -11,6 +11,7 @@ enum TrackerViewControllerType {
     case typeTrackers
     case category
     case creatingTracker
+    case schedule
 }
 
 class BaseTrackerViewController: UIViewController {
@@ -20,6 +21,7 @@ class BaseTrackerViewController: UIViewController {
     private var isFooterVisible = false
     private var emojies: [String] = []
     private var colors: [String] = []
+    private var weekDays: [String] = []
     
     var categories: [String] = []
     private var selectedCategories: [String] = []
@@ -37,11 +39,12 @@ class BaseTrackerViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
-        tableView.register(ButtonCell.self, forCellReuseIdentifier: ButtonCell.reuseIdentifier)
+        //tableView.register(ButtonCell.self, forCellReuseIdentifier: ButtonCell.reuseIdentifier)
         tableView.register(EmojiesAndColorsTableViewCell.self, forCellReuseIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier)
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.reuseIdentifier)
         tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
+        tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
@@ -77,6 +80,8 @@ class BaseTrackerViewController: UIViewController {
             self.title = "Категория"
         case .creatingTracker:
             self.title = "Новая привычка"
+        case .schedule:
+            self.title = "Расписание"
         case .none:
             break
         }
@@ -112,6 +117,8 @@ class BaseTrackerViewController: UIViewController {
             baseTableview()
         case .creatingTracker:
             baseTableview()
+        case .schedule:
+            baseTableview()
         case nil:
             break
         }
@@ -128,6 +135,16 @@ class BaseTrackerViewController: UIViewController {
             "#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4",
             "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
             "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"
+        ]
+        
+        weekDays = [
+            "Понедельник", 
+            "Вторник",
+            "Среда",
+            "Четверг",
+            "Пятница",
+            "Суббота",
+            "Воскресенье"
         ]
     }
     
@@ -199,6 +216,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return TrackerSection.allCases.count
         case .category:
             return 1
+        case .schedule:
+            return 1
         case .none:
             return 0
         }
@@ -224,6 +243,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
             }
         case .category:
             return isAddingCategory ? 1 : categories.count
+        case .schedule:
+            return weekDays.count
         case .none:
             return 0
         }
@@ -267,6 +288,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             case .buttons:
                 let cell = UITableViewCell()
                 configureButtonCell(cell, at: indexPath)
+                configureSeparator(cell, is: indexPath.row == 0)
                 cell.selectionStyle = .none
                 return cell
             case .emoji:
@@ -316,9 +338,25 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     return UITableViewCell()
                 }
                 cell.configure(with: categories[indexPath.row])
-                configureCategoryCell(cell, at: indexPath)
+                configureBaseCell(cell, at: indexPath, totalRows: categories.count)
+                configureSeparator(cell, is: indexPath.row < categories.count - 1)
                 return cell
             }
+            
+        case .schedule:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: ScheduleCell.reuseIdentifier,
+                for: indexPath) as? ScheduleCell else {
+                return UITableViewCell()
+            }
+            if indexPath.row < weekDays.count {
+                cell.configure(with: weekDays[indexPath.row])
+                configureBaseCell(cell, at: indexPath, totalRows: weekDays.count)
+                configureSeparator(cell, is: indexPath.row < weekDays.count - 1)
+            } else {
+                fatalError("Index out of range for weekDays array")
+            }
+            return cell
         case .none:
             return UITableViewCell()
         }
@@ -355,18 +393,17 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
                 cell.detailTextLabel?.text = indexPath.row == 0 && !isAddingCategory ? categorySubtitle : ""
             }
-            configureSeparator(cell, is: indexPath.row == 0)
         }
-    // Конфигурация ячеек CategoryCell, с настройкой скругления Top первой ячейки и Bottom последней
-    private func configureCategoryCell(
-        _ cell: CategoryCell,
-        at indexPath: IndexPath) {
+    // Конфигурация ячеек наследуемых от BaseCell, с настройкой скругления Top первой ячейки и Bottom последней
+    private func configureBaseCell(
+        _ cell: UITableViewCell,
+        at indexPath: IndexPath,
+        totalRows: Int) {
+            
             cell.layer.masksToBounds = true
             cell.backgroundColor = .ypWhiteGray
             cell.selectionStyle = .none
             cell.tintColor = .systemBlue
-            
-            let totalRows = categories.count
             
             if totalRows == 1 {
                 cell.layer.cornerRadius = 15
@@ -391,9 +428,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
             } else {
                 cell.layer.cornerRadius = 0
             }
-            
-            configureSeparator(cell, is: indexPath.row < categories.count - 1)
         }
+
     // Настройка сепаратора (для визуального разделения ячеек)
     private func configureSeparator(_ cell: UITableViewCell, is row: Bool) {
         if row {
@@ -426,26 +462,31 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker)
                 let navController = UINavigationController(rootViewController: creatingTrackerVC)
                 navController.modalPresentationStyle = .formSheet
-                self.present(navController, animated: true, completion: nil)
+                self.present(navController, animated: true)
             } else if indexPath.section == 1 {
                 let irregularEventVC = CreatingTrackerViewController(type: .creatingTracker)
                 irregularEventVC.title = "Нерегулярное событие"
                 let navController = UINavigationController(rootViewController: irregularEventVC)
                 navController.modalPresentationStyle = .formSheet
-                self.present(navController, animated: true, completion: nil)
+                self.present(navController, animated: true)
             }
         // Действия при нажатии на ячейки в CreatingTrackersVC
         case .creatingTracker:
+            print(indexPath.row)
             if indexPath.section == TrackerSection.buttons.rawValue {
                 if indexPath.row == 0 {
-                    // Переход к выбору категории
                     let categoryVC = CategoryViewController(type: .category)
                     categoryVC.delegate = self
                     let navController = UINavigationController(rootViewController: categoryVC)
                     navController.modalPresentationStyle = .formSheet
-                    self.present(navController, animated: true, completion: nil)
+                    self.present(navController, animated: true)
+                } else if indexPath.row == 1 {
+                    let scheduleVC = CreatingTrackerViewController(type: .schedule)
+                    let navController = UINavigationController(rootViewController: scheduleVC)
+                    navController.modalPresentationStyle = .formSheet
+                    self.present(navController, animated: true)
                 } else {
-                    // Переход к выбору расписания
+                    print("Unknown row index: \(indexPath.row)")
                 }
             }
         // Действия при нажатии на ячейки в CategoryVC
@@ -455,6 +496,8 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 let selectedCategory = categories[indexPath.row]
                 selectedCategories.append(selectedCategory)
             }
+        case .schedule:
+            print("Day of the week \(weekDays[indexPath.row])")
         case .none:
             break
         }
@@ -472,9 +515,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             switch viewControllerType {
             case .creatingTracker:
                 return trackerSection.headerTitle
-            case .typeTrackers, .category:
-                return nil
-            case .none:
+            default:
                 break
             }
             return ""
@@ -510,10 +551,8 @@ extension BaseTrackerViewController: UITableViewDelegate {
         switch viewControllerType {
         case .creatingTracker:
             headerLabel.text = trackerSection.headerTitle
-        case .typeTrackers, .category:
-            return nil
-        case .none:
-            return nil
+        default:
+            break
         }
         return headerView
     }
@@ -526,8 +565,6 @@ extension BaseTrackerViewController: UITableViewDelegate {
             }
             
             switch viewControllerType {
-            case .typeTrackers:
-                return 0
             case .creatingTracker:
                 switch trackerSection {
                 case .textView, .color, .emoji:
@@ -537,7 +574,9 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 case .createButtons:
                     return 16
                 }
-            case .category:
+            case .schedule:
+                return 16
+            case .typeTrackers, .category:
                 return 0
             case .none:
                 return 0
@@ -578,15 +617,15 @@ extension BaseTrackerViewController: UITableViewDelegate {
             footerLabel.bottomAnchor.constraint(
                 equalTo: footerView.bottomAnchor)
         ])
-        
-        switch viewControllerType {
-        case .creatingTracker:
-            footerLabel.text = trackerSection.footerTitle
-        case .typeTrackers, .category:
-            return nil
-        case .none:
-            return nil
-        }
+            
+            switch viewControllerType {
+            case .creatingTracker:
+                footerLabel.text = trackerSection.footerTitle
+            case .typeTrackers, .category, .schedule:
+                return nil
+            case .none:
+                return nil
+            }
         return footerView
     }
     
@@ -606,7 +645,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             default:
                 return 16
             }
-        case .category:
+        case .category, .schedule:
             return 0
         case .none:
             return 0
@@ -635,7 +674,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             
         case .typeTrackers:
             return 60
-        case .category:
+        case .category, .schedule:
             return UITableView.automaticDimension
         case .none:
             return UITableView.automaticDimension
