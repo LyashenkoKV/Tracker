@@ -20,7 +20,7 @@ class CategoryBaseCell: UITableViewCell {
     let toggleSwitch: UISwitch = {
         let toggleSwitch = UISwitch()
         toggleSwitch.translatesAutoresizingMaskIntoConstraints = false
-        toggleSwitch.isHidden = true // Скрываем по умолчанию
+        toggleSwitch.isHidden = true
         return toggleSwitch
     }()
     
