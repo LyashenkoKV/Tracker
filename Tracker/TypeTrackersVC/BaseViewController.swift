@@ -7,25 +7,17 @@
 
 import UIKit
 
-enum TrackerViewControllerType {
-    case typeTrackers
-    case category
-    case creatingTracker
-    case schedule
-}
-
 class BaseTrackerViewController: UIViewController {
-    
     // MARK: - Properties
-    private var viewControllerType: TrackerViewControllerType?
+    var viewControllerType: TrackerViewControllerType?
     private var isFooterVisible = false
-    private var emojies: [String] = []
-    private var colors: [String] = []
-    private var weekDays: [String] = []
-    
+    var emojies: [String] = []
+    var colors: [String] = []
+
     var categories: [String] = []
     private var selectedCategories: [String] = []
-    private var categorySubtitle = ""
+    private var selectedDays = ""
+    private var selectedCategory = ""
     
     var editingCategoryIndex: IndexPath?
     
@@ -137,20 +129,9 @@ class BaseTrackerViewController: UIViewController {
             "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
             "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"
         ]
-        
-        weekDays = [
-            "Понедельник",
-            "Вторник",
-            "Среда",
-            "Четверг",
-            "Пятница",
-            "Суббота",
-            "Воскресенье"
-        ]
     }
     
     func saveCategoriesToUserDefaults() {
-        print("Сохраняем категории в UserDefaults: \(categories)")
         UserDefaults.standard.set(categories, forKey: "savedCategories")
     }
     
@@ -158,10 +139,8 @@ class BaseTrackerViewController: UIViewController {
         if let savedCategories = UserDefaults.standard.array(forKey: "savedCategories") as? [String] {
             categories = savedCategories
         } else {
-            print("No categories found in UserDefaults")
             categories = []
         }
-        print("Загружены категории из UserDefaults: \(categories)")
     }
     
     func updateUI() {}
@@ -183,9 +162,23 @@ class BaseTrackerViewController: UIViewController {
     }
 }
 
+// MARK: - ScheduleSelectionDelegate
+extension BaseTrackerViewController: ScheduleSelectionDelegate {
+    func didSelect(_ days: String) {
+        selectedDays = days
+
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: 1,
+                section: TrackerSection.buttons.rawValue)],
+            with: .automatic)
+    }
+}
+
+// MARK: - CategorySelectionDelegate
 extension BaseTrackerViewController: CategorySelectionDelegate {
     func didSelectCategory(_ category: String) {
-        self.categorySubtitle = category
+        selectedCategory = category
         tableView.reloadRows(
             at: [IndexPath(
                 row: 0,
@@ -217,7 +210,7 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         }
     }
     
-    // ‼️ Не нравится мне как работает редактирование, надо поправить
+    // ‼️ Не нравится мне как работает редактирование, сепаратор скачет, надо поправить
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
         guard let newText = text, !newText.isEmpty else {
             print("Текст пуст или nil, редактирование не выполнено")
@@ -225,11 +218,9 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         }
         
         if let editingIndex = editingCategoryIndex {
-            print("Редактируем категорию на позиции \(editingIndex.row) с новым текстом: \(newText)")
             categories[editingIndex.row] = newText
             editingCategoryIndex = nil
         } else {
-            print("Добавляем новую категорию: \(newText)")
             categories.append(newText)
         }
         saveCategoriesToUserDefaults()
@@ -279,7 +270,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             case .category:
                 return isAddingCategory ? 1 : categories.count
             case .schedule:
-                return weekDays.count
+                return DayOfTheWeek.allCases.count
             case .none:
                 return 0
             }
@@ -291,16 +282,14 @@ extension BaseTrackerViewController: UITableViewDataSource {
             switch viewControllerType {
             case .typeTrackers:
                 return configureTypeTrackersCell(at: indexPath)
-            case .creatingTracker:
-                return configureCreatingTrackerCell(at: indexPath)
+            case .creatingTracker, .schedule:
+                return UITableViewCell()
             case .category:
                 if isAddingCategory {
                     return configureTextViewCell(at: indexPath)
                 } else {
                     return configureCategoryCell(at: indexPath)
                 }
-            case .schedule:
-                return configureScheduleCell(at: indexPath)
             case .none:
                 return UITableViewCell()
             }
@@ -320,55 +309,6 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.clipsToBounds = true
         cell.selectionStyle = .none
         return cell
-    }
-    
-    private func configureCreatingTrackerCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
-            return UITableViewCell()
-        }
-        switch trackerSection {
-        case .textView:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: TextViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? TextViewCell else {
-                return UITableViewCell()
-            }
-            cell.delegate = self
-            return cell
-        case .buttons:
-            let cell = UITableViewCell()
-            configureButtonCell(cell, at: indexPath)
-            configureSeparator(cell, isLastRow: indexPath.row == 1)
-            cell.selectionStyle = .none
-            return cell
-        case .emoji:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: emojies, isEmoji: true)
-            return cell
-        case .color:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: colors, isEmoji: false)
-            return cell
-        case .createButtons:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: CreateButtonsViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? CreateButtonsViewCell else {
-                return UITableViewCell()
-            }
-            return cell
-        }
     }
     
     private func configureCategoryCell(at indexPath: IndexPath) -> UITableViewCell {
@@ -407,24 +347,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
         return cell
     }
     
-    private func configureScheduleCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: ScheduleCell.reuseIdentifier,
-            for: indexPath) as? ScheduleCell else {
-            return UITableViewCell()
-        }
-        if indexPath.row < weekDays.count {
-            cell.configure(with: weekDays[indexPath.row])
-            configureBaseCell(cell, at: indexPath, totalRows: weekDays.count)
-            configureSeparator(cell, isLastRow: indexPath.row < weekDays.count - 1)
-        } else {
-            fatalError("Index out of range for weekDays array")
-        }
-        return cell
-    }
     
     // Конфигурация ячеек ButtonCell, с настройкой скругления Top первой ячейки и Bottom второй
-    private func configureButtonCell(
+    func configureButtonCell(
         _ cell: UITableViewCell,
         at indexPath: IndexPath) {
             cell.layer.masksToBounds = true
@@ -448,15 +373,16 @@ extension BaseTrackerViewController: UITableViewDataSource {
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                content.secondaryText = indexPath.row == 0 && !isAddingCategory ? categorySubtitle : ""
+                content.secondaryText = indexPath.row == 0 && !isAddingCategory ? selectedCategory : selectedDays
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                cell.detailTextLabel?.text = indexPath.row == 0 && !isAddingCategory ? categorySubtitle : ""
+                cell.detailTextLabel?.text = indexPath.row == 0 && !isAddingCategory ? selectedCategory : selectedDays
             }
         }
+    
     // Конфигурация ячеек наследуемых от BaseCell, с настройкой скругления Top первой ячейки и Bottom последней
-    private func configureBaseCell(
+    func configureBaseCell(
         _ cell: UITableViewCell,
         at indexPath: IndexPath,
         totalRows: Int) {
@@ -492,7 +418,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         }
     
     // Настройка сепаратора (для визуального разделения ячеек)
-    private func configureSeparator(_ cell: UITableViewCell, isLastRow: Bool) {
+    func configureSeparator(_ cell: UITableViewCell, isLastRow: Bool) {
         cell.contentView.subviews.filter { $0.tag == 1001 }.forEach { $0.removeFromSuperview() }
         
         guard !isLastRow else { return }
@@ -526,7 +452,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
         case .category:
             handleCategorySelection(at: indexPath)
         case .schedule:
-            print("Day of the week \(weekDays[indexPath.row])")
+            break
         case .none:
             break
         }
@@ -535,6 +461,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
     private func handleTypeTrackersSelection(at indexPath: IndexPath) {
         if indexPath.section == 0 {
             let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker)
+//            if let delegate = self as? CreatingTrackerDelegate {
+//                creatingTrackerVC.delegate = delegate
+//            }
+            
             let navController = UINavigationController(rootViewController: creatingTrackerVC)
             navController.modalPresentationStyle = .formSheet
             self.present(navController, animated: true)
@@ -557,11 +487,12 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 self.present(navController, animated: true)
             } else if indexPath.row == 1 {
                 let scheduleVC = ScheduleViewController(type: .schedule)
+                scheduleVC.delegate = self
                 let navController = UINavigationController(rootViewController: scheduleVC)
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true)
             } else {
-                print("Unknown row index: \(indexPath.row)")
+                print("Неизвестный индекс ячейки: \(indexPath.row)")
             }
         }
     }

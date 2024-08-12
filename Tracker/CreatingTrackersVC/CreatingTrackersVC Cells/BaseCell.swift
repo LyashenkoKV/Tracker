@@ -21,6 +21,7 @@ class CategoryBaseCell: UITableViewCell {
         let toggleSwitch = UISwitch()
         toggleSwitch.translatesAutoresizingMaskIntoConstraints = false
         toggleSwitch.isHidden = true
+        toggleSwitch.onTintColor = .ypBlue
         return toggleSwitch
     }()
     

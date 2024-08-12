@@ -11,6 +11,9 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     static let reuseIdentifier = "CreateButtonsCell"
     
+    var onCreateButtonTapped: (() -> Void)?
+    var onCancelButtonTapped: (() -> Void)?
+    
     private lazy var createButton: UIButton = {
         let button = addButton(
             with: "Создать",
@@ -90,10 +93,12 @@ final class CreateButtonsViewCell: UITableViewCell {
     }
     
     @objc private func createButtonAction() {
-        
+        onCreateButtonTapped?()
+        print("createButtonAction")
     }
     
     @objc private func cancelButtonAction() {
-        
+        onCancelButtonTapped?()
+        print("cancelButtonAction")
     }
 }

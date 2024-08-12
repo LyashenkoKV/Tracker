@@ -155,37 +155,16 @@ extension TrackersViewController {
     
     // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
-//        let typeTrackersVC = TypeTrackersViewController()
-//        let navController = UINavigationController(rootViewController: typeTrackersVC)
-//        navController.modalPresentationStyle = .formSheet
-//        self.present(navController, animated: true, completion: nil)
-        
-        let typeTrackersVC = TypeTrackersViewController(type: .typeTrackers)
-        let navController = UINavigationController(rootViewController: typeTrackersVC)
+        let creatingTrackerVC = TypeTrackersViewController(type: .typeTrackers)
+        creatingTrackerVC.delegate = self
+        let navController = UINavigationController(rootViewController: creatingTrackerVC)
         navController.modalPresentationStyle = .formSheet
-        self.present(navController, animated: true, completion: nil)
+        self.present(navController, animated: true)
         
-//        guard let currentDateString = presenter?
-//            .dateFormatter
-//            .string(from: currentDate) else {
-//            return
-//        }
-//        
-//        let newTracker = Tracker.tracker(
-//            id: UUID(),
-//            name: "New Tracker",
-//            color: .ypGreen,
-//            emoji: "😀",
-//            schedule: .dayOfTheWeek([currentDateString])
-//        )
-        
-//
-//        presenter?.addTracker(newTracker, categotyTitle: "Default Category")
-//        // Придумать как прикрутить добавление ячейки через performBatchUpdates, пока не хватает мозгов(
-//        collectionView.reloadData()
-//        updatePlaceholderView()
+        collectionView.reloadData()
+        updatePlaceholderView()
     }
-    
+
     // Обработка изменения даты в пикере
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         currentDate = sender.date
@@ -215,5 +194,12 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
                 cancelButton.setTitle("Отменить", for: .normal)
             }
         }
+    }
+}
+
+// MARK: - CreatingTrackerDelegate
+extension TrackersViewController: CreatingTrackerDelegate {
+    func didCreateTracker(_ tracker: Tracker, in category: String) {
+        presenter?.addTracker(tracker, categotyTitle: category)
     }
 }

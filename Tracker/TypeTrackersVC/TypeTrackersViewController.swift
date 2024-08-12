@@ -8,6 +8,9 @@
 import UIKit
 
 final class TypeTrackersViewController: BaseTrackerViewController {
+    
+    weak var delegate: CreatingTrackerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
