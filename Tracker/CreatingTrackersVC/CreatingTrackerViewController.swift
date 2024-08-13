@@ -53,9 +53,9 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: selectedSchedule ?? .dayOfTheWeek(["Понедельник", "Среда"])
+            schedule: selectedSchedule ?? .dayOfTheWeek([])
         )
-        
+
         let categoryTitle: String
         if let selectedCategory = selectedCategory,
            case let .category(title, _) = selectedCategory {
@@ -63,17 +63,14 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         } else {
             categoryTitle = "Новая категория"
         }
-        
+
         let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": categoryTitle]
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
-        
-        print("Категория - \(categories)")
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 
     private func handleCancelButtonTapped() {
-        print("handleCancelButtonTapped")
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
     

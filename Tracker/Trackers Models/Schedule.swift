@@ -46,3 +46,11 @@ enum Schedule: Codable {
     }
 }
 
+extension Schedule {
+    var description: String {
+        switch self {
+        case .dayOfTheWeek(let days):
+            return days.joined(separator: ", ")
+        }
+    }
+}

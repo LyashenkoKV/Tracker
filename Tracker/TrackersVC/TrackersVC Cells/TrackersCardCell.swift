@@ -162,11 +162,6 @@ final class TrackersCardCell: UICollectionViewCell {
                 day = "Дней"
             }
             counterLabel.text = ("\(countDays) \(day)")
-            
-            switch date { // надо подумать как прикрутить dates и надо ли!
-            case .dayOfTheWeek(let dates):
-               print(dates)
-            }
         }
     }
 }

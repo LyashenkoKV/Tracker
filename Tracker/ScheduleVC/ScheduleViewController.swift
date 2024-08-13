@@ -8,14 +8,14 @@
 import UIKit
 
 protocol ScheduleSelectionDelegate: AnyObject {
-    func didSelect(_ days: String)
+    func didSelect(_ days: [String])
 }
 
-class ScheduleViewController: BaseTrackerViewController {
+final class ScheduleViewController: BaseTrackerViewController {
     
     weak var delegate: ScheduleSelectionDelegate?
     
-    private var selectedDays: [String] = []
+    var selectDays: [String] = []
     
     private lazy var addDoneButton = UIButton(
         title: "Готово",
@@ -69,7 +69,7 @@ class ScheduleViewController: BaseTrackerViewController {
         cell.configure(with: DayOfTheWeek.allCases[indexPath.row].rawValue)
         let switchView = cell.toggleSwitch
         
-        switchView.isOn = selectedDays.contains(oneDay)
+        switchView.isOn = selectDays.contains(oneDay)
         switchView.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         
         configureBaseCell(cell, at: indexPath, totalRows: DayOfTheWeek.allCases.count)
@@ -77,45 +77,6 @@ class ScheduleViewController: BaseTrackerViewController {
         
         return cell
     }
-    
-    private func selectedDaysString() -> String {
-        let daysOrder = [
-            "Понедельник", "Вторник", "Среда",
-            "Четверг", "Пятница", "Суббота",
-            "Воскресенье"
-        ]
-        
-        let fullWeek = Set(daysOrder)
-        let selectedSet = Set(selectedDays)
-
-        if selectedSet == fullWeek {
-            return "Каждый день"
-        }
-
-        let sortedDays = selectedDays.sorted {
-            guard let firstIndex = daysOrder.firstIndex(of: $0),
-                  let secondIndex = daysOrder.firstIndex(of: $1) else {
-                return false
-            }
-            return firstIndex < secondIndex
-        }
-        
-        let dayShortcuts = sortedDays.compactMap { day in
-            switch day {
-            case "Понедельник": return "Пн"
-            case "Вторник": return "Вт"
-            case "Среда": return "Ср"
-            case "Четверг": return "Чт"
-            case "Пятница": return "Пт"
-            case "Суббота": return "Сб"
-            case "Воскресенье": return "Вс"
-            default: return nil
-            }
-        }
-        
-        return dayShortcuts.joined(separator: ", ")
-    }
-
     
     @objc func switchChanged(sender: UISwitch) {
         guard let cell = sender.superview(of: ScheduleCell.self),
@@ -126,17 +87,16 @@ class ScheduleViewController: BaseTrackerViewController {
         let oneDay = DayOfTheWeek.allCases[indexPath.row].rawValue
 
         if sender.isOn {
-            if !selectedDays.contains(oneDay) {
-                selectedDays.append(oneDay)
+            if !selectDays.contains(oneDay) {
+                selectDays.append(oneDay)
             }
         } else {
-            selectedDays.removeAll { $0 == oneDay }
+            selectDays.removeAll { $0 == oneDay }
         }
     }
     
     @objc private func addDoneButtonAction() {
-        let selectedDays = selectedDaysString()
-        delegate?.didSelect(selectedDays)
+        delegate?.didSelect(selectDays)
         dismiss(animated: true)
     }
 }

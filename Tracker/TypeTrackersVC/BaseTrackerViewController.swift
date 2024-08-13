@@ -16,7 +16,7 @@ class BaseTrackerViewController: UIViewController {
     var categories: [TrackerCategory] = []
     
     private var selectedCategories: [TrackerCategory] = []
-    private var selectedDays = ""
+    var selectedDays: Schedule?
     var selectedCategory: TrackerCategory?
     
     var editingCategoryIndex: IndexPath?
@@ -196,14 +196,13 @@ class BaseTrackerViewController: UIViewController {
 
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {
-    func didSelect(_ days: String) {
-        selectedDays = days
-
+    func didSelect(_ days: [String]) {
+        selectedDays = .dayOfTheWeek(days)
         tableView.reloadRows(
             at: [IndexPath(
                 row: 1,
-                section: TrackerSection.buttons.rawValue)],
-            with: .automatic)
+                section: TrackerSection.buttons.rawValue
+            )], with: .automatic)
     }
 }
 
@@ -398,7 +397,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                         content.secondaryText = title
                     }
                 } else {
-                    content.secondaryText = selectedDays
+                    content.secondaryText = selectedDaysString()
                 }
                 cell.contentConfiguration = content
             } else {
@@ -409,7 +408,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                         cell.detailTextLabel?.text = title
                     }
                 } else {
-                    cell.detailTextLabel?.text = selectedDays
+                    cell.detailTextLabel?.text = selectedDaysString()
                 }
             }
         }
@@ -742,4 +741,49 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return UITableView.automaticDimension
             }
         }
+}
+
+// MARK: - selectedDaysString
+extension BaseTrackerViewController {
+    private func selectedDaysString() -> String {
+        guard case let .dayOfTheWeek(days) = selectedDays else {
+            return "Не выбрано"
+        }
+
+        let daysOrder = [
+            "Понедельник", "Вторник", "Среда",
+            "Четверг", "Пятница", "Суббота",
+            "Воскресенье"
+        ]
+        
+        let fullWeek = Set(daysOrder)
+        let selectedSet = Set(days)
+
+        if selectedSet == fullWeek {
+            return "Каждый день"
+        }
+
+        let sortedDays = days.sorted {
+            guard let firstIndex = daysOrder.firstIndex(of: $0),
+                  let secondIndex = daysOrder.firstIndex(of: $1) else {
+                return false
+            }
+            return firstIndex < secondIndex
+        }
+        
+        let dayShortcuts = sortedDays.compactMap { day in
+            switch day {
+            case "Понедельник": return "Пн"
+            case "Вторник": return "Вт"
+            case "Среда": return "Ср"
+            case "Четверг": return "Чт"
+            case "Пятница": return "Пт"
+            case "Суббота": return "Сб"
+            case "Воскресенье": return "Вс"
+            default: return nil
+            }
+        }
+        
+        return dayShortcuts.joined(separator: ", ")
+    }
 }
