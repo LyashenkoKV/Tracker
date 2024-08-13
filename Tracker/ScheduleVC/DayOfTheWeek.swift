@@ -2,7 +2,7 @@
 //  DayOfTheWeek.swift
 //  Tracker
 //
-//  Created by Konstantin Lyashenko on 12.08.2024.
+//  Created by Konstantin Lyashenko on 13.08.2024.
 //
 
 import Foundation

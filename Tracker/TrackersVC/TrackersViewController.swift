@@ -33,7 +33,6 @@ final class TrackersViewController: UIViewController {
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
-        //picker.maximumDate = Date()
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
         picker.tintColor = .ypBlack
@@ -177,8 +176,8 @@ extension TrackersViewController {
 
     // Обработка изменения даты в пикере
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = sender.date
-        collectionView.reloadData()
+        let selectedDate = sender.date
+        presenter?.filterTrackers(for: selectedDate)
     }
     
     @objc private func handleTrackerCreated(_ notification: Notification) {

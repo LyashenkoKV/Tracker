@@ -35,10 +35,11 @@
 		243024F52C5289B500B0F1D3 /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024F42C5289B500B0F1D3 /* StatisticViewController.swift */; };
 		243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024F62C5292AD00B0F1D3 /* Logger.swift */; };
 		243024FB2C53C4A500B0F1D3 /* TrackersCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024FA2C53C4A500B0F1D3 /* TrackersCardCell.swift */; };
-		2476B0A52C6A70AE00ADAD1B /* DayOfTheWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A42C6A70AE00ADAD1B /* DayOfTheWeek.swift */; };
 		2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */; };
 		2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */; };
 		2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */; };
+		2476B0AD2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */; };
+		2476B0AF2C6BD4E200ADAD1B /* DayOfTheWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AE2C6BD4E200ADAD1B /* DayOfTheWeek.swift */; };
 		247E4FFF2C577DC800630037 /* TrackersViewController + Extension DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E4FFE2C577DC800630037 /* TrackersViewController + Extension DataSource.swift */; };
 		247E50012C577E2700630037 /* TrackersViewController + Extension Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50002C577E2600630037 /* TrackersViewController + Extension Delegate.swift */; };
 		247E504E2C58DC4800630037 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E504D2C58DC4800630037 /* Tracker.swift */; };
@@ -79,10 +80,11 @@
 		243024F42C5289B500B0F1D3 /* StatisticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewController.swift; sourceTree = "<group>"; };
 		243024F62C5292AD00B0F1D3 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		243024FA2C53C4A500B0F1D3 /* TrackersCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCardCell.swift; sourceTree = "<group>"; };
-		2476B0A42C6A70AE00ADAD1B /* DayOfTheWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfTheWeek.swift; sourceTree = "<group>"; };
 		2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
 		2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewControllerType.swift; sourceTree = "<group>"; };
 		2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification + Extension.swift"; sourceTree = "<group>"; };
+		2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults + Extensions.swift"; sourceTree = "<group>"; };
+		2476B0AE2C6BD4E200ADAD1B /* DayOfTheWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfTheWeek.swift; sourceTree = "<group>"; };
 		247E4FFE2C577DC800630037 /* TrackersViewController + Extension DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackersViewController + Extension DataSource.swift"; sourceTree = "<group>"; };
 		247E50002C577E2600630037 /* TrackersViewController + Extension Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackersViewController + Extension Delegate.swift"; sourceTree = "<group>"; };
 		247E504D2C58DC4800630037 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				2411D69C2C63AB770031C584 /* UIButton + Extensions.swift */,
 				2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */,
 				2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */,
+				2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */,
 			);
 			path = "Global Extensions";
 			sourceTree = "<group>";
@@ -179,7 +182,7 @@
 			children = (
 				2411D6A92C69432F0031C584 /* ScheduleViewController.swift */,
 				2411D6AD2C6945D40031C584 /* ScheduleCell.swift */,
-				2476B0A42C6A70AE00ADAD1B /* DayOfTheWeek.swift */,
+				2476B0AE2C6BD4E200ADAD1B /* DayOfTheWeek.swift */,
 			);
 			path = ScheduleVC;
 			sourceTree = "<group>";
@@ -356,8 +359,8 @@
 				2411D6AE2C6945D40031C584 /* ScheduleCell.swift in Sources */,
 				247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */,
 				243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */,
-				2476B0A52C6A70AE00ADAD1B /* DayOfTheWeek.swift in Sources */,
 				2411D69D2C63AB770031C584 /* UIButton + Extensions.swift in Sources */,
+				2476B0AF2C6BD4E200ADAD1B /* DayOfTheWeek.swift in Sources */,
 				247E4FFF2C577DC800630037 /* TrackersViewController + Extension DataSource.swift in Sources */,
 				2411D6742C621C6E0031C584 /* TypeTrackersViewController.swift in Sources */,
 				2411D66E2C5CD39A0031C584 /* TrackersViewController + Extension DelegateFlowLayout.swift in Sources */,
@@ -368,6 +371,7 @@
 				2411D69B2C63AAD90031C584 /* CategoryViewController.swift in Sources */,
 				247E50502C58DC6400630037 /* TrackerCategory.swift in Sources */,
 				2411D6772C622E200031C584 /* CreatingTrackerViewController.swift in Sources */,
+				2476B0AD2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift in Sources */,
 				2411D6962C63766B0031C584 /* Placeholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

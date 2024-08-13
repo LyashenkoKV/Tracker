@@ -196,7 +196,7 @@ class BaseTrackerViewController: UIViewController {
 
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {
-    func didSelect(_ days: [String]) {
+    func didSelect(_ days: [DayOfTheWeek]) {
         selectedDays = .dayOfTheWeek(days)
         tableView.reloadRows(
             at: [IndexPath(
@@ -750,10 +750,10 @@ extension BaseTrackerViewController {
             return "Не выбрано"
         }
 
-        let daysOrder = [
-            "Понедельник", "Вторник", "Среда",
-            "Четверг", "Пятница", "Суббота",
-            "Воскресенье"
+        let daysOrder: [DayOfTheWeek] = [
+            .monday, .tuesday, .wednesday,
+            .thursday, .friday, .saturday,
+            .sunday
         ]
         
         let fullWeek = Set(daysOrder)
@@ -764,23 +764,18 @@ extension BaseTrackerViewController {
         }
 
         let sortedDays = days.sorted {
-            guard let firstIndex = daysOrder.firstIndex(of: $0),
-                  let secondIndex = daysOrder.firstIndex(of: $1) else {
-                return false
-            }
-            return firstIndex < secondIndex
+            daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
         }
         
-        let dayShortcuts = sortedDays.compactMap { day in
+        let dayShortcuts = sortedDays.map { day in
             switch day {
-            case "Понедельник": return "Пн"
-            case "Вторник": return "Вт"
-            case "Среда": return "Ср"
-            case "Четверг": return "Чт"
-            case "Пятница": return "Пт"
-            case "Суббота": return "Сб"
-            case "Воскресенье": return "Вс"
-            default: return nil
+            case .monday: return "Пн"
+            case .tuesday: return "Вт"
+            case .wednesday: return "Ср"
+            case .thursday: return "Чт"
+            case .friday: return "Пт"
+            case .saturday: return "Сб"
+            case .sunday: return "Вс"
             }
         }
         

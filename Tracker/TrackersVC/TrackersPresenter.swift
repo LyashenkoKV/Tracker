@@ -17,6 +17,7 @@ protocol TrackersPresenterProtocol {
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
     func isDateValidForCompletion(date: Date) -> Bool
+    func filterTrackers(for date: Date)
 }
 // MARK: - Object
 final class TrackersPresenter {
@@ -39,31 +40,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     func viewDidLoad() {
         // Нужен ли мне тут viewDidLoad
     }
-    
-//    func addTracker(_ tracker: Tracker, categotyTitle: String) {
-//        var newCategories: [TrackerCategory] = []
-//        var categoryExists = false
-//        
-//        for category in view?.categories ?? [] {
-//            if case .category(let title, var trackers) = category, title == categotyTitle {
-//                trackers.append(tracker)
-//                newCategories.append(.category(title: title, trackers: trackers))
-//                categoryExists = true
-//            } else {
-//                newCategories.append(category)
-//            }
-//        }
-//        if !categoryExists {
-//            newCategories.append(.category(title: categotyTitle, trackers: [tracker]))
-//        }
-//        view?.categories = newCategories
-//        
-//        DispatchQueue.main.async { [ weak self ] in
-//            self?.view?.reloadData()
-//            self?.view?.updatePlaceholderView()
-//        }
-//    }
-    
+
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
         var newCategories: [TrackerCategory] = []
         var categoryExists = false
@@ -141,5 +118,33 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func isDateValidForCompletion(date: Date) -> Bool {
         return date <= Date()
+    }
+    
+    func filterTrackers(for date: Date) {
+        let savedTrackers = UserDefaults.standard.savedTrackers
+
+        let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: date)
+
+        let selectedDay = DayOfTheWeek.allCases[weekdayIndex - 2]
+        
+        print("selectedDay - \(selectedDay.rawValue)")
+        
+        let filteredTrackers = savedTrackers.filter { tracker in
+            if case .tracker(_, _, _, _, let schedule) = tracker {
+                return schedule.containsDay(selectedDay)
+            }
+            return false
+        }
+        
+        print("filteredTrackers - \(filteredTrackers)")
+        
+        view?.categories = categorizeTrackers(filteredTrackers)
+        view?.reloadData()
+    }
+    
+    private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
+        let categories: [TrackerCategory] = []
+        return categories
     }
 }

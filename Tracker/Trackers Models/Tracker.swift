@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Триста раз пожалел, что не слелал на структурах(
 enum Tracker: Codable {
     case tracker(
         id: UUID,
@@ -16,18 +17,15 @@ enum Tracker: Codable {
         schedule: Schedule
     )
 
-    // Ключи для кодирования
     private enum CodingKeys: String, CodingKey {
         case id, name, color, emoji, schedule
         case type
     }
 
-    // Тип трекера
     private enum TrackerType: String, Codable {
         case tracker
     }
 
-    // Кодирование
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
@@ -42,7 +40,6 @@ enum Tracker: Codable {
         }
     }
 
-    // Декодирование
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(TrackerType.self, forKey: .type)

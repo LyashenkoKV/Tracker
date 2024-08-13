@@ -8,14 +8,14 @@
 import UIKit
 
 protocol ScheduleSelectionDelegate: AnyObject {
-    func didSelect(_ days: [String])
+    func didSelect(_ days: [DayOfTheWeek])
 }
 
-final class ScheduleViewController: BaseTrackerViewController {
+class ScheduleViewController: BaseTrackerViewController {
     
     weak var delegate: ScheduleSelectionDelegate?
     
-    var selectDays: [String] = []
+    var selectDays: [DayOfTheWeek] = []
     
     private lazy var addDoneButton = UIButton(
         title: "Готово",
@@ -64,12 +64,13 @@ final class ScheduleViewController: BaseTrackerViewController {
             return UITableViewCell()
         }
         
-        let oneDay = DayOfTheWeek.allCases[indexPath.row].rawValue
+        let day = DayOfTheWeek.allCases[indexPath.row]
         
-        cell.configure(with: DayOfTheWeek.allCases[indexPath.row].rawValue)
+        cell.configure(with: day.rawValue)
+        
         let switchView = cell.toggleSwitch
+        switchView.isOn = selectDays.contains(day)
         
-        switchView.isOn = selectDays.contains(oneDay)
         switchView.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         
         configureBaseCell(cell, at: indexPath, totalRows: DayOfTheWeek.allCases.count)
@@ -77,6 +78,7 @@ final class ScheduleViewController: BaseTrackerViewController {
         
         return cell
     }
+
     
     @objc func switchChanged(sender: UISwitch) {
         guard let cell = sender.superview(of: ScheduleCell.self),
@@ -84,14 +86,14 @@ final class ScheduleViewController: BaseTrackerViewController {
             return
         }
 
-        let oneDay = DayOfTheWeek.allCases[indexPath.row].rawValue
+        let selectedDay = DayOfTheWeek.allCases[indexPath.row]
 
         if sender.isOn {
-            if !selectDays.contains(oneDay) {
-                selectDays.append(oneDay)
+            if !selectDays.contains(selectedDay) {
+                selectDays.append(selectedDay)
             }
         } else {
-            selectDays.removeAll { $0 == oneDay }
+            selectDays.removeAll { $0 == selectedDay }
         }
     }
     

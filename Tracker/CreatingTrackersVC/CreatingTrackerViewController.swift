@@ -12,7 +12,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     private var trackerName: String?
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
-    private var selectedSchedule: Schedule?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,8 +52,10 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: selectedSchedule ?? .dayOfTheWeek([])
+            schedule: selectedDays ?? .dayOfTheWeek([])
         )
+        
+        print("selectedSchedule - \(selectedDays)")
 
         let categoryTitle: String
         if let selectedCategory = selectedCategory,
