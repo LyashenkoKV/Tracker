@@ -70,7 +70,6 @@ final class TrackersViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
             withReuseIdentifier: SectionHeaderView.reuseIdentifier
         )
-        
         collectionView.register(
             TrackersCardCell.self,
             forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
@@ -188,10 +187,12 @@ extension TrackersViewController {
               let categoryTitle = userInfo["categoryTitle"] as? String else {
             return
         }
-        
         presenter?.addTracker(tracker, categotyTitle: categoryTitle)
-        collectionView.reloadData()
-        updatePlaceholderView()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+            self?.updatePlaceholderView()
+        }
     }
 }
 

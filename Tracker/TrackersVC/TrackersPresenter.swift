@@ -40,6 +40,30 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         // Нужен ли мне тут viewDidLoad
     }
     
+//    func addTracker(_ tracker: Tracker, categotyTitle: String) {
+//        var newCategories: [TrackerCategory] = []
+//        var categoryExists = false
+//        
+//        for category in view?.categories ?? [] {
+//            if case .category(let title, var trackers) = category, title == categotyTitle {
+//                trackers.append(tracker)
+//                newCategories.append(.category(title: title, trackers: trackers))
+//                categoryExists = true
+//            } else {
+//                newCategories.append(category)
+//            }
+//        }
+//        if !categoryExists {
+//            newCategories.append(.category(title: categotyTitle, trackers: [tracker]))
+//        }
+//        view?.categories = newCategories
+//        
+//        DispatchQueue.main.async { [ weak self ] in
+//            self?.view?.reloadData()
+//            self?.view?.updatePlaceholderView()
+//        }
+//    }
+    
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
         var newCategories: [TrackerCategory] = []
         var categoryExists = false
@@ -53,12 +77,14 @@ extension TrackersPresenter: TrackersPresenterProtocol {
                 newCategories.append(category)
             }
         }
+        
         if !categoryExists {
             newCategories.append(.category(title: categotyTitle, trackers: [tracker]))
         }
+        
         view?.categories = newCategories
         
-        DispatchQueue.main.async { [ weak self ] in
+        DispatchQueue.main.async { [weak self] in
             self?.view?.reloadData()
             self?.view?.updatePlaceholderView()
         }
