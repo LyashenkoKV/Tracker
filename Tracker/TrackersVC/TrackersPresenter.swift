@@ -59,11 +59,8 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         view?.categories = newCategories
         
         DispatchQueue.main.async { [ weak self ] in
-            guard let self else { return }
-            if let vc = self.view as? TrackersViewController {
-                vc.reloadData()
-                vc.updatePlaceholderView()
-            }
+            self?.view?.reloadData()
+            self?.view?.updatePlaceholderView()
         }
     }
     

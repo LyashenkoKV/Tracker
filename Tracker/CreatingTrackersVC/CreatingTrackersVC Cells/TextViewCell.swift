@@ -11,7 +11,6 @@ protocol TextViewCellDelegate: AnyObject, UITextViewDelegate {
     func textViewCellDidBeginEditing(_ cell: TextViewCell)
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?)
     func textViewCellDidChange(_ cell: TextViewCell)
-    
     func textViewCellDidReachLimit(_ cell: TextViewCell)
     func textViewCellDidFallBelowLimit(_ cell: TextViewCell)
 }

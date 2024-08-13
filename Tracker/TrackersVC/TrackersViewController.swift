@@ -11,6 +11,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
     var currentDate: Date { get set }
+    func updatePlaceholderView()
     func reloadData()
 }
 // MARK: - Object
@@ -122,13 +123,9 @@ final class TrackersViewController: UIViewController {
         )
     }
 
-    
     private func setupConstraints() {
         [collectionView, placeholder.view].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-
-        [collectionView, placeholder.view].forEach {
             view.addSubview($0)
         }
         

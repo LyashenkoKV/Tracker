@@ -85,11 +85,19 @@ extension EmojiesAndColorsTableViewCell: UICollectionViewDelegate {
     func collectionView(
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath) {
-            selectedIndexPath = indexPath
-            hasSelectedItem = true
+            var selectedElement = ""
+            
+            if selectedIndexPath == indexPath {
+                selectedIndexPath = nil
+                hasSelectedItem = false
+            } else {
+                selectedIndexPath = indexPath
+                hasSelectedItem = true
+                selectedElement = elements[indexPath.item]
+            }
+            
             collectionView.reloadData()
             
-            let selectedElement = elements[indexPath.item]
             if isEmoji {
                 NotificationCenter.default.post(
                     name: .emojiSelected,
@@ -172,5 +180,4 @@ extension EmojiesAndColorsTableViewCell: UICollectionViewDelegateFlowLayout {
         return CGSize(width: cellWidth,
                       height: cellWidth)
     }
-    
 }

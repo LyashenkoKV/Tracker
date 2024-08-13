@@ -8,7 +8,7 @@
 import UIKit
 // MARK: - Protocol
 protocol CategorySelectionDelegate: AnyObject {
-    func didSelectCategory(_ category: String)
+    func didSelectCategory(_ category: TrackerCategory)
     func startEditingCategory(at indexPath: IndexPath)
     func deleteCategory(at indexPath: IndexPath)
 }
@@ -58,6 +58,7 @@ final class CategoryViewController: BaseTrackerViewController {
         updateUI()
     }
     
+    
     // MARK: - UI Setup
     private func setupUI() {
         
@@ -81,9 +82,7 @@ final class CategoryViewController: BaseTrackerViewController {
 
     // MARK: - Actions
     @objc private func addCategoryButtonAction() {
-        if isAddingCategory {
-            isAddingCategory.toggle()
-        } else {
+        if !isAddingCategory {
             isAddingCategory.toggle()
         }
         updateUI()
@@ -119,7 +118,7 @@ extension CategoryViewController {
             
             let selectedCategory = categories[indexPath.row]
             delegate?.didSelectCategory(selectedCategory)
-            dismiss(animated: true)
+            dismissOrCancel()
         }
     }
 }

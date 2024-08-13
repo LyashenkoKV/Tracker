@@ -13,11 +13,11 @@ class BaseTrackerViewController: UIViewController {
     private var isFooterVisible = false
     var emojies: [String] = []
     var colors: [String] = []
-    var categories: [String] = []
+    var categories: [TrackerCategory] = []
     
-    private var selectedCategories: [String] = []
+    private var selectedCategories: [TrackerCategory] = []
     private var selectedDays = ""
-    private var selectedCategory = ""
+    var selectedCategory: TrackerCategory?
     
     var editingCategoryIndex: IndexPath?
     
@@ -132,11 +132,16 @@ class BaseTrackerViewController: UIViewController {
     }
     
     func saveCategoriesToUserDefaults() {
-        UserDefaults.standard.set(categories, forKey: "savedCategories")
+        if isAddingCategory {
+            if let encodedCategories = try? JSONEncoder().encode(categories) {
+                UserDefaults.standard.set(encodedCategories, forKey: "savedCategories")
+            }
+        }
     }
     
     func loadCategoriesFromUserDefaults() {
-        if let savedCategories = UserDefaults.standard.array(forKey: "savedCategories") as? [String] {
+        if let savedData = UserDefaults.standard.data(forKey: "savedCategories"),
+           let savedCategories = try? JSONDecoder().decode([TrackerCategory].self, from: savedData) {
             categories = savedCategories
         } else {
             categories = []
@@ -160,6 +165,33 @@ class BaseTrackerViewController: UIViewController {
         tableView.deleteRows(at: [indexPath], with: .automatic)
         saveCategoriesToUserDefaults()
     }
+    
+    // ‼️ Не нравится мне как работает редактирование, сепаратор скачет, надо поправить
+    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        guard isAddingCategory else { return }
+        
+        guard let newText = text, !newText.isEmpty else {
+            print("Текст пуст или nil, редактирование не выполнено")
+            return
+        }
+        
+        let newCategory = TrackerCategory.category(title: newText, trackers: [])
+        
+        if let editingIndex = editingCategoryIndex {
+            categories[editingIndex.row] = newCategory
+            editingCategoryIndex = nil
+        } else {
+            categories.append(newCategory)
+        }
+        saveCategoriesToUserDefaults()
+        isAddingCategory = false
+        tableView.reloadData()
+    }
+    
+    func dismissOrCancel() {
+        isAddingCategory = false
+        dismiss(animated: true)
+    }
 }
 
 // MARK: - ScheduleSelectionDelegate
@@ -177,7 +209,7 @@ extension BaseTrackerViewController: ScheduleSelectionDelegate {
 
 // MARK: - CategorySelectionDelegate
 extension BaseTrackerViewController: CategorySelectionDelegate {
-    func didSelectCategory(_ category: String) {
+    func didSelectCategory(_ category: TrackerCategory) {
         selectedCategory = category
         tableView.reloadRows(
             at: [IndexPath(
@@ -208,25 +240,6 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         default:
             break
         }
-    }
-    
-    // ‼️ Не нравится мне как работает редактирование, сепаратор скачет, надо поправить
-    func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
-        guard let newText = text, !newText.isEmpty else {
-            print("Текст пуст или nil, редактирование не выполнено")
-            return
-        }
-        
-        if let editingIndex = editingCategoryIndex {
-            categories[editingIndex.row] = newText
-            editingCategoryIndex = nil
-        } else {
-            categories.append(newText)
-        }
-        saveCategoriesToUserDefaults()
-        isAddingCategory = false
-
-        tableView.reloadData()
     }
 }
 
@@ -317,7 +330,12 @@ extension BaseTrackerViewController: UITableViewDataSource {
         ) as? CategoryCell else {
             return UITableViewCell()
         }
-        cell.configure(with: categories[indexPath.row])
+        
+        let category = categories[indexPath.row]
+        if case let .category(title, _) = category {
+            cell.configure(with: title)
+        }
+        
         configureBaseCell(cell, at: indexPath, totalRows: categories.count)
         configureSeparator(cell, isLastRow: indexPath.row == categories.count - 1)
         return cell
@@ -333,7 +351,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.delegate = self
         
         if let editingIndex = editingCategoryIndex, editingIndex.row == indexPath.row {
-            cell.getText().text = categories[editingIndex.row]
+            if case let .category(title, _) = categories[editingIndex.row] {
+                cell.getText().text = title
+            }
             self.title = "Редактирование категории"
         } else {
             cell.getText().text = ""
@@ -372,11 +392,25 @@ extension BaseTrackerViewController: UITableViewDataSource {
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                content.secondaryText = indexPath.row == 0 && !isAddingCategory ? selectedCategory : selectedDays
+
+                if indexPath.row == 0 && !isAddingCategory {
+                    if let category = selectedCategory, case let .category(title, _) = category {
+                        content.secondaryText = title
+                    }
+                } else {
+                    content.secondaryText = selectedDays
+                }
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                cell.detailTextLabel?.text = indexPath.row == 0 && !isAddingCategory ? selectedCategory : selectedDays
+
+                if indexPath.row == 0 && !isAddingCategory {
+                    if let category = selectedCategory, case let .category(title, _) = category {
+                        cell.detailTextLabel?.text = title
+                    }
+                } else {
+                    cell.detailTextLabel?.text = selectedDays
+                }
             }
         }
     

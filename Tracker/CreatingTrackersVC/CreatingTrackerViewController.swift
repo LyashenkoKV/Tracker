@@ -22,59 +22,110 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleEmojiSelected(_:)),
+            selector: #selector(handleEmojiSelected),
             name: .emojiSelected,
             object: nil)
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleColorSelected(_:)),
+            selector: #selector(handleColorSelected),
             name: .colorSelected,
             object: nil)
     }
     
-    private func handleCreateButtonTapped() {
+    func handleCreateButtonTapped() {
         
         guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
-              let trackerName = textViewCell.getText().text, !trackerName.isEmpty else {
-            print("Название трекера не может быть пустым")
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+              let selectedColor = selectedColor,
+              let selectedEmoji = selectedEmoji else {
+            print("Условия не выполнены: \(trackerName), \(selectedColor), \(selectedEmoji)")
             return
         }
         
-//        guard !selectedCategory.isEmpty else {
-//            print("Не выбрана категория")
-//            return
-//        }
+        print("Треккер - \(trackerName)")
         
-        let schedule = Schedule.dayOfTheWeek(["Понедельник", "Среда"])
-        
-        guard let selectedColor = selectedColor else {
-            print("Не выбран цвет")
-            return
-        }
-        
-        guard let selectedEmoji = selectedEmoji else {
-            print("Не выбран emoji")
-            return
-        }
-
         let tracker = Tracker.tracker(
             id: UUID(),
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: schedule
+            schedule: selectedSchedule ?? .dayOfTheWeek(["Понедельник", "Среда"])
         )
         
-        let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": "Спорт"]
+        if let selectedCategory = selectedCategory,
+           let categoryIndex = categories.firstIndex(where: {
+            if case let .category(title, _) = $0 {
+                return title == {
+                    if case let .category(categoryTitle, _) = selectedCategory {
+                        return categoryTitle
+                    } else {
+                        return ""
+                    }
+                }()
+            }
+            return false
+        }) {
+            if case let .category(title, trackers) = categories[categoryIndex] {
+                var updatedTrackers = trackers
+                updatedTrackers.append(tracker)
+                categories[categoryIndex] = .category(title: title, trackers: updatedTrackers)
+            }
+        } else {
+            if case let .category(title, _) = selectedCategory {
+                let newCategory = TrackerCategory.category(title: title, trackers: [tracker])
+                categories.append(newCategory)
+            }
+        }
+ 
+        NotificationCenter.default.post(name: .trackerCreated, object: nil)
         
-        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+        print("Категория - \(categories)")
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
+//    private func handleCreateButtonTapped() {
+//            
+//            guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+//                  let trackerName = textViewCell.getText().text, !trackerName.isEmpty else {
+//                print("Название трекера не может быть пустым")
+//                return
+//            }
+//            
+//    //        guard !selectedCategory.isEmpty else {
+//    //            print("Не выбрана категория")
+//    //            return
+//    //        }
+//            
+//            let schedule = Schedule.dayOfTheWeek(["Понедельник", "Среда"])
+//            
+//            guard let selectedColor = selectedColor else {
+//                print("Не выбран цвет")
+//                return
+//            }
+//            
+//            guard let selectedEmoji = selectedEmoji, !selectedEmoji.isEmpty else {
+//                print("Не выбран emoji")
+//                return
+//            }
+//
+//            let tracker = Tracker.tracker(
+//                id: UUID(),
+//                name: trackerName,
+//                color: selectedColor,
+//                emoji: selectedEmoji,
+//                schedule: schedule
+//            )
+//            
+//            let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": "Спорт"]
+//            
+//            NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+//            
+//            presentingViewController?.presentingViewController?.dismiss(animated: true)
+//        }
 
     private func handleCancelButtonTapped() {
         print("handleCancelButtonTapped")
