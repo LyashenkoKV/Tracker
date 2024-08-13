@@ -63,6 +63,17 @@ final class TrackersViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.accessibilityIdentifier = "TrackersCollectionView"
+        
+        collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionHeaderView.reuseIdentifier
+        )
+        
+        collectionView.register(
+            TrackersCardCell.self,
+            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
+        )
         return collectionView
     }()
     
@@ -82,6 +93,10 @@ final class TrackersViewController: UIViewController {
         return barButtonItem
     }()
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .trackerCreated, object: nil)
+    }
+    
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,23 +105,23 @@ final class TrackersViewController: UIViewController {
         setupConstraints()
         updatePlaceholderView()
         presenter?.viewDidLoad()
-        
-        self.collectionView.register( // Перенести в свойство
-            SectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: SectionHeaderView.reuseIdentifier
-        )
-        
-        self.collectionView.register(
-            TrackersCardCell.self,
-            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
-        )
+        addNotification()
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
         self.presenter = presenter
         self.presenter?.view = self
     }
+    
+    private func addNotification() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleTrackerCreated),
+            name: .trackerCreated,
+            object: nil
+        )
+    }
+
     
     private func setupConstraints() {
         [collectionView, placeholder.view].forEach {
@@ -155,9 +170,8 @@ extension TrackersViewController {
     
     // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
-        let creatingTrackerVC = TypeTrackersViewController(type: .typeTrackers)
-        creatingTrackerVC.delegate = self
-        let navController = UINavigationController(rootViewController: creatingTrackerVC)
+        let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
+        let navController = UINavigationController(rootViewController: typeTrackerVC)
         navController.modalPresentationStyle = .formSheet
         self.present(navController, animated: true)
         
@@ -169,6 +183,18 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         currentDate = sender.date
         collectionView.reloadData()
+    }
+    
+    @objc private func handleTrackerCreated(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let tracker = userInfo["tracker"] as? Tracker,
+              let categoryTitle = userInfo["categoryTitle"] as? String else {
+            return
+        }
+        
+        presenter?.addTracker(tracker, categotyTitle: categoryTitle)
+        collectionView.reloadData()
+        updatePlaceholderView()
     }
 }
 
@@ -194,12 +220,5 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
                 cancelButton.setTitle("Отменить", for: .normal)
             }
         }
-    }
-}
-
-// MARK: - CreatingTrackerDelegate
-extension TrackersViewController: CreatingTrackerDelegate {
-    func didCreateTracker(_ tracker: Tracker, in category: String) {
-        presenter?.addTracker(tracker, categotyTitle: category)
     }
 }

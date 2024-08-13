@@ -88,17 +88,15 @@ final class CreateButtonsViewCell: UITableViewCell {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 15
-        button.addTarget(self, action: action, for: .allEditingEvents)
+        button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
     
     @objc private func createButtonAction() {
         onCreateButtonTapped?()
-        print("createButtonAction")
     }
     
     @objc private func cancelButtonAction() {
         onCancelButtonTapped?()
-        print("cancelButtonAction")
     }
 }

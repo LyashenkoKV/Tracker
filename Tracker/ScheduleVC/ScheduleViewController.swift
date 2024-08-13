@@ -136,7 +136,6 @@ class ScheduleViewController: BaseTrackerViewController {
     
     @objc private func addDoneButtonAction() {
         let selectedDays = selectedDaysString()
-        print(selectedDays)
         delegate?.didSelect(selectedDays)
         dismiss(animated: true)
     }

@@ -8,8 +8,12 @@
 import UIKit
 
 final class EmojiesAndColorsTableViewCell: UITableViewCell {
+    
     static let reuseIdentifier = "CollectionTableViewCell"
     
+    private var selectedIndexPath: IndexPath?
+    private var hasSelectedItem = false
+
     private let params = GeometricParams(
         cellCount: 6,
         leftInset: 10,
@@ -78,6 +82,28 @@ final class EmojiesAndColorsTableViewCell: UITableViewCell {
 // MARK: - UICollectionViewDelegate
 extension EmojiesAndColorsTableViewCell: UICollectionViewDelegate {
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath) {
+            selectedIndexPath = indexPath
+            hasSelectedItem = true
+            collectionView.reloadData()
+            
+            let selectedElement = elements[indexPath.item]
+            if isEmoji {
+                NotificationCenter.default.post(
+                    name: .emojiSelected,
+                    object: nil,
+                    userInfo: ["selectedEmoji": selectedElement]
+                )
+            } else {
+                NotificationCenter.default.post(
+                    name: .colorSelected,
+                    object: nil,
+                    userInfo: ["selectedColor": selectedElement]
+                )
+            }
+        }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -100,7 +126,15 @@ extension EmojiesAndColorsTableViewCell: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let element = elements[indexPath.item]
-        cell.configure(with: element, isEmoji: isEmoji)
+        let isSelected = indexPath == selectedIndexPath
+        
+        cell.configure(
+            with: element,
+            isEmoji: isEmoji,
+            isSelected: isSelected,
+            hasSelectedItem: hasSelectedItem
+        )
+        
         return cell
     }
 }

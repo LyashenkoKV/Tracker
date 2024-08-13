@@ -9,7 +9,7 @@ import UIKit
 
 final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "CollectionViewCell"
-    
+
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,17 +37,25 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with element: String, isEmoji: Bool) {
+    func configure(
+        with element: String,
+        isEmoji: Bool,
+        isSelected: Bool,
+        hasSelectedItem: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if isEmoji {
-                self.emojiLabel.text = element
+                emojiLabel.text = element
                 contentView.backgroundColor = .clear
             } else {
-                self.emojiLabel.text = ""
+                emojiLabel.text = ""
                 contentView.backgroundColor = UIColor(hex: element)
+            }
+            if hasSelectedItem {
+                contentView.alpha = isSelected ? 1.0 : 0.2
+            } else {
+                contentView.alpha = 1.0
             }
         }
     }
 }
-

@@ -13,8 +13,8 @@ class BaseTrackerViewController: UIViewController {
     private var isFooterVisible = false
     var emojies: [String] = []
     var colors: [String] = []
-
     var categories: [String] = []
+    
     private var selectedCategories: [String] = []
     private var selectedDays = ""
     private var selectedCategory = ""
@@ -229,7 +229,6 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         tableView.reloadData()
     }
 }
-
 
 // MARK: - UITableViewDataSource
 extension BaseTrackerViewController: UITableViewDataSource {
@@ -461,10 +460,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     private func handleTypeTrackersSelection(at indexPath: IndexPath) {
         if indexPath.section == 0 {
             let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker)
-//            if let delegate = self as? CreatingTrackerDelegate {
-//                creatingTrackerVC.delegate = delegate
-//            }
-            
+  
             let navController = UINavigationController(rootViewController: creatingTrackerVC)
             navController.modalPresentationStyle = .formSheet
             self.present(navController, animated: true)

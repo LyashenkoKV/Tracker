@@ -7,14 +7,8 @@
 
 import UIKit
 
-protocol CreatingTrackerDelegate: AnyObject {
-    func didCreateTracker(_ tracker: Tracker, in category: String)
-}
-
 final class CreatingTrackerViewController: BaseTrackerViewController {
-
-    weak var delegate: CreatingTrackerDelegate?
-
+    
     private var trackerName: String?
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
@@ -22,9 +16,89 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNotificationObservers()
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleEmojiSelected(_:)),
+            name: .emojiSelected,
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleColorSelected(_:)),
+            name: .colorSelected,
+            object: nil)
+    }
+    
+    private func handleCreateButtonTapped() {
+        
+        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty else {
+            print("Название трекера не может быть пустым")
+            return
+        }
+        
+//        guard !selectedCategory.isEmpty else {
+//            print("Не выбрана категория")
+//            return
+//        }
+        
+        let schedule = Schedule.dayOfTheWeek(["Понедельник", "Среда"])
+        
+        guard let selectedColor = selectedColor else {
+            print("Не выбран цвет")
+            return
+        }
+        
+        guard let selectedEmoji = selectedEmoji else {
+            print("Не выбран emoji")
+            return
+        }
+
+        let tracker = Tracker.tracker(
+            id: UUID(),
+            name: trackerName,
+            color: selectedColor,
+            emoji: selectedEmoji,
+            schedule: schedule
+        )
+        
+        let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": "Спорт"]
+        
+        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+        
+        presentingViewController?.presentingViewController?.dismiss(animated: true)
+    }
+
+    private func handleCancelButtonTapped() {
+        print("handleCancelButtonTapped")
+        presentingViewController?.presentingViewController?.dismiss(animated: true)
+    }
+    
+    @objc private func handleEmojiSelected(_ notification: Notification) {
+        if let emoji = notification.userInfo?["selectedEmoji"] as? String {
+            selectedEmoji = emoji
+        }
+    }
+    
+    @objc private func handleColorSelected(_ notification: Notification) {
+        if let hexColor = notification.userInfo?["selectedColor"] as? String {
+            selectedColor = UIColor(hex: hexColor)
+        }
+    }
+}
+
+// MARK: - cellForRowAt
+extension CreatingTrackerViewController {
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch viewControllerType {
         case .creatingTracker:
             return configureCreatingTrackerCell(at: indexPath)
@@ -32,7 +106,10 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             return UITableViewCell()
         }
     }
-    
+}
+
+// MARK: - ConfigureCell
+extension CreatingTrackerViewController {
     private func configureCreatingTrackerCell(at indexPath: IndexPath) -> UITableViewCell {
         guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
             return UITableViewCell()
@@ -87,39 +164,13 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             
             cell.onCreateButtonTapped = { [weak self] in
                 self?.handleCreateButtonTapped()
-                print("handleCreateButtonTapped")
             }
             
             cell.onCancelButtonTapped = { [weak self] in
                 self?.handleCancelButtonTapped()
-                print("handleCancelButtonTapped")
             }
             cell.selectionStyle = .none
             return cell
         }
-    }
-    
-    private func handleCreateButtonTapped() {
-        guard let trackerName = trackerName,
-              let selectedColor = selectedColor,
-              let selectedEmoji = selectedEmoji,
-              let selectedSchedule = selectedSchedule else {
-            return // Возвращаемся, если необходимые данные не заполнены
-        }
-
-        let tracker = Tracker.tracker(
-            id: UUID(),
-            name: trackerName,
-            color: selectedColor,
-            emoji: selectedEmoji,
-            schedule: selectedSchedule
-        )
-
-        delegate?.didCreateTracker(tracker, in: "Здоровье") // Здесь можно передать выбранную категорию
-        dismiss(animated: true)
-    }
-
-    private func handleCancelButtonTapped() {
-        dismiss(animated: true)
     }
 }
