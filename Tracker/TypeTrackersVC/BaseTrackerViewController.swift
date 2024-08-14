@@ -84,37 +84,8 @@ class BaseTrackerViewController: UIViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        func baseTableview() {
-            NSLayoutConstraint.activate([
-                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-            ])
-        }
-        
-        switch viewControllerType {
-        case .typeTrackers:
-            let numberOfCells = 2
-            let cellHeight: CGFloat = 60
-            let spacing: CGFloat = 16
-            let tableHeight = CGFloat(numberOfCells) * cellHeight + CGFloat(numberOfCells - 1) * spacing
-            
-            NSLayoutConstraint.activate([
-                tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                tableView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                tableView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -40),
-                tableView.heightAnchor.constraint(equalToConstant: tableHeight)
-            ])
-        case .category:
-            baseTableview()
-        case .creatingTracker:
-            baseTableview()
-        case .schedule:
-            baseTableview()
-        case nil:
-            break
-        }
+        let layoutConfigurator = LayoutConfiguratorFactory.create(for: viewControllerType)
+        layoutConfigurator.setupLayout(in: view, with: tableView)
     }
     
     private func configureData() {

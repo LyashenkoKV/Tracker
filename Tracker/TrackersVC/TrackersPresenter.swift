@@ -49,16 +49,29 @@ extension TrackersPresenter: TrackersPresenterProtocol {
             if case .category(let title, var trackers) = view.categories[sectionIndex] {
                 let newIndex = trackers.count
                 trackers.append(tracker)
-                view.categories[sectionIndex] = .category(title: title, trackers: trackers)
+                view.categories[sectionIndex] = .category(
+                    title: title,
+                    trackers: trackers
+                )
                 
                 let newIndexPath = IndexPath(row: newIndex, section: sectionIndex)
-                view.reloadDataWithBatchUpdates(insertedSections: nil, insertedIndexPaths: [newIndexPath])
+                view.reloadDataWithBatchUpdates(
+                    insertedSections: nil,
+                    insertedIndexPaths: [newIndexPath]
+                )
             }
         } else {
-            view.categories.append(.category(title: categotyTitle, trackers: [tracker]))
+            view.categories.append(
+                .category(
+                    title: categotyTitle,
+                    trackers: [tracker])
+            )
             
             let newSectionIndex = view.categories.count - 1
-            view.reloadDataWithBatchUpdates(insertedSections: IndexSet(integer: newSectionIndex), insertedIndexPaths: nil)
+            view.reloadDataWithBatchUpdates(
+                insertedSections: IndexSet(integer: newSectionIndex),
+                insertedIndexPaths: nil
+            )
         }
         saveTrackers()
     }

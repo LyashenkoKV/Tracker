@@ -164,6 +164,20 @@ final class TrackersViewController: UIViewController {
         }
         updatePlaceholderView()
     }
+    
+    func deleteTracker(at indexPath: IndexPath) { // Тут надо будет подумать как лучше сделать, сейчас удаляет, но при возвращении на это число трекер на месте, наверное пересохранить UD
+        if case .category(let title, var trackers) = categories[indexPath.section] {
+            trackers.remove(at: indexPath.row)
+            categories[indexPath.section] = .category(title: title, trackers: trackers)
+            collectionView.performBatchUpdates {
+                collectionView.deleteItems(at: [indexPath])
+            }
+            updatePlaceholderView()
+        }
+    }
+    
+    func editTracker(at indexPath: IndexPath) {
+    }
 }
 
 // MARK: - NavigationController
