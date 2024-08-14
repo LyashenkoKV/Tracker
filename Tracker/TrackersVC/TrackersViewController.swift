@@ -10,7 +10,7 @@ import UIKit
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
-    var currentDate: Date { get set }
+    //var currentDate: Date { get set }
     func updatePlaceholderView()
     func reloadData()
     func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
@@ -23,7 +23,7 @@ final class TrackersViewController: UIViewController {
     
     var categories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
-    var currentDate: Date = Date()
+    //var currentDate: Date = Date()
     
     let params = GeometricParams(
         cellCount: 1,
@@ -32,7 +32,7 @@ final class TrackersViewController: UIViewController {
         cellSpacing: 10
     )
     
-    private lazy var datePicker: UIDatePicker = {
+    lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact

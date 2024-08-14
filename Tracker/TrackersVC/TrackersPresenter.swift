@@ -14,10 +14,10 @@ protocol TrackersPresenterProtocol {
     func trackerCompletedMark(_ trackerId: UUID, date: String)
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
-    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
+    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date)
     func isDateValidForCompletion(date: Date) -> Bool
     func filterTrackers(for date: Date)
-    func loadTrackers() 
+    func loadTrackers()
     func loadCompletedTrackers()
 }
 // MARK: - Object
@@ -108,7 +108,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         }
     }
     
-    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool) {
+    func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
         var trackerId: UUID?
 
         if case let .tracker(id, _, _, _, _, _, _) = tracker {
@@ -117,7 +117,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         
         guard let id = trackerId else { return }
         
-        let currentDateString = dateFormatter.string(from: view?.currentDate ?? Date())
+        let currentDateString = dateFormatter.string(from: date)
         
         if isCompleted {
             trackerCompletedUnmark(id, date: currentDateString)
