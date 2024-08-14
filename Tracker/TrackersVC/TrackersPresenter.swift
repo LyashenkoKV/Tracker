@@ -18,6 +18,7 @@ protocol TrackersPresenterProtocol {
     func isDateValidForCompletion(date: Date) -> Bool
     func filterTrackers(for date: Date)
     func loadTrackers() 
+    func loadCompletedTrackers()
 }
 // MARK: - Object
 final class TrackersPresenter {
@@ -99,18 +100,18 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool {
         guard let view = view else { return false }
-        return view.completedTrackers.contains(where: {
-            if case .record(let id, let recordDate) = $0 {
+        return view.completedTrackers.contains { record in
+            if case let .record(id, recordDate) = record {
                 return id == trackerId && recordDate == date
             }
             return false
-        })
+        }
     }
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool) {
         var trackerId: UUID?
 
-        if case let .tracker(id, _, _, _, _, _) = tracker {
+        if case let .tracker(id, _, _, _, _, _, _) = tracker {
             trackerId = id
         }
         
@@ -123,6 +124,8 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         } else {
             trackerCompletedMark(id, date: currentDateString)
         }
+        
+        saveCompletedTrackersToUserDefaults()
         view?.reloadData()
     }
     
@@ -140,7 +143,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
         let filteredTrackers = savedTrackers.filter { tracker in
-            if case .tracker(_, _, _, _, let schedule, _) = tracker {
+            if case .tracker(_, _, _, _, let schedule, _, _) = tracker {
                 return schedule.containsDay(selectedDay)
             }
             return false
@@ -151,15 +154,13 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
-        // Явно указываем типы ключа и значений в словаре
         let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { (tracker: Tracker) -> String in
-            if case .tracker(_, _, _, _, _, let categoryTitle) = tracker {
+            if case .tracker(_, _, _, _, _, let categoryTitle, _) = tracker {
                 return categoryTitle
             }
-            return "Uncategorized" // Обработка случая, если категория отсутствует
+            return "Uncategorized"
         })
 
-        // Преобразуем сгруппированные данные в массив TrackerCategory
         return groupedTrackers.map { (title: String, trackers: [Tracker]) in
             TrackerCategory.category(title: title, trackers: trackers)
         }
@@ -175,11 +176,22 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         UserDefaults.standard.saveTrackers(allTrackers)
     }
     
+    func saveCompletedTrackersToUserDefaults() {
+        guard let view = view else { return }
+        UserDefaults.standard.saveCompletedTrackers(view.completedTrackers)
+    }
+    
     func loadTrackers() {
         let loadedTrackers = UserDefaults.standard.loadTrackers()
         let categorizedTrackers = categorizeTrackers(loadedTrackers)
         view?.categories = categorizedTrackers
         view?.reloadData()
         view?.updatePlaceholderView()
+    }
+    
+    func loadCompletedTrackers() {
+        let loadedCompletedTrackers = UserDefaults.standard.loadCompletedTrackers()
+        view?.completedTrackers = loadedCompletedTrackers
+        view?.reloadData()
     }
 }

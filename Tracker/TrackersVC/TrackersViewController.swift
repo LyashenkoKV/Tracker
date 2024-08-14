@@ -106,7 +106,9 @@ final class TrackersViewController: UIViewController {
         setupConstraints()
         updatePlaceholderView()
         addNotification()
+        
         presenter?.loadTrackers()
+        presenter?.loadCompletedTrackers()
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -208,6 +210,8 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         presenter?.filterTrackers(for: selectedDate)
+        presenter?.loadCompletedTrackers()
+        reloadData()
     }
     
     @objc private func handleTrackerCreated(_ notification: Notification) {
@@ -216,7 +220,29 @@ extension TrackersViewController {
               let categoryTitle = userInfo["categoryTitle"] as? String else {
             return
         }
-        presenter?.addTracker(tracker, categotyTitle: categoryTitle)
+
+        let updatedTracker: Tracker
+
+        if case let .tracker(id, name, color, emoji, _, _, isRegularEvent) = tracker, !isRegularEvent {
+            let selectedDate = datePicker.date
+            let dayOfTheWeek = Calendar.current.component(.weekday, from: selectedDate)
+            let adjustedIndex = (dayOfTheWeek + 5) % 7
+            let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
+
+            updatedTracker = .tracker(
+                id: id,
+                name: name,
+                color: color,
+                emoji: emoji,
+                schedule: .dayOfTheWeek([selectedDay]),
+                categoryTitle: categoryTitle,
+                isRegularEvent: isRegularEvent // ‼️Надо что-то думать с нерегулярными событиями, добавляются до дням недели а не по календ. дням
+            )
+        } else {
+            updatedTracker = tracker
+        }
+
+        presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
         
         DispatchQueue.main.async { [weak self] in
             self?.presenter?.loadTrackers()

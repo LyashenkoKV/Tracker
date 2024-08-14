@@ -124,9 +124,9 @@
 		2411D6722C621C3B0031C584 /* TypeTrackersVC */ = {
 			isa = PBXGroup;
 			children = (
+				2411D6A72C674B370031C584 /* BaseTrackerViewController.swift */,
 				2476B0B02C6CB01B00ADAD1B /* LayoutConfigurator.swift */,
 				2476B0B42C6CB1AB00ADAD1B /* LayoutConfiguratorFactory.swift */,
-				2411D6A72C674B370031C584 /* BaseTrackerViewController.swift */,
 				2411D6732C621C6E0031C584 /* TypeTrackersViewController.swift */,
 				2476B0B22C6CB13000ADAD1B /* TypeTrackersLayoutConfigurator.swift */,
 				2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */,

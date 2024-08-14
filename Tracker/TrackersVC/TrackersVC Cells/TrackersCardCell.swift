@@ -135,11 +135,12 @@ final class TrackersCardCell: UICollectionViewCell {
         selectButtonTappedHandler?()
     }
     
-    func configure(with tracker: Tracker, 
+    func configure(with tracker: Tracker,
                    countComplete: Set<TrackerRecord>,
                    isCompleted: Bool,
-                   isDateValidForCompletion: Bool) {
-        if case let .tracker(_, name, color, emoji, _, _) = tracker {
+                   isDateValidForCompletion: Bool,
+                   isRegularEvent: Bool) {
+        if case let .tracker(id, name, color, emoji, _, _, _) = tracker {
             nameLabel.text = name
             self.emoji.text = emoji
             messageStack.backgroundColor = color
@@ -147,21 +148,33 @@ final class TrackersCardCell: UICollectionViewCell {
             
             let buttonImage = isCompleted ? "checkmark" : "plus"
             let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
+            
             completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
             completeButton.backgroundColor = buttonColor
             completeButton.isEnabled = isDateValidForCompletion
             
-            let countDays = countComplete.count
-            var day = ""
+            //counterLabel.isHidden = !isRegularEvent  // ‼️ пока не очень понятно как решить вопрос с отметкой выполнения в конкретный день, и надо по-идее скрывать счетчик у нерег соб
+
+            let countDays = countComplete.filter { record in
+                if case let .record(trackerId, _) = record {
+                    return trackerId == id
+                }
+                return false
+            }.count
             
-            if countDays == 1 {
-                day = "День"
-            } else if (2...4).contains(countDays) {
-                day = "Дня"
-            } else {
-                day = "Дней"
-            }
-            counterLabel.text = ("\(countDays) \(day)")
+            let day = declensionDay(for: countDays)
+            counterLabel.text = "\(countDays) \(day)"
+        }
+    }
+    
+    private func declensionDay(for countDays: Int) -> String {
+        switch countDays {
+        case 1:
+            return "День"
+        case 2...4:
+            return "Дня"
+        default:
+            return "Дней"
         }
     }
 }

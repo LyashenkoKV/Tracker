@@ -26,29 +26,44 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TrackersCardCell.reuseIdentifier,
             for: indexPath) as? TrackersCardCell else { return UICollectionViewCell() }
+        
         if case .category(_, let trackers) = categories[indexPath.section] {
             let tracker = trackers[indexPath.row]
             let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
             
             var trackerId: UUID?
-            if case let .tracker(id, _, _, _, _, _) = tracker {
+            var isRegularEvent = false
+            
+            if case let .tracker(id, _, _, _, _, _, regularEvent) = tracker {
                 trackerId = id
+                isRegularEvent = regularEvent
             }
             
             guard let id = trackerId else { return UICollectionViewCell() }
+
+            let isCompletedToday = completedTrackers.contains { record in
+                if case let .record(trackerId, date) = record {
+                    return trackerId == id && date == currentDateString
+                }
+                return false
+            }
             
-            let isCompleted = presenter?.isTrackerCompleted(id, date: currentDateString) ?? false
             let isDateValidForCompletion = presenter?.isDateValidForCompletion(date: currentDate) ?? false
             
-            cell.configure(with: tracker, 
-                           countComplete: completedTrackers,
-                           isCompleted: isCompleted,
-                           isDateValidForCompletion: isDateValidForCompletion)
+            cell.configure(
+                with: tracker,
+                countComplete: completedTrackers,
+                isCompleted: isCompletedToday,
+                isDateValidForCompletion: isDateValidForCompletion,
+                isRegularEvent: isRegularEvent
+            )
             
             cell.selectButtonTappedHandler = { [weak self] in
-                guard let self else { return }
+                guard let self = self else { return }
                 if isDateValidForCompletion {
-                    self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompleted)
+                    self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompletedToday)
+                    
+                    collectionView.reloadItems(at: [indexPath])
                 } else {
                     print("Нельзя отметить будущую дату как выполненную")
                 }

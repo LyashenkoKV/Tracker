@@ -12,6 +12,16 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     private var trackerName: String?
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
+    private var isRegularEvent: Bool
+    
+    init(type: TrackerViewControllerType, isRegularEvent: Bool) {
+        self.isRegularEvent = isRegularEvent
+        super.init(type: type)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,13 +47,11 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     func handleCreateButtonTapped() {
         guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(
-                row: 0,
-                section: TrackerSection.textView.rawValue)
+            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell,
-              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
-              let selectedColor = selectedColor,
-              let selectedEmoji = selectedEmoji else {
+        let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+        let selectedColor = selectedColor,
+        let selectedEmoji = selectedEmoji else {
             return
         }
         
@@ -60,15 +68,21 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: selectedDays ?? .dayOfTheWeek([]), 
-            categoryTitle: categoryTitle
+            schedule: selectedDays ?? .dayOfTheWeek([]),
+            categoryTitle: categoryTitle,
+            isRegularEvent: isRegularEvent
         )
 
-        let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": categoryTitle]
+        let userInfo: [String: Any] = [
+            "tracker": tracker,
+            "categoryTitle": categoryTitle
+        ]
+
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
+
 
     private func handleCancelButtonTapped() {
         presentingViewController?.presentingViewController?.dismiss(animated: true)
@@ -83,6 +97,23 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     @objc private func handleColorSelected(_ notification: Notification) {
         if let hexColor = notification.userInfo?["selectedColor"] as? String {
             selectedColor = UIColor(hex: hexColor)
+        }
+    }
+}
+
+extension CreatingTrackerViewController {
+    override func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        guard let trackerSection = TrackerSection(rawValue: section) else { return 0 }
+        switch trackerSection {
+        case .textView:
+            return 1
+        case .buttons:
+            return isRegularEvent ? 2 : 1
+        case .emoji, .color, .createButtons:
+            return 1
         }
     }
 }
@@ -119,14 +150,18 @@ extension CreatingTrackerViewController {
             cell.selectionStyle = .none
             return cell
         case .buttons:
-            if indexPath.section == TrackerSection.buttons.rawValue {
-                let cell = UITableViewCell()
-                configureButtonCell(cell, at: indexPath)
-                configureSeparator(cell, isLastRow: indexPath.row == 1)
-                cell.selectionStyle = .none
-                return cell
+            if !isRegularEvent && indexPath.row == 1 {
+                return UITableViewCell()
             }
-            return UITableViewCell()
+            let cell = UITableViewCell()
+            
+            let totalRows = isRegularEvent ? 2 : 1
+            
+            configureButtonCell(cell, at: indexPath, isSingleCell: isRegularEvent)
+            configureBaseCell(cell, at: indexPath, totalRows: totalRows)
+            configureSeparator(cell, isLastRow: indexPath.row == (isRegularEvent ? 1 : 0))
+            cell.selectionStyle = .none
+            return cell
         case .emoji:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,

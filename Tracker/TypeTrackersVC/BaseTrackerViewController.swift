@@ -238,17 +238,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             case .typeTrackers:
                 return 1
             case .creatingTracker:
-                guard let trackerSection = TrackerSection(rawValue: section) else {
-                    return 0
-                }
-                switch trackerSection {
-                case .textView:
-                    return 1
-                case .buttons:
-                    return 2
-                case .emoji, .color, .createButtons:
-                    return 1
-                }
+                return 0
             case .category:
                 return isAddingCategory ? 1 : categories.count
             case .schedule:
@@ -340,29 +330,14 @@ extension BaseTrackerViewController: UITableViewDataSource {
     // Конфигурация ячеек ButtonCell, с настройкой скругления Top первой ячейки и Bottom второй
     func configureButtonCell(
         _ cell: UITableViewCell,
-        at indexPath: IndexPath) {
-            cell.layer.masksToBounds = true
-            cell.layer.cornerRadius = 15
-            cell.backgroundColor = .ypWhiteGray
-            cell.heightAnchor.constraint(equalToConstant: 75).isActive = true
-            
-            if indexPath.row == 0 {
-                cell.layer.maskedCorners = [
-                    .layerMinXMinYCorner,
-                    .layerMaxXMinYCorner
-                ]
-            } else {
-                cell.layer.maskedCorners = [
-                    .layerMinXMaxYCorner,
-                    .layerMaxXMaxYCorner
-                ]
-            }
+        at indexPath: IndexPath,
+        isSingleCell: Bool) {
             cell.accessoryType = .disclosureIndicator
             
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-
+                
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory, case let .category(title, _) = category {
                         content.secondaryText = title
@@ -373,7 +348,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-
+                
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory, case let .category(title, _) = category {
                         cell.detailTextLabel?.text = title
@@ -463,13 +438,12 @@ extension BaseTrackerViewController: UITableViewDelegate {
     
     private func handleTypeTrackersSelection(at indexPath: IndexPath) {
         if indexPath.section == 0 {
-            let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker)
-  
+            let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: true)
             let navController = UINavigationController(rootViewController: creatingTrackerVC)
             navController.modalPresentationStyle = .formSheet
             self.present(navController, animated: true)
         } else if indexPath.section == 1 {
-            let irregularEventVC = CreatingTrackerViewController(type: .creatingTracker)
+            let irregularEventVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: false)
             irregularEventVC.title = "Нерегулярное событие"
             let navController = UINavigationController(rootViewController: irregularEventVC)
             navController.modalPresentationStyle = .formSheet
