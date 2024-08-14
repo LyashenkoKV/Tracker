@@ -38,31 +38,29 @@ final class TrackersPresenter {
 extension TrackersPresenter: TrackersPresenterProtocol {
     
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
-        var newCategories: [TrackerCategory] = []
-        var categoryExists = false
+        guard let view = view else { return }
         
-        for category in view?.categories ?? [] {
-            if case .category(let title, var trackers) = category, title == categotyTitle {
-                trackers.append(tracker)
-                newCategories.append(.category(title: title, trackers: trackers))
-                categoryExists = true
-            } else {
-                newCategories.append(category)
+        if let sectionIndex = view.categories.firstIndex(where: {
+            if case .category(let title, _) = $0 {
+                return title == categotyTitle
             }
+            return false
+        }) {
+            if case .category(let title, var trackers) = view.categories[sectionIndex] {
+                let newIndex = trackers.count
+                trackers.append(tracker)
+                view.categories[sectionIndex] = .category(title: title, trackers: trackers)
+                
+                let newIndexPath = IndexPath(row: newIndex, section: sectionIndex)
+                view.reloadDataWithBatchUpdates(insertedSections: nil, insertedIndexPaths: [newIndexPath])
+            }
+        } else {
+            view.categories.append(.category(title: categotyTitle, trackers: [tracker]))
+            
+            let newSectionIndex = view.categories.count - 1
+            view.reloadDataWithBatchUpdates(insertedSections: IndexSet(integer: newSectionIndex), insertedIndexPaths: nil)
         }
-        
-        if !categoryExists {
-            newCategories.append(.category(title: categotyTitle, trackers: [tracker]))
-        }
-        
-        view?.categories = newCategories
-        
         saveTrackers()
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.view?.reloadData()
-            self?.view?.updatePlaceholderView()
-        }
     }
     
     func trackerCompletedMark(_ trackerId: UUID, date: String) {

@@ -13,7 +13,9 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var currentDate: Date { get set }
     func updatePlaceholderView()
     func reloadData()
+    func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
 }
+
 // MARK: - Object
 final class TrackersViewController: UIViewController {
     
@@ -147,6 +149,20 @@ final class TrackersViewController: UIViewController {
         }
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
+    }
+    
+    func reloadDataWithBatchUpdates(
+        insertedSections: IndexSet? = nil,
+        insertedIndexPaths: [IndexPath]? = nil) {
+        collectionView.performBatchUpdates {
+            if let sections = insertedSections {
+                collectionView.insertSections(sections)
+            }
+            if let indexPaths = insertedIndexPaths {
+                collectionView.insertItems(at: indexPaths)
+            }
+        }
+        updatePlaceholderView()
     }
 }
 
