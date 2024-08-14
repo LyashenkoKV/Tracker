@@ -103,8 +103,8 @@ final class TrackersViewController: UIViewController {
         view.backgroundColor = .ypWhite
         setupConstraints()
         updatePlaceholderView()
-        presenter?.viewDidLoad()
         addNotification()
+        presenter?.loadTrackers()
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -189,8 +189,7 @@ extension TrackersViewController {
         presenter?.addTracker(tracker, categotyTitle: categoryTitle)
         
         DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
-            self?.updatePlaceholderView()
+            self?.presenter?.loadTrackers()
         }
     }
 }

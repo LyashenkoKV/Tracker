@@ -31,7 +31,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
             
             var trackerId: UUID?
-            if case .tracker(let id, _, _, _, _) = tracker {
+            if case let .tracker(id, _, _, _, _, _) = tracker {
                 trackerId = id
             }
             

@@ -139,7 +139,7 @@ final class TrackersCardCell: UICollectionViewCell {
                    countComplete: Set<TrackerRecord>,
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool) {
-        if case .tracker(_, let name, let color, let emoji, _) = tracker {
+        if case let .tracker(_, name, color, emoji, _, _) = tracker {
             nameLabel.text = name
             self.emoji.text = emoji
             messageStack.backgroundColor = color

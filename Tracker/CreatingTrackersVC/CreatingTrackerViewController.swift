@@ -46,17 +46,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
               let selectedEmoji = selectedEmoji else {
             return
         }
-
-        let tracker = Tracker.tracker(
-            id: UUID(),
-            name: trackerName,
-            color: selectedColor,
-            emoji: selectedEmoji,
-            schedule: selectedDays ?? .dayOfTheWeek([])
-        )
         
-        print("selectedSchedule - \(selectedDays)")
-
         let categoryTitle: String
         if let selectedCategory = selectedCategory,
            case let .category(title, _) = selectedCategory {
@@ -64,6 +54,15 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         } else {
             categoryTitle = "Новая категория"
         }
+
+        let tracker = Tracker.tracker(
+            id: UUID(),
+            name: trackerName,
+            color: selectedColor,
+            emoji: selectedEmoji,
+            schedule: selectedDays ?? .dayOfTheWeek([]), 
+            categoryTitle: categoryTitle
+        )
 
         let userInfo: [String: Any] = ["tracker": tracker, "categoryTitle": categoryTitle]
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)

@@ -12,16 +12,27 @@ extension UserDefaults {
         static let trackers = "savedTrackers"
     }
 
-    var savedTrackers: [Tracker] {
-        get {
-            guard let data = data(forKey: Keys.trackers) else { return [] }
-            let decoder = JSONDecoder()
-            return (try? decoder.decode([Tracker].self, from: data)) ?? []
-        }
-        set {
-            let encoder = JSONEncoder()
-            let data = try? encoder.encode(newValue)
+    func saveTrackers(_ trackers: [Tracker]) {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(trackers)
             set(data, forKey: Keys.trackers)
+        } catch {
+            print("Failed to encode trackers: \(error)")
+        }
+    }
+
+    func loadTrackers() -> [Tracker] {
+        guard let data = data(forKey: Keys.trackers) else {
+            return []
+        }
+        let decoder = JSONDecoder()
+        do {
+            let trackers = try decoder.decode([Tracker].self, from: data)
+            return trackers
+        } catch {
+            print("Failed to decode trackers: \(error)")
+            return []
         }
     }
 }

@@ -10,7 +10,6 @@ import UIKit
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
     var dateFormatter: DateFormatter { get }
-    func viewDidLoad()
     func addTracker(_ tracker: Tracker, categotyTitle: String)
     func trackerCompletedMark(_ trackerId: UUID, date: String)
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)
@@ -18,6 +17,7 @@ protocol TrackersPresenterProtocol {
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool)
     func isDateValidForCompletion(date: Date) -> Bool
     func filterTrackers(for date: Date)
+    func loadTrackers() 
 }
 // MARK: - Object
 final class TrackersPresenter {
@@ -37,10 +37,6 @@ final class TrackersPresenter {
 
 extension TrackersPresenter: TrackersPresenterProtocol {
     
-    func viewDidLoad() {
-        // Нужен ли мне тут viewDidLoad
-    }
-
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
         var newCategories: [TrackerCategory] = []
         var categoryExists = false
@@ -60,6 +56,8 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         }
         
         view?.categories = newCategories
+        
+        saveTrackers()
         
         DispatchQueue.main.async { [weak self] in
             self?.view?.reloadData()
@@ -100,7 +98,8 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool) {
         var trackerId: UUID?
-        if case .tracker(let id, _, _, _, _) = tracker {
+
+        if case let .tracker(id, _, _, _, _, _) = tracker {
             trackerId = id
         }
         
@@ -121,30 +120,55 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func filterTrackers(for date: Date) {
-        let savedTrackers = UserDefaults.standard.savedTrackers
+        let savedTrackers = UserDefaults.standard.loadTrackers()
 
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
+        
+        let adjustedIndex = (weekdayIndex + 5) % 7
+        let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
-        let selectedDay = DayOfTheWeek.allCases[weekdayIndex - 2]
-        
-        print("selectedDay - \(selectedDay.rawValue)")
-        
         let filteredTrackers = savedTrackers.filter { tracker in
-            if case .tracker(_, _, _, _, let schedule) = tracker {
+            if case .tracker(_, _, _, _, let schedule, _) = tracker {
                 return schedule.containsDay(selectedDay)
             }
             return false
         }
-        
-        print("filteredTrackers - \(filteredTrackers)")
-        
+
         view?.categories = categorizeTrackers(filteredTrackers)
         view?.reloadData()
     }
     
     private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
-        let categories: [TrackerCategory] = []
-        return categories
+        // Явно указываем типы ключа и значений в словаре
+        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { (tracker: Tracker) -> String in
+            if case .tracker(_, _, _, _, _, let categoryTitle) = tracker {
+                return categoryTitle
+            }
+            return "Uncategorized" // Обработка случая, если категория отсутствует
+        })
+
+        // Преобразуем сгруппированные данные в массив TrackerCategory
+        return groupedTrackers.map { (title: String, trackers: [Tracker]) in
+            TrackerCategory.category(title: title, trackers: trackers)
+        }
+    }
+    
+    private func saveTrackers() {
+        let allTrackers = view?.categories.flatMap { category -> [Tracker] in
+            if case .category(_, let trackers) = category {
+                return trackers
+            }
+            return []
+        } ?? []
+        UserDefaults.standard.saveTrackers(allTrackers)
+    }
+    
+    func loadTrackers() {
+        let loadedTrackers = UserDefaults.standard.loadTrackers()
+        let categorizedTrackers = categorizeTrackers(loadedTrackers)
+        view?.categories = categorizedTrackers
+        view?.reloadData()
+        view?.updatePlaceholderView()
     }
 }
