@@ -688,7 +688,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
 extension BaseTrackerViewController {
     private func selectedDaysString() -> String {
         guard let days = selectedDays?.days else {
-            return "Не выбрано"
+            return ""
         }
         
         let daysOrder: [DayOfTheWeek] = [

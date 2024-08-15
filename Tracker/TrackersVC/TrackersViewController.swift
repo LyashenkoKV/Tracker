@@ -233,7 +233,6 @@ extension TrackersViewController {
             let adjustedIndex = (dayOfTheWeek + 5) % 7
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
-            // Создаем обновленный трекер
             updatedTracker = Tracker(
                 id: tracker.id,
                 name: tracker.name,

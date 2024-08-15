@@ -62,4 +62,12 @@ extension UserDefaults {
             return []
         }
     }
+    
+    func removeTrackers() {
+        removeObject(forKey: Keys.trackers)
+    }
+
+    func removeCompletedTrackers() {
+        removeObject(forKey: Keys.completedTrackers)
+    }
 }

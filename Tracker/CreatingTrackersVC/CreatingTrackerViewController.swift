@@ -26,10 +26,29 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNotificationObservers()
+        //updateCreateButtonState()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func updateCreateButtonState() {
+        guard let textViewCell = tableView.cellForRow(
+            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
+        ) as? TextViewCell else { return }
+              
+        let isValid = !(textViewCell.getText().text.isEmpty) &&
+        selectedCategory != nil &&
+        selectedColor != nil && 
+        selectedEmoji != nil
+
+        if let createButtonCell = tableView.cellForRow(
+            at: IndexPath(row: 0,
+                          section: TrackerSection.createButtons.rawValue)
+        ) as? CreateButtonsViewCell {
+            createButtonCell.updateCreateButtonState(isEnabled: isValid)
+        }
     }
 
     private func setupNotificationObservers() {
@@ -56,6 +75,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         }
         
         let categoryTitle: String
+        
         if let selectedCategory = selectedCategory {
             categoryTitle = selectedCategory.title
         } else {
@@ -90,12 +110,14 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     @objc private func handleEmojiSelected(_ notification: Notification) {
         if let emoji = notification.userInfo?["selectedEmoji"] as? String {
             selectedEmoji = emoji
+            //updateCreateButtonState()
         }
     }
     
     @objc private func handleColorSelected(_ notification: Notification) {
         if let hexColor = notification.userInfo?["selectedColor"] as? String {
             selectedColor = UIColor(hex: hexColor)
+            updateCreateButtonState()
         }
     }
 }

@@ -88,6 +88,7 @@ final class CreateButtonsViewCell: UITableViewCell {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 15
+        button.isUserInteractionEnabled = false
         button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
@@ -98,5 +99,14 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     @objc private func cancelButtonAction() {
         onCancelButtonTapped?()
+    }
+    
+    func updateCreateButtonState(isEnabled: Bool) {
+        if isEnabled {
+            createButton.backgroundColor = .ypBlack
+            createButton.isUserInteractionEnabled = true
+        } else {
+            createButton.backgroundColor = .ypGray
+        }
     }
 }
