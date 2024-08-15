@@ -18,6 +18,13 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let colorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 7
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -28,12 +35,23 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupUI() {
-        contentView.addSubview(emojiLabel)
+        [emojiLabel, colorView].forEach {
+            contentView.addSubview($0)
+        }
         contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 10
         NSLayoutConstraint.activate([
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            colorView.widthAnchor.constraint(equalToConstant: 40),
+            colorView.heightAnchor.constraint(equalToConstant: 40),
+            colorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
+            colorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
+            colorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+            colorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3)
         ])
     }
     
@@ -42,20 +60,21 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
         isEmoji: Bool,
         isSelected: Bool,
         hasSelectedItem: Bool) {
+            
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if isEmoji {
                 emojiLabel.text = element
-                contentView.backgroundColor = .clear
+                colorView.isHidden = true
+                contentView.backgroundColor = isSelected ? .ypWhiteGray : .clear
             } else {
                 emojiLabel.text = ""
-                contentView.backgroundColor = UIColor(hex: element)
+                colorView.isHidden = false
+                colorView.backgroundColor = UIColor(hex: element)
+                contentView.layer.borderWidth = isSelected ? 2 : 0
+                contentView.layer.borderColor = isSelected ? UIColor(hex: element)?.withAlphaComponent(0.3).cgColor : UIColor.clear.cgColor
             }
-            if hasSelectedItem {
-                contentView.alpha = isSelected ? 1.0 : 0.2
-            } else {
-                contentView.alpha = 1.0
-            }
+            //contentView.alpha = hasSelectedItem ? (isSelected ? 1.0 : 0.2) : 1.0
         }
     }
 }

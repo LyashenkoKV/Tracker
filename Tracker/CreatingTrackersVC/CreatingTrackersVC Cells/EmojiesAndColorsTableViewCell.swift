@@ -18,7 +18,8 @@ final class EmojiesAndColorsTableViewCell: UITableViewCell {
         cellCount: 6,
         leftInset: 10,
         rightInset: 10,
-        cellSpacing: 17
+        cellSpacing: 17, 
+        cellSize: 40 + 3
     )
     
     private var elements: [String] = []
@@ -135,6 +136,7 @@ extension EmojiesAndColorsTableViewCell: UICollectionViewDataSource {
         }
         let element = elements[indexPath.item]
         let isSelected = indexPath == selectedIndexPath
+        let hasSelectedItem = hasSelectedItem
         
         cell.configure(
             with: element,
@@ -175,9 +177,9 @@ extension EmojiesAndColorsTableViewCell: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let availableWidth = collectionView.frame.width - params.paddingWidth
-        let cellWidth =  availableWidth / CGFloat(params.cellCount)
-        return CGSize(width: cellWidth,
-                      height: cellWidth)
+        return CGSize(
+            width: params.cellSize,
+            height: params.cellSize
+        )
     }
 }
