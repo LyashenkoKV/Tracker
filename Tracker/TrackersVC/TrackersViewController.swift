@@ -13,7 +13,6 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var currentDate: Date { get set }
     func updatePlaceholderView()
     func reloadData()
-    //func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
 }
 
 // MARK: - Object
@@ -106,9 +105,9 @@ final class TrackersViewController: UIViewController {
         setupConstraints()
         updatePlaceholderView()
         addNotification()
-//        
-//        presenter?.loadTrackers()
-//        presenter?.loadCompletedTrackers()
+        
+        presenter?.filterTrackers(for: currentDate)
+        presenter?.loadCompletedTrackers()
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -149,7 +148,9 @@ final class TrackersViewController: UIViewController {
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
     }
-//    
+    
+    // Надо вернуться к добавлению через .performBatchUpdates
+//
 //    func reloadDataWithBatchUpdates(
 //        insertedSections: IndexSet? = nil,
 //        insertedIndexPaths: [IndexPath]? = nil) {
@@ -254,7 +255,6 @@ extension TrackersViewController {
 // MARK: - TrackersViewControllerProtocol
 extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
-        print("Количество трекеров перед обновлением: \(categories.flatMap { $0.trackers }.count)")
         collectionView.reloadData()
         updatePlaceholderView()
     }

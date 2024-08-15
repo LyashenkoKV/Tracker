@@ -32,9 +32,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         let trackers = categories[indexPath.section].trackers
         let tracker = trackers[indexPath.row]
         let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
-        
-        print("Отображается трекер с ID: \(tracker.id) дата: \(tracker.schedule.days)")
-        
         let trackerId = tracker.id
         let isRegularEvent = tracker.isRegularEvent
         
@@ -43,8 +40,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
         
         let isDateValidForCompletion = presenter?.isDateValidForCompletion(date: currentDate) ?? false
-        
-        cell.prepareForReuse()
         
         cell.configure(
             with: tracker,

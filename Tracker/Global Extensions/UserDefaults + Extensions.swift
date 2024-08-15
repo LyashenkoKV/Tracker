@@ -14,11 +14,9 @@ extension UserDefaults {
     }
 
     func saveTrackers(_ trackers: [Tracker]) {
-        var existingTrackers = loadTrackers()
-        existingTrackers.append(contentsOf: trackers)
         let encoder = JSONEncoder()
         do {
-            let data = try encoder.encode(existingTrackers)
+            let data = try encoder.encode(trackers)
             set(data, forKey: Keys.trackers)
         } catch {
             print("Failed to encode trackers: \(error)")

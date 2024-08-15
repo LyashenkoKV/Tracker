@@ -107,29 +107,27 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         let savedTrackers = UserDefaults.standard.loadTrackers()
         
         let calendar = Calendar.current
-        let selectedDateString = dateFormatter.string(from: date)
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        let adjustedIndex = (weekdayIndex + 5) % 7
+
+        let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
         
         let filteredTrackers = savedTrackers.filter { tracker in
             if tracker.isRegularEvent {
-                let weekdayIndex = calendar.component(.weekday, from: date)
-                let adjustedIndex = (weekdayIndex + 5) % 7
-                let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
-                return tracker.schedule.containsDay(selectedDay)
+                return tracker.schedule.days.contains(selectedDay)
             } else {
                 let creationDateString = dateFormatter.string(from: tracker.creationDate ?? Date())
+                let selectedDateString = dateFormatter.string(from: date)
                 return selectedDateString == creationDateString
             }
         }
-        
-        let uniqueTrackers = Array(Set(filteredTrackers.map { $0.id }))
-            .compactMap { id in filteredTrackers.first { $0.id == id } }
-        
-        view?.categories = categorizeTrackers(uniqueTrackers)
+
+        view?.categories = categorizeTrackers(filteredTrackers)
         view?.reloadData()
     }
     
     private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
-        let uniqueTrackers = Array(Set(trackers.map { $0.id }))
+        let uniqueTrackers = Array(Set(trackers.map { $0.id })) // тут я удаляю дубликаты по id
             .compactMap { id in trackers.first { $0.id == id } }
 
         let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: uniqueTrackers, by: { $0.categoryTitle })
@@ -160,5 +158,10 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         let loadedCompletedTrackers = UserDefaults.standard.loadCompletedTrackers()
         view?.completedTrackers = loadedCompletedTrackers
         view?.reloadData()
+    }
+    
+    private func clearAndSaveTrackers(_ trackers: [Tracker]) {
+        UserDefaults.standard.removeTrackers()
+        UserDefaults.standard.saveTrackers(trackers)
     }
 }
