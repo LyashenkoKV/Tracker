@@ -29,8 +29,7 @@ final class TrackersViewController: UIViewController {
         cellCount: 1,
         leftInset: 10,
         rightInset: 10,
-        cellSpacing: 10, 
-        cellSize: 0
+        cellSpacing: 10
     )
     
     private lazy var datePicker: UIDatePicker = {

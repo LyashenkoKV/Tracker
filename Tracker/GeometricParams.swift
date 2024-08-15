@@ -13,14 +13,12 @@ struct GeometricParams {
     let rightInset: CGFloat
     let cellSpacing: CGFloat
     let paddingWidth: CGFloat
-    let cellSize: CGFloat
     
-    init(cellCount: Int, leftInset: CGFloat, rightInset: CGFloat, cellSpacing: CGFloat, cellSize: CGFloat) {
+    init(cellCount: Int, leftInset: CGFloat, rightInset: CGFloat, cellSpacing: CGFloat) {
         self.cellCount = cellCount
         self.leftInset = leftInset
         self.rightInset = rightInset
         self.cellSpacing = cellSpacing
         self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
-        self.cellSize = cellSize
     }
 }

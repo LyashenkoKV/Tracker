@@ -47,11 +47,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
             colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             colorView.widthAnchor.constraint(equalToConstant: 40),
-            colorView.heightAnchor.constraint(equalToConstant: 40),
-            colorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 3),
-            colorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -3),
-            colorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
-            colorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3)
+            colorView.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     
@@ -66,12 +62,12 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
             if isEmoji {
                 emojiLabel.text = element
                 colorView.isHidden = true
-                contentView.backgroundColor = isSelected ? .ypWhiteGray : .clear
+                contentView.backgroundColor = isSelected ? .ypLightGray : .clear
             } else {
                 emojiLabel.text = ""
                 colorView.isHidden = false
                 colorView.backgroundColor = UIColor(hex: element)
-                contentView.layer.borderWidth = isSelected ? 2 : 0
+                contentView.layer.borderWidth = isSelected ? 3 : 0
                 contentView.layer.borderColor = isSelected ? UIColor(hex: element)?.withAlphaComponent(0.3).cgColor : UIColor.clear.cgColor
             }
             //contentView.alpha = hasSelectedItem ? (isSelected ? 1.0 : 0.2) : 1.0
