@@ -140,14 +140,13 @@ final class TrackersCardCell: UICollectionViewCell {
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool,
                    isRegularEvent: Bool) {
-        if case let .tracker(id, name, color, emoji, _, _, _) = tracker {
-            nameLabel.text = name
-            self.emoji.text = emoji
-            messageStack.backgroundColor = color
-            completeButton.backgroundColor = color
+        nameLabel.text = tracker.name
+        self.emoji.text = tracker.emoji
+        messageStack.backgroundColor = tracker.color
+        completeButton.backgroundColor = tracker.color
             
             let buttonImage = isCompleted ? "checkmark" : "plus"
-            let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
+        let buttonColor = isCompleted ? tracker.color.withAlphaComponent(0.3) : tracker.color
             
             completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
             completeButton.backgroundColor = buttonColor
@@ -155,17 +154,13 @@ final class TrackersCardCell: UICollectionViewCell {
             
             //counterLabel.isHidden = !isRegularEvent  // ‼️ пока не очень понятно как решить вопрос с отметкой выполнения в конкретный день, и надо по-идее скрывать счетчик у нерег соб
 
-            let countDays = countComplete.filter { record in
-                if case let .record(trackerId, _) = record {
-                    return trackerId == id
-                }
-                return false
+        let countDays = countComplete.filter { record in
+                return record.trackerId == tracker.id
             }.count
             
             let day = declensionDay(for: countDays)
             counterLabel.text = "\(countDays) \(day)"
         }
-    }
     
     private func declensionDay(for countDays: Int) -> String {
         switch countDays {

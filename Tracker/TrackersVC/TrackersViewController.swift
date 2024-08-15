@@ -10,7 +10,7 @@ import UIKit
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
-    //var currentDate: Date { get set }
+    var currentDate: Date { get set }
     func updatePlaceholderView()
     func reloadData()
     func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
@@ -23,7 +23,7 @@ final class TrackersViewController: UIViewController {
     
     var categories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
-    //var currentDate: Date = Date()
+    var currentDate: Date = Date()
     
     let params = GeometricParams(
         cellCount: 1,
@@ -32,7 +32,7 @@ final class TrackersViewController: UIViewController {
         cellSpacing: 10
     )
     
-    lazy var datePicker: UIDatePicker = {
+    private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
@@ -144,10 +144,7 @@ final class TrackersViewController: UIViewController {
     
     func updatePlaceholderView() {
         let hasData = categories.contains { category in
-            if case .category(_, let trackers) = category {
-                return !trackers.isEmpty
-            }
-            return false
+            return !category.trackers.isEmpty
         }
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
@@ -167,15 +164,22 @@ final class TrackersViewController: UIViewController {
         updatePlaceholderView()
     }
     
-    func deleteTracker(at indexPath: IndexPath) { // Тут надо будет подумать как лучше сделать, сейчас удаляет, но при возвращении на это число трекер на месте, наверное пересохранить UD
-        if case .category(let title, var trackers) = categories[indexPath.section] {
-            trackers.remove(at: indexPath.row)
-            categories[indexPath.section] = .category(title: title, trackers: trackers)
-            collectionView.performBatchUpdates {
-                collectionView.deleteItems(at: [indexPath])
+    func deleteTracker(at indexPath: IndexPath) {
+        let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
+            if index == indexPath.section {
+                var updatedTrackers = category.trackers
+                updatedTrackers.remove(at: indexPath.row)
+                return TrackerCategory(title: category.title, trackers: updatedTrackers)
+            } else {
+                return category
             }
-            updatePlaceholderView()
         }
+        categories = updatedCategories
+        
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(at: [indexPath])
+        }
+        updatePlaceholderView()
     }
     
     func editTracker(at indexPath: IndexPath) {
@@ -221,25 +225,24 @@ extension TrackersViewController {
             return
         }
 
-        let updatedTracker: Tracker
+        var updatedTracker = tracker
 
-        if case let .tracker(id, name, color, emoji, _, _, isRegularEvent) = tracker, !isRegularEvent {
-            let selectedDate = datePicker.date
-            let dayOfTheWeek = Calendar.current.component(.weekday, from: selectedDate)
+        if !tracker.isRegularEvent {
+            currentDate = datePicker.date
+            let dayOfTheWeek = Calendar.current.component(.weekday, from: currentDate)
             let adjustedIndex = (dayOfTheWeek + 5) % 7
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
-            updatedTracker = .tracker(
-                id: id,
-                name: name,
-                color: color,
-                emoji: emoji,
-                schedule: .dayOfTheWeek([selectedDay]),
+            // Создаем обновленный трекер
+            updatedTracker = Tracker(
+                id: tracker.id,
+                name: tracker.name,
+                color: tracker.color,
+                emoji: tracker.emoji,
+                schedule: Schedule(days: [selectedDay]),
                 categoryTitle: categoryTitle,
-                isRegularEvent: isRegularEvent // ‼️Надо что-то думать с нерегулярными событиями, добавляются до дням недели а не по календ. дням
+                isRegularEvent: tracker.isRegularEvent
             )
-        } else {
-            updatedTracker = tracker
         }
 
         presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)

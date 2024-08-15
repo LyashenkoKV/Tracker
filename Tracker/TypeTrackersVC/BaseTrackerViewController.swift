@@ -146,8 +146,8 @@ class BaseTrackerViewController: UIViewController {
             return
         }
         
-        let newCategory = TrackerCategory.category(title: newText, trackers: [])
-        
+        let newCategory = TrackerCategory(title: newText, trackers: [])
+
         if let editingIndex = editingCategoryIndex {
             categories[editingIndex.row] = newCategory
             editingCategoryIndex = nil
@@ -168,7 +168,7 @@ class BaseTrackerViewController: UIViewController {
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {
     func didSelect(_ days: [DayOfTheWeek]) {
-        selectedDays = .dayOfTheWeek(days)
+        selectedDays = Schedule(days: days)
         tableView.reloadRows(
             at: [IndexPath(
                 row: 1,
@@ -292,9 +292,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         }
         
         let category = categories[indexPath.row]
-        if case let .category(title, _) = category {
-            cell.configure(with: title)
-        }
+        cell.configure(with: category.title)
         
         configureBaseCell(cell, at: indexPath, totalRows: categories.count)
         configureSeparator(cell, isLastRow: indexPath.row == categories.count - 1)
@@ -311,9 +309,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.delegate = self
         
         if let editingIndex = editingCategoryIndex, editingIndex.row == indexPath.row {
-            if case let .category(title, _) = categories[editingIndex.row] {
-                cell.getText().text = title
-            }
+            let category = categories[editingIndex.row]
+            cell.getText().text = category.title // Прямой доступ к свойству `title`
             self.title = "Редактирование категории"
         } else {
             cell.getText().text = ""
@@ -325,8 +322,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         
         return cell
     }
-    
-    
+
     // Конфигурация ячеек ButtonCell, с настройкой скругления Top первой ячейки и Bottom второй
     func configureButtonCell(
         _ cell: UITableViewCell,
@@ -339,8 +335,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
                 
                 if indexPath.row == 0 && !isAddingCategory {
-                    if let category = selectedCategory, case let .category(title, _) = category {
-                        content.secondaryText = title
+                    if let category = selectedCategory {
+                        content.secondaryText = category.title
                     }
                 } else {
                     content.secondaryText = selectedDaysString()
@@ -350,8 +346,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
                 
                 if indexPath.row == 0 && !isAddingCategory {
-                    if let category = selectedCategory, case let .category(title, _) = category {
-                        cell.detailTextLabel?.text = title
+                    if let category = selectedCategory {
+                        cell.detailTextLabel?.text = category.title
                     }
                 } else {
                     cell.detailTextLabel?.text = selectedDaysString()
@@ -691,10 +687,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
 // MARK: - selectedDaysString
 extension BaseTrackerViewController {
     private func selectedDaysString() -> String {
-        guard case let .dayOfTheWeek(days) = selectedDays else {
+        guard let days = selectedDays?.days else {
             return "Не выбрано"
         }
-
+        
         let daysOrder: [DayOfTheWeek] = [
             .monday, .tuesday, .wednesday,
             .thursday, .friday, .saturday,
@@ -703,11 +699,11 @@ extension BaseTrackerViewController {
         
         let fullWeek = Set(daysOrder)
         let selectedSet = Set(days)
-
+        
         if selectedSet == fullWeek {
             return "Каждый день"
         }
-
+        
         let sortedDays = days.sorted {
             daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
         }

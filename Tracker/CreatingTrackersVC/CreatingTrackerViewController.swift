@@ -56,19 +56,18 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         }
         
         let categoryTitle: String
-        if let selectedCategory = selectedCategory,
-           case let .category(title, _) = selectedCategory {
-            categoryTitle = title
+        if let selectedCategory = selectedCategory {
+            categoryTitle = selectedCategory.title
         } else {
             categoryTitle = "Новая категория"
         }
 
-        let tracker = Tracker.tracker(
+        let tracker = Tracker(
             id: UUID(),
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: selectedDays ?? .dayOfTheWeek([]),
+            schedule: selectedDays ?? Schedule(days: []),
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent
         )
