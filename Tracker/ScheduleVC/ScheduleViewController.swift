@@ -39,6 +39,8 @@ class ScheduleViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadSelectedDays()
+        tableView.reloadData()
     }
     
     private func setupUI() {
@@ -78,7 +80,6 @@ class ScheduleViewController: BaseTrackerViewController {
         
         return cell
     }
-
     
     @objc func switchChanged(sender: UISwitch) {
         guard let cell = sender.superview(of: ScheduleCell.self),

@@ -102,49 +102,22 @@ class BaseTrackerViewController: UIViewController {
         ]
     }
     
-    func saveCategoriesToUserDefaults() {
-        if isAddingCategory {
-            if let encodedCategories = try? JSONEncoder().encode(categories) {
-                UserDefaults.standard.set(encodedCategories, forKey: "savedCategories")
-            }
-        }
-    }
-    
-    func loadCategoriesFromUserDefaults() {
-        if let savedData = UserDefaults.standard.data(forKey: "savedCategories"),
-           let savedCategories = try? JSONDecoder().decode([TrackerCategory].self, from: savedData) {
-            categories = savedCategories
-        } else {
-            categories = []
-        }
-    }
-    
     func updateUI() {}
     
     // Методы выношу из расширения, потому что дочерние классы их не видят
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
     func startEditingCategory(at indexPath: IndexPath) {
-        print("Начато редактирование категории на позиции \(indexPath.row)")
         editingCategoryIndex = indexPath
         isAddingCategory = true
         tableView.reloadData()
-    }
-    
-    func deleteCategory(at indexPath: IndexPath) {
-        categories.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        saveCategoriesToUserDefaults()
     }
     
     // ‼️ Не нравится мне как работает редактирование, сепаратор скачет, надо поправить
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
         guard isAddingCategory else { return }
         
-        guard let newText = text, !newText.isEmpty else {
-            print("Текст пуст или nil, редактирование не выполнено")
-            return
-        }
+        guard let newText = text, !newText.isEmpty else { return }
         
         let newCategory = TrackerCategory(title: newText, trackers: [])
 
@@ -165,10 +138,70 @@ class BaseTrackerViewController: UIViewController {
     }
 }
 
+// MARK: - UserDafaults
+extension BaseTrackerViewController {
+    
+    func saveCategoriesToUserDefaults() {
+        UserDefaults.standard.savedCategories(categories)
+        
+        if let selectedCategory = selectedCategory {
+            UserDefaults.standard.set(selectedCategory.title, forKey: "selectedCategory")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "selectedCategory")
+        }
+    }
+    
+    func saveSelectedDays() {
+        if let selectedDays = selectedDays?.days {
+            print("Сохранение выбранных дней: \(selectedDays)")
+            let encodedDays = selectedDays.map { $0.rawValue }
+            UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
+        } else {
+            print("Удаление сохраненных дней (selectedDays равно nil).")
+            UserDefaults.standard.removeObject(forKey: "selectedDays")
+        }
+    }
+    
+    func loadCategoriesFromUserDefaults() {
+        categories = UserDefaults.standard.loadCategories()
+        
+        if let savedCategoryTitle = UserDefaults.standard.string(forKey: "selectedCategory") {
+            selectedCategory = categories.first { $0.title == savedCategoryTitle }
+        } else {
+            selectedCategory = nil
+        }
+    }
+    
+    func loadSelectedDays() {
+        if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
+            let loadedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
+            selectedDays = Schedule(days: loadedDays)
+            print("Загруженные дни: \(loadedDays)")
+        } else {
+            print("Сохраненные дни не найдены.")
+            selectedDays = nil
+        }
+    }
+    
+    func deleteCategory(at indexPath: IndexPath) {
+        let deletedCategory = categories[indexPath.row]
+        categories.remove(at: indexPath.row)
+        
+        if selectedCategory?.title == deletedCategory.title {
+            selectedCategory = nil
+            UserDefaults.standard.removeObject(forKey: "selectedCategory")
+        }
+        
+        saveCategoriesToUserDefaults()
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+}
+
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {
     func didSelect(_ days: [DayOfTheWeek]) {
         selectedDays = Schedule(days: days)
+        saveSelectedDays()
         tableView.reloadRows(
             at: [IndexPath(
                 row: 1,
@@ -181,11 +214,7 @@ extension BaseTrackerViewController: ScheduleSelectionDelegate {
 extension BaseTrackerViewController: CategorySelectionDelegate {
     func didSelectCategory(_ category: TrackerCategory) {
         selectedCategory = category
-        tableView.reloadRows(
-            at: [IndexPath(
-                row: 0,
-                section: TrackerSection.buttons.rawValue)],
-            with: .automatic)
+        tableView.reloadData()
     }
 }
 
@@ -293,6 +322,12 @@ extension BaseTrackerViewController: UITableViewDataSource {
         
         let category = categories[indexPath.row]
         cell.configure(with: category.title)
+        
+        if let selectedCategory = selectedCategory, selectedCategory.title == category.title {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
         
         configureBaseCell(cell, at: indexPath, totalRows: categories.count)
         configureSeparator(cell, isLastRow: indexPath.row == categories.count - 1)

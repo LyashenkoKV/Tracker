@@ -183,8 +183,7 @@ final class TrackersViewController: UIViewController {
         updatePlaceholderView()
     }
     
-    func editTracker(at indexPath: IndexPath) {
-    }
+    func editTracker(at indexPath: IndexPath) {}
 }
 
 // MARK: - NavigationController
@@ -245,8 +244,6 @@ extension TrackersViewController {
                 isRegularEvent: tracker.isRegularEvent, 
                 creationDate: creationDate
             )
-            
-            print("updatedTracker \(updatedTracker)")
         }
         presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
     }

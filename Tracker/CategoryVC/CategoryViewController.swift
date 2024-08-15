@@ -50,14 +50,15 @@ final class CategoryViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        //dismissKeyboard(view: self.view) Надо подумать, из за метода не правильно отрабатывает кнопка
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadCategoriesFromUserDefaults()
+        tableView.reloadData()
         updateUI()
     }
-    
     
     // MARK: - UI Setup
     private func setupUI() {
@@ -111,14 +112,14 @@ extension CategoryViewController {
     override func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath) {
-        if !isAddingCategory {
-            if let cell = tableView.cellForRow(at: indexPath) as? CategoryCell {
-                cell.accessoryType = .checkmark
+            if !isAddingCategory {
+                let selectedCategory = categories[indexPath.row]
+                self.selectedCategory = selectedCategory
+                saveCategoriesToUserDefaults()
+                delegate?.didSelectCategory(selectedCategory)
+                
+                tableView.reloadData()
+                dismissOrCancel()
             }
-            
-            let selectedCategory = categories[indexPath.row]
-            delegate?.didSelectCategory(selectedCategory)
-            dismissOrCancel()
         }
-    }
 }

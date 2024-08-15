@@ -23,10 +23,12 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNotificationObservers()
         updateCreateButtonState()
+        dismissKeyboard(view: self.view)
     }
     
     deinit {

@@ -50,6 +50,7 @@
 		247E50522C58DC7700630037 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50512C58DC7700630037 /* TrackerRecord.swift */; };
 		247E50542C58EC5900630037 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50532C58EC5900630037 /* Schedule.swift */; };
 		247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50552C58EEB300630037 /* TrackersPresenter.swift */; };
+		2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485B51D2C6E9422001650D1 /* GlobalFunc.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -98,6 +99,7 @@
 		247E50512C58DC7700630037 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		247E50532C58EC5900630037 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		247E50552C58EEB300630037 /* TrackersPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersPresenter.swift; sourceTree = "<group>"; };
+		2485B51D2C6E9422001650D1 /* GlobalFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 				2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */,
 				2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */,
 				2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */,
+				2485B51D2C6E9422001650D1 /* GlobalFunc.swift */,
 			);
 			path = "Global Extensions";
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				247E50542C58EC5900630037 /* Schedule.swift in Sources */,
 				2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */,
 				2411D6852C623F950031C584 /* TextViewCell.swift in Sources */,
+				2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */,
 				2476B0B52C6CB1AB00ADAD1B /* LayoutConfiguratorFactory.swift in Sources */,
 				2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */,
 				2411D69B2C63AAD90031C584 /* CategoryViewController.swift in Sources */,

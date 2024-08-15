@@ -159,9 +159,4 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         view?.completedTrackers = loadedCompletedTrackers
         view?.reloadData()
     }
-    
-    private func clearAndSaveTrackers(_ trackers: [Tracker]) {
-        UserDefaults.standard.removeTrackers()
-        UserDefaults.standard.saveTrackers(trackers)
-    }
 }

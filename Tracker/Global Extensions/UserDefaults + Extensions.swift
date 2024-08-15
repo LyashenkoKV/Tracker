@@ -11,6 +11,8 @@ extension UserDefaults {
     private enum Keys {
         static let trackers = "savedTrackers"
         static let completedTrackers = "completedTrackers"
+        static let savedCategories = "savedCategories"
+        static let selectedDays = "selectedDays"
     }
 
     func saveTrackers(_ trackers: [Tracker]) {
@@ -36,7 +38,7 @@ extension UserDefaults {
             return []
         }
     }
-    
+
     func saveCompletedTrackers(_ completedTrackers: Set<TrackerRecord>) {
         let encoder = JSONEncoder()
         do {
@@ -46,7 +48,7 @@ extension UserDefaults {
             print("Failed to encode completed trackers: \(error)")
         }
     }
-    
+
     func loadCompletedTrackers() -> Set<TrackerRecord> {
         guard let data = data(forKey: Keys.completedTrackers) else {
             return []
@@ -60,12 +62,28 @@ extension UserDefaults {
             return []
         }
     }
-    
-    func removeTrackers() {
-        removeObject(forKey: Keys.trackers)
+
+    func savedCategories(_ categories: [TrackerCategory]) {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(categories)
+            set(data, forKey: Keys.savedCategories)
+        } catch {
+            print("Failed to encode categories: \(error)")
+        }
     }
 
-    func removeCompletedTrackers() {
-        removeObject(forKey: Keys.completedTrackers)
+    func loadCategories() -> [TrackerCategory] {
+        guard let data = data(forKey: Keys.savedCategories) else {
+            return []
+        }
+        let decoder = JSONDecoder()
+        do {
+            let categories = try decoder.decode([TrackerCategory].self, from: data)
+            return categories
+        } catch {
+            print("Failed to decode categories: \(error)")
+            return []
+        }
     }
 }
