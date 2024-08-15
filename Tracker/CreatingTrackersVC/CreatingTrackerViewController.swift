@@ -13,7 +13,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     private var isRegularEvent: Bool
-    
+
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
         super.init(type: type)
@@ -26,7 +26,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNotificationObservers()
-        //updateCreateButtonState()
+        updateCreateButtonState()
     }
     
     deinit {
@@ -37,12 +37,18 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         guard let textViewCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
-              
-        let isValid = !(textViewCell.getText().text.isEmpty) &&
+        
+        let isValid = isRegularEvent
+        ? !(textViewCell.getText().text.isEmpty) &&
+        !(selectedDays?.days.isEmpty ?? true) &&
         selectedCategory != nil &&
-        selectedColor != nil && 
-        selectedEmoji != nil
-
+        selectedColor != nil &&
+        (selectedEmoji?.isEmpty ?? true) == false
+        : !(textViewCell.getText().text.isEmpty) &&
+        selectedCategory != nil &&
+        selectedColor != nil &&
+        (selectedEmoji?.isEmpty ?? true) == false
+        
         if let createButtonCell = tableView.cellForRow(
             at: IndexPath(row: 0,
                           section: TrackerSection.createButtons.rawValue)
@@ -89,7 +95,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             emoji: selectedEmoji,
             schedule: selectedDays ?? Schedule(days: []),
             categoryTitle: categoryTitle,
-            isRegularEvent: isRegularEvent
+            isRegularEvent: isRegularEvent,
+            creationDate: Date()
         )
 
         let userInfo: [String: Any] = [
@@ -110,7 +117,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     @objc private func handleEmojiSelected(_ notification: Notification) {
         if let emoji = notification.userInfo?["selectedEmoji"] as? String {
             selectedEmoji = emoji
-            //updateCreateButtonState()
+            updateCreateButtonState()
         }
     }
     

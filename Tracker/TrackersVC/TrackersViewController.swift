@@ -13,7 +13,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var currentDate: Date { get set }
     func updatePlaceholderView()
     func reloadData()
-    func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
+    //func reloadDataWithBatchUpdates(insertedSections: IndexSet?, insertedIndexPaths: [IndexPath]?)
 }
 
 // MARK: - Object
@@ -106,9 +106,9 @@ final class TrackersViewController: UIViewController {
         setupConstraints()
         updatePlaceholderView()
         addNotification()
-        
-        presenter?.loadTrackers()
-        presenter?.loadCompletedTrackers()
+//        
+//        presenter?.loadTrackers()
+//        presenter?.loadCompletedTrackers()
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -149,21 +149,21 @@ final class TrackersViewController: UIViewController {
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
     }
-    
-    func reloadDataWithBatchUpdates(
-        insertedSections: IndexSet? = nil,
-        insertedIndexPaths: [IndexPath]? = nil) {
-        collectionView.performBatchUpdates {
-            if let sections = insertedSections {
-                collectionView.insertSections(sections)
-            }
-            if let indexPaths = insertedIndexPaths {
-                collectionView.insertItems(at: indexPaths)
-            }
-        }
-        updatePlaceholderView()
-    }
-    
+//    
+//    func reloadDataWithBatchUpdates(
+//        insertedSections: IndexSet? = nil,
+//        insertedIndexPaths: [IndexPath]? = nil) {
+//        collectionView.performBatchUpdates {
+//            if let sections = insertedSections {
+//                collectionView.insertSections(sections)
+//            }
+//            if let indexPaths = insertedIndexPaths {
+//                collectionView.insertItems(at: indexPaths)
+//            }
+//        }
+//        updatePlaceholderView()
+//    }
+//    
     func deleteTracker(at indexPath: IndexPath) {
         let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
             if index == indexPath.section {
@@ -213,6 +213,7 @@ extension TrackersViewController {
     // Обработка изменения даты в пикере
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
+        currentDate = selectedDate
         presenter?.filterTrackers(for: selectedDate)
         presenter?.loadCompletedTrackers()
         reloadData()
@@ -228,8 +229,8 @@ extension TrackersViewController {
         var updatedTracker = tracker
 
         if !tracker.isRegularEvent {
-            currentDate = datePicker.date
-            let dayOfTheWeek = Calendar.current.component(.weekday, from: currentDate)
+            let creationDate = currentDate
+            let dayOfTheWeek = Calendar.current.component(.weekday, from: creationDate)
             let adjustedIndex = (dayOfTheWeek + 5) % 7
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
@@ -240,21 +241,20 @@ extension TrackersViewController {
                 emoji: tracker.emoji,
                 schedule: Schedule(days: [selectedDay]),
                 categoryTitle: categoryTitle,
-                isRegularEvent: tracker.isRegularEvent
+                isRegularEvent: tracker.isRegularEvent, 
+                creationDate: creationDate
             )
+            
+            print("updatedTracker \(updatedTracker)")
         }
-
         presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.presenter?.loadTrackers()
-        }
     }
 }
 
 // MARK: - TrackersViewControllerProtocol
 extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
+        print("Количество трекеров перед обновлением: \(categories.flatMap { $0.trackers }.count)")
         collectionView.reloadData()
         updatePlaceholderView()
     }

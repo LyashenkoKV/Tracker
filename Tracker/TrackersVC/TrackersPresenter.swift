@@ -39,23 +39,24 @@ final class TrackersPresenter {
 extension TrackersPresenter: TrackersPresenterProtocol {
     
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
-        guard let view = view else { return }
+        guard let view else { return }
         
         var updatedCategories = view.categories
         
         if let sectionIndex = view.categories.firstIndex(where: { $0.title == categotyTitle }) {
             let category = view.categories[sectionIndex]
-            let updatedTrackers = category.trackers + [tracker]
-            let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
             
-            updatedCategories[sectionIndex] = updatedCategory
+            if !category.trackers.contains(where: { $0.id == tracker.id }) {
+                let updatedTrackers = category.trackers + [tracker]
+                let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
+                updatedCategories[sectionIndex] = updatedCategory
+            }
         } else {
             let newCategory = TrackerCategory(title: categotyTitle, trackers: [tracker])
             updatedCategories.append(newCategory)
         }
         view.categories = updatedCategories
         view.reloadData()
-        
         saveTrackers()
     }
 
@@ -79,12 +80,12 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool {
-        guard let view = view else { return false }
+        guard let view else { return false }
         return view.completedTrackers.contains { $0.trackerId == trackerId && $0.date == date }
     }
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
-        guard let view = view else { return }
+        guard let view else { return }
 
         let currentDateString = dateFormatter.string(from: date)
         
@@ -104,21 +105,34 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func filterTrackers(for date: Date) {
         let savedTrackers = UserDefaults.standard.loadTrackers()
-
-        let calendar = Calendar.current
-        let weekdayIndex = calendar.component(.weekday, from: date)
         
-        let adjustedIndex = (weekdayIndex + 5) % 7
-        let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
-
-        let filteredTrackers = savedTrackers.filter { $0.schedule.containsDay(selectedDay) }
-
-        view?.categories = categorizeTrackers(filteredTrackers)
+        let calendar = Calendar.current
+        let selectedDateString = dateFormatter.string(from: date)
+        
+        let filteredTrackers = savedTrackers.filter { tracker in
+            if tracker.isRegularEvent {
+                let weekdayIndex = calendar.component(.weekday, from: date)
+                let adjustedIndex = (weekdayIndex + 5) % 7
+                let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
+                return tracker.schedule.containsDay(selectedDay)
+            } else {
+                let creationDateString = dateFormatter.string(from: tracker.creationDate ?? Date())
+                return selectedDateString == creationDateString
+            }
+        }
+        
+        let uniqueTrackers = Array(Set(filteredTrackers.map { $0.id }))
+            .compactMap { id in filteredTrackers.first { $0.id == id } }
+        
+        view?.categories = categorizeTrackers(uniqueTrackers)
         view?.reloadData()
     }
     
     private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
-        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
+        let uniqueTrackers = Array(Set(trackers.map { $0.id }))
+            .compactMap { id in trackers.first { $0.id == id } }
+
+        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: uniqueTrackers, by: { $0.categoryTitle })
 
         return groupedTrackers.map { (title: String, trackers: [Tracker]) in
             TrackerCategory(title: title, trackers: trackers)
@@ -131,7 +145,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func saveCompletedTrackersToUserDefaults() {
-        guard let view = view else { return }
+        guard let view else { return }
         UserDefaults.standard.saveCompletedTrackers(view.completedTrackers)
     }
     

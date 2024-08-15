@@ -16,3 +16,4 @@ enum DayOfTheWeek: String, Codable, CaseIterable {
     case saturday = "Суббота"
     case sunday = "Воскресенье"
 }
+

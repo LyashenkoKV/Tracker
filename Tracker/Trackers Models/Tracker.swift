@@ -15,12 +15,28 @@ struct Tracker: Codable {
     let schedule: Schedule
     let categoryTitle: String
     let isRegularEvent: Bool
+    let creationDate: Date?
     
     private enum CodingKeys: String, CodingKey {
-        case id, name, color, emoji, schedule, categoryTitle, isRegularEvent
+        case id, 
+             name,
+             color,
+             emoji,
+             schedule,
+             categoryTitle,
+             isRegularEvent,
+             creationDate
     }
     
-    init(id: UUID, name: String, color: UIColor, emoji: String, schedule: Schedule, categoryTitle: String, isRegularEvent: Bool) {
+    init(id: UUID,
+        name: String,
+        color: UIColor,
+        emoji: String,
+        schedule: Schedule,
+        categoryTitle: String,
+        isRegularEvent: Bool,
+        creationDate: Date? = nil
+    ) {
         self.id = id
         self.name = name
         self.color = color
@@ -28,6 +44,7 @@ struct Tracker: Codable {
         self.schedule = schedule
         self.categoryTitle = categoryTitle
         self.isRegularEvent = isRegularEvent
+        self.creationDate = creationDate
     }
     
     func encode(to encoder: Encoder) throws {
@@ -39,6 +56,7 @@ struct Tracker: Codable {
         try container.encode(schedule, forKey: .schedule)
         try container.encode(categoryTitle, forKey: .categoryTitle)
         try container.encode(isRegularEvent, forKey: .isRegularEvent)
+        try container.encode(creationDate, forKey: .creationDate)  // Новое поле
     }
     
     init(from decoder: Decoder) throws {
@@ -51,5 +69,6 @@ struct Tracker: Codable {
         schedule = try container.decode(Schedule.self, forKey: .schedule)
         categoryTitle = try container.decode(String.self, forKey: .categoryTitle)
         isRegularEvent = try container.decodeIfPresent(Bool.self, forKey: .isRegularEvent) ?? true
+        creationDate = try container.decodeIfPresent(Date.self, forKey: .creationDate) ?? Date()
     }
 }

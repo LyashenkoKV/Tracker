@@ -33,6 +33,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         let tracker = trackers[indexPath.row]
         let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
         
+        print("Отображается трекер с ID: \(tracker.id) дата: \(tracker.schedule.days)")
+        
         let trackerId = tracker.id
         let isRegularEvent = tracker.isRegularEvent
         
@@ -41,6 +43,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
         
         let isDateValidForCompletion = presenter?.isDateValidForCompletion(date: currentDate) ?? false
+        
+        cell.prepareForReuse()
         
         cell.configure(
             with: tracker,
@@ -51,9 +55,13 @@ extension TrackersViewController: UICollectionViewDataSource {
         )
         
         cell.selectButtonTappedHandler = { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
+            
             if isDateValidForCompletion {
-                self.presenter?.handleTrackerSelection(tracker, isCompleted: isCompletedToday, date: self.currentDate)
+                self.presenter?.handleTrackerSelection(
+                    tracker,
+                    isCompleted: isCompletedToday,
+                    date: self.currentDate)
                 
                 collectionView.reloadItems(at: [indexPath])
             } else {
