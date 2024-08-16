@@ -140,7 +140,7 @@ class BaseTrackerViewController: UIViewController {
 
 // MARK: - UserDafaults
 extension BaseTrackerViewController {
-    
+    // Не забыть вынести в глоб экст
     func saveCategoriesToUserDefaults() {
         UserDefaults.standard.savedCategories(categories)
         
@@ -153,11 +153,9 @@ extension BaseTrackerViewController {
     
     func saveSelectedDays() {
         if let selectedDays = selectedDays?.days {
-            print("Сохранение выбранных дней: \(selectedDays)")
             let encodedDays = selectedDays.map { $0.rawValue }
             UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
         } else {
-            print("Удаление сохраненных дней (selectedDays равно nil).")
             UserDefaults.standard.removeObject(forKey: "selectedDays")
         }
     }
@@ -176,11 +174,14 @@ extension BaseTrackerViewController {
         if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
             let loadedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
             selectedDays = Schedule(days: loadedDays)
-            print("Загруженные дни: \(loadedDays)")
         } else {
-            print("Сохраненные дни не найдены.")
             selectedDays = nil
         }
+    }
+    
+    func clearSavedData() {
+        UserDefaults.standard.removeObject(forKey: "selectedCategory")
+        UserDefaults.standard.removeObject(forKey: "selectedDays")
     }
     
     func deleteCategory(at indexPath: IndexPath) {
@@ -201,7 +202,6 @@ extension BaseTrackerViewController {
 extension BaseTrackerViewController: ScheduleSelectionDelegate {
     func didSelect(_ days: [DayOfTheWeek]) {
         selectedDays = Schedule(days: days)
-        saveSelectedDays()
         tableView.reloadRows(
             at: [IndexPath(
                 row: 1,

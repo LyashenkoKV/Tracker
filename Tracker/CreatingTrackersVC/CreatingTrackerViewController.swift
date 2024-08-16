@@ -105,7 +105,9 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             "tracker": tracker,
             "categoryTitle": categoryTitle
         ]
-
+        
+        clearSavedData()
+        
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
