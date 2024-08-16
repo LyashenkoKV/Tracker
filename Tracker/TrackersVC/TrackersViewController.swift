@@ -46,10 +46,13 @@ final class TrackersViewController: UIViewController {
     private lazy var searchController: UISearchController = {
         let searchController = UISearchController()
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.barTintColor = .systemBlue
-        searchController.searchBar.tintColor = .systemBlue
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.placeholder = "Поиск"
         searchController.searchBar.delegate = self
         searchController.delegate = self
+        searchController.searchBar.barTintColor = .systemBlue
+        searchController.searchBar.tintColor = .systemBlue
         return searchController
     }()
     
@@ -63,6 +66,7 @@ final class TrackersViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.alwaysBounceVertical = true
         collectionView.accessibilityIdentifier = "TrackersCollectionView"
         
         collectionView.register(
@@ -108,6 +112,16 @@ final class TrackersViewController: UIViewController {
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.hidesBarsOnSwipe = false
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.searchController = searchController
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -192,10 +206,14 @@ extension TrackersViewController {
     func setupNavigationBar() -> UINavigationController {
         let navigationController = UINavigationController(rootViewController: self)
         navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.hidesBarsOnSwipe = false
+
         navigationItem.searchController = searchController
         navigationItem.searchController?.searchBar.placeholder = "Поиск"
         navigationItem.leftBarButtonItem = addNewTrackerButtonItem
         navigationItem.rightBarButtonItem = calendarButtonItem
+        navigationItem.largeTitleDisplayMode = .always
+
         return navigationController
     }
     
