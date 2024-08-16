@@ -62,6 +62,10 @@ final class TextViewCell: UITableViewCell {
         ])
     }
     
+    func isPlaceholderActive() -> Bool {
+        return getText().text == placeholderText
+    }
+    
     func getText() -> UITextView {
         return textView
     }

@@ -37,6 +37,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        clearSavedData()
     }
     
     override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
@@ -48,7 +49,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
         
-        let textIsValid = !textViewCell.getText().text.isEmpty
+        let textIsValid = !textViewCell.isPlaceholderActive() && !textViewCell.getText().text.isEmpty
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
         let emojiIsSelected = selectedEmoji != nil
@@ -120,8 +121,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             "tracker": tracker,
             "categoryTitle": categoryTitle
         ]
-        
-        clearSavedData()
         
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
         
@@ -238,10 +237,12 @@ extension CreatingTrackerViewController {
             
             cell.onCreateButtonTapped = { [weak self] in
                 self?.handleCreateButtonTapped()
+                self?.clearSavedData()
             }
             
             cell.onCancelButtonTapped = { [weak self] in
                 self?.handleCancelButtonTapped()
+                self?.clearSavedData()
             }
             cell.selectionStyle = .none
             return cell
