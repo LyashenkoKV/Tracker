@@ -39,6 +39,10 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        updateCreateButtonState()
+    }
+    
     private func updateCreateButtonState() {
         guard let textViewCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
@@ -91,9 +95,14 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryTitle: String
         
         if let selectedCategory = selectedCategory {
+            updateCreateButtonState()
             categoryTitle = selectedCategory.title
         } else {
             categoryTitle = "Новая категория"
+        }
+        
+        if selectedDays != nil {
+            updateCreateButtonState()
         }
 
         let tracker = Tracker(

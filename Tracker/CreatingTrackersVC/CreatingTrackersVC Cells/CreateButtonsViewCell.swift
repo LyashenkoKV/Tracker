@@ -88,7 +88,7 @@ final class CreateButtonsViewCell: UITableViewCell {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 15
-        button.isUserInteractionEnabled = false
+        button.isUserInteractionEnabled = true
         button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
