@@ -152,6 +152,8 @@ final class TrackersCardCell: UICollectionViewCell {
         completeButton.backgroundColor = buttonColor
         completeButton.isEnabled = isDateValidForCompletion
         
+        counterLabel.isHidden = !isRegularEvent
+        
         let countDays = countComplete.filter { record in
             return record.trackerId == tracker.id
         }.count

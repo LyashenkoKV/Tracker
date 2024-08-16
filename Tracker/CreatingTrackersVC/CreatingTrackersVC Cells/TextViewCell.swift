@@ -45,6 +45,7 @@ final class TextViewCell: UITableViewCell {
         setupUI()
         textView.delegate = self
         textView.text = placeholderText
+        textView.font = UIFont.systemFont(ofSize: 17, weight: .regular)
     }
     
     required init?(coder: NSCoder) {

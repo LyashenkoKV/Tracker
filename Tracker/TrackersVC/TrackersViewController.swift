@@ -130,8 +130,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addNotification() {
-        NotificationCenter.default.addObserver(
-            self,
+        NotificationCenter.default.addObserver(            self,
             selector: #selector(handleTrackerCreated),
             name: .trackerCreated,
             object: nil

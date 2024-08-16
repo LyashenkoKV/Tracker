@@ -92,13 +92,16 @@ final class CategoryViewController: BaseTrackerViewController {
     // MARK: - Overriding updateUI
     override func updateUI() {
         super.updateUI()
-        placeholder.view.isHidden = !categories.isEmpty
-        addCategoryButton.isEnabled = !isAddingCategory
+        
+        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
 
+        addCategoryButton.isEnabled = !isAddingCategory
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
         addCategoryButton.setTitle(isAddingCategory ? "Готово" : "Добавить категорию", for: .normal)
+
         tableView.reloadData()
     }
+
     
     override func textViewCellDidChange(_ cell: TextViewCell) {
         super.textViewCellDidChange(cell)

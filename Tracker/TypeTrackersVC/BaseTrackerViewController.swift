@@ -36,7 +36,6 @@ class BaseTrackerViewController: UIViewController {
         tableView.register(EmojiesAndColorsTableViewCell.self, forCellReuseIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier)
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.reuseIdentifier)
-        tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseIdentifier)
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
         tableView.backgroundColor = .ypWhite
         tableView.separatorStyle = .none
@@ -345,10 +344,10 @@ extension BaseTrackerViewController: UITableViewDataSource {
         
         if let editingIndex = editingCategoryIndex, editingIndex.row == indexPath.row {
             let category = categories[editingIndex.row]
-            cell.getText().text = category.title // Прямой доступ к свойству `title`
+            cell.getText().text = category.title
             self.title = "Редактирование категории"
         } else {
-            cell.getText().text = ""
+            cell.getText().text = !isAddingCategory ? "" : "Введите название категории"
             self.title = "Новая категория"
         }
         
@@ -368,6 +367,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
+                content.textProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -376,9 +376,13 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 } else {
                     content.secondaryText = selectedDaysString()
                 }
+                content.secondaryTextProperties.color = .ypGray
+                content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+                cell.detailTextLabel?.textColor = .ypGray
+                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {

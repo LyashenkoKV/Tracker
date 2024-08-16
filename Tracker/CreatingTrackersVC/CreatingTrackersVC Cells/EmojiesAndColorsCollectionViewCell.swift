@@ -56,21 +56,29 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
         isEmoji: Bool,
         isSelected: Bool,
         hasSelectedItem: Bool) {
-            
+
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            
+            contentView.layer.borderWidth = 0
+            contentView.backgroundColor = .clear
+            emojiLabel.text = ""
+            colorView.backgroundColor = .clear
+            
             if isEmoji {
                 emojiLabel.text = element
                 colorView.isHidden = true
                 contentView.backgroundColor = isSelected ? .ypLightGray : .clear
             } else {
-                emojiLabel.text = ""
                 colorView.isHidden = false
                 colorView.backgroundColor = UIColor(hex: element)
-                contentView.layer.borderWidth = isSelected ? 3 : 0
-                contentView.layer.borderColor = isSelected ? UIColor(hex: element)?.withAlphaComponent(0.3).cgColor : UIColor.clear.cgColor
+                if isSelected {
+                    contentView.layer.borderWidth = 3
+                    contentView.layer.borderColor = UIColor(hex: element)?.withAlphaComponent(0.3).cgColor
+                }
             }
             //contentView.alpha = hasSelectedItem ? (isSelected ? 1.0 : 0.2) : 1.0
         }
     }
+
 }

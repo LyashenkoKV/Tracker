@@ -27,8 +27,12 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNotificationObservers()
-        updateCreateButtonState()
         dismissKeyboard(view: self.view)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateCreateButtonState()
     }
     
     deinit {
@@ -40,20 +44,22 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
         
-        let isValid = isRegularEvent
-        ? !(textViewCell.getText().text.isEmpty) &&
-        !(selectedDays?.days.isEmpty ?? true) &&
-        selectedCategory != nil &&
-        selectedColor != nil &&
-        (selectedEmoji?.isEmpty ?? true) == false
-        : !(textViewCell.getText().text.isEmpty) &&
-        selectedCategory != nil &&
-        selectedColor != nil &&
-        (selectedEmoji?.isEmpty ?? true) == false
+        let textIsValid = !textViewCell.getText().text.isEmpty
+        let categoryIsSelected = selectedCategory != nil
+        let colorIsSelected = selectedColor != nil
+        let emojiIsSelected = selectedEmoji != nil
+        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true)
+
+        let isValid: Bool
+
+        if isRegularEvent {
+            isValid = textIsValid && daysAreSelected && categoryIsSelected && colorIsSelected && emojiIsSelected
+        } else {
+            isValid = textIsValid && categoryIsSelected && colorIsSelected && emojiIsSelected
+        }
         
         if let createButtonCell = tableView.cellForRow(
-            at: IndexPath(row: 0,
-                          section: TrackerSection.createButtons.rawValue)
+            at: IndexPath(row: 0, section: TrackerSection.createButtons.rawValue)
         ) as? CreateButtonsViewCell {
             createButtonCell.updateCreateButtonState(isEnabled: isValid)
         }
@@ -112,7 +118,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
-
 
     private func handleCancelButtonTapped() {
         presentingViewController?.presentingViewController?.dismiss(animated: true)
@@ -234,5 +239,3 @@ extension CreatingTrackerViewController {
         }
     }
 }
-
-
