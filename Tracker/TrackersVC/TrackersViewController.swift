@@ -246,6 +246,7 @@ extension TrackersViewController {
             )
         }
         presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
+        presenter?.filterTrackers(for: currentDate)
     }
 }
 
