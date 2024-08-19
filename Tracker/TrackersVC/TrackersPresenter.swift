@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 // MARK: - Protocol
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
@@ -24,6 +25,8 @@ protocol TrackersPresenterProtocol {
 final class TrackersPresenter {
     weak var view: TrackersViewControllerProtocol?
     
+    private var context: NSManagedObjectContext
+    
     lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yy"
@@ -31,8 +34,12 @@ final class TrackersPresenter {
         return dateFormatter
     }()
     
-    init(view: TrackersViewControllerProtocol) {
+    init(
+        view: TrackersViewControllerProtocol,
+        context: NSManagedObjectContext = CoreDataStack.shared.context
+    ) {
         self.view = view
+        self.context = context
     }
 }
 
