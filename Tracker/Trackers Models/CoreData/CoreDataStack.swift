@@ -11,9 +11,9 @@ import CoreData
 final class CoreDataStack {
     static let shared = CoreDataStack()
 
-    lazy var persistentContainer: NSPersistentContainer = {
+    private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TrackerCoreData")
-        container.loadPersistentStores { description, error in
+        container.loadPersistentStores { (storeDescription, error) in
             if let error = error {
                 Logger.shared.log(.error,
                                   message: "CoreDataStack: ошибка при создании контейнера CoreData",
@@ -36,7 +36,7 @@ final class CoreDataStack {
                 let nserror = error as NSError
                 Logger.shared.log(.error,
                                   message: "CoreDataStack: ошибка сохранения контекста CoreData",
-                                  metadata: ["❌": error.localizedDescription])
+                                  metadata: ["❌": nserror.localizedDescription])
             }
         }
     }

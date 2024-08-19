@@ -237,12 +237,10 @@ extension CreatingTrackerViewController {
             
             cell.onCreateButtonTapped = { [weak self] in
                 self?.handleCreateButtonTapped()
-                self?.clearSavedData()
             }
             
             cell.onCancelButtonTapped = { [weak self] in
                 self?.handleCancelButtonTapped()
-                self?.clearSavedData()
             }
             cell.selectionStyle = .none
             return cell
