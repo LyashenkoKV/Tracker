@@ -52,7 +52,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let textIsValid = !textViewCell.isPlaceholderActive() && !textViewCell.getText().text.isEmpty
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
-        let emojiIsSelected = selectedEmoji != nil
+        let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
         let daysAreSelected = !(selectedDays?.days.isEmpty ?? true)
 
         let isValid: Bool

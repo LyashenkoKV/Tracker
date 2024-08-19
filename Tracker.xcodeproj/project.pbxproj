@@ -26,6 +26,8 @@
 		2411D6AA2C6943300031C584 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A92C69432F0031C584 /* ScheduleViewController.swift */; };
 		2411D6AC2C69456B0031C584 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6AB2C69456B0031C584 /* BaseCell.swift */; };
 		2411D6AE2C6945D40031C584 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6AD2C6945D40031C584 /* ScheduleCell.swift */; };
+		241FE2B62C735C3200903AC8 /* TrackerCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 241FE2B42C735C3200903AC8 /* TrackerCoreData.xcdatamodeld */; };
+		241FE2C52C7383CB00903AC8 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */; };
 		243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DB2C525B3500B0F1D3 /* AppDelegate.swift */; };
 		243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */; };
 		243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024DF2C525B3500B0F1D3 /* MainViewController.swift */; };
@@ -73,6 +75,8 @@
 		2411D6A92C69432F0031C584 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		2411D6AB2C69456B0031C584 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		2411D6AD2C6945D40031C584 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
+		241FE2B52C735C3200903AC8 /* TrackerCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreData.xcdatamodel; sourceTree = "<group>"; };
+		241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		243024D82C525B3500B0F1D3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		243024DB2C525B3500B0F1D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -199,6 +203,15 @@
 			path = ScheduleVC;
 			sourceTree = "<group>";
 		};
+		241FE2B72C735C4600903AC8 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */,
+				241FE2B42C735C3200903AC8 /* TrackerCoreData.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		243024CF2C525B3500B0F1D3 = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +282,7 @@
 		247E504C2C58DC3200630037 /* Trackers Models */ = {
 			isa = PBXGroup;
 			children = (
+				241FE2B72C735C4600903AC8 /* CoreData */,
 				247E504D2C58DC4800630037 /* Tracker.swift */,
 				247E504F2C58DC6400630037 /* TrackerCategory.swift */,
 				247E50512C58DC7700630037 /* TrackerRecord.swift */,
@@ -380,11 +394,13 @@
 				2411D66E2C5CD39A0031C584 /* TrackersViewController + Extension DelegateFlowLayout.swift in Sources */,
 				247E50542C58EC5900630037 /* Schedule.swift in Sources */,
 				2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */,
+				241FE2B62C735C3200903AC8 /* TrackerCoreData.xcdatamodeld in Sources */,
 				2411D6852C623F950031C584 /* TextViewCell.swift in Sources */,
 				2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */,
 				2476B0B52C6CB1AB00ADAD1B /* LayoutConfiguratorFactory.swift in Sources */,
 				2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */,
 				2411D69B2C63AAD90031C584 /* CategoryViewController.swift in Sources */,
+				241FE2C52C7383CB00903AC8 /* CoreDataStack.swift in Sources */,
 				247E50502C58DC6400630037 /* TrackerCategory.swift in Sources */,
 				2411D6772C622E200031C584 /* CreatingTrackerViewController.swift in Sources */,
 				2476B0AD2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift in Sources */,
@@ -609,6 +625,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		241FE2B42C735C3200903AC8 /* TrackerCoreData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				241FE2B52C735C3200903AC8 /* TrackerCoreData.xcdatamodel */,
+			);
+			currentVersion = 241FE2B52C735C3200903AC8 /* TrackerCoreData.xcdatamodel */;
+			path = TrackerCoreData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 243024D02C525B3500B0F1D3 /* Project object */;
 }
