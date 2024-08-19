@@ -40,7 +40,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         clearSavedData()
     }
     
-    override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+    override func textViewCellDidChange(_ cell: TextViewCell) {
         updateCreateButtonState()
     }
     
@@ -53,7 +53,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
         let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
-        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true)
+        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true) && selectedDays != nil
 
         let isValid: Bool
 

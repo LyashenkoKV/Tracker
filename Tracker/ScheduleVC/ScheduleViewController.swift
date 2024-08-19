@@ -24,8 +24,7 @@ class ScheduleViewController: BaseTrackerViewController {
         cornerRadius: 20,
         font: UIFont.systemFont(
             ofSize: 16,
-            weight: .medium
-        ),
+            weight: .medium),
         target: self,
         action: #selector(addDoneButtonAction)
     )

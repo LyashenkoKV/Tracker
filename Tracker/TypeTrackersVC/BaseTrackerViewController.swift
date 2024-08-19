@@ -130,6 +130,16 @@ class BaseTrackerViewController: UIViewController {
         tableView.reloadData()
     }
     
+    
+    func textViewCellDidBeginEditing(_ cell: TextViewCell) {
+        switch viewControllerType {
+        case .creatingTracker:
+            self.title = "Создание привычки"
+        default:
+            break
+        }
+    }
+    
     func dismissOrCancel() {
         isAddingCategory = false
         dismiss(animated: true)
@@ -228,15 +238,6 @@ extension BaseTrackerViewController: TextViewCellDelegate {
         isFooterVisible = false
         tableView.beginUpdates()
         tableView.endUpdates()
-    }
-    
-    func textViewCellDidBeginEditing(_ cell: TextViewCell) {
-        switch viewControllerType {
-        case .creatingTracker:
-            self.title = "Создание привычки"
-        default:
-            break
-        }
     }
 }
 

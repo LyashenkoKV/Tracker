@@ -58,12 +58,13 @@ final class TextViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//        textView.text = placeholderText
-//        textView.textColor = .lightGray
-//        isVisiblePlaceholder = true
-//    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        if isVisiblePlaceholder {
+            textView.text = placeholderText
+            textView.textColor = .lightGray
+        }
+    }
     
     private func setupUI() {
         contentView.addSubview(textView)
