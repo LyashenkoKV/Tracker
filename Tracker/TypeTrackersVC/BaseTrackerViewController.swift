@@ -112,7 +112,6 @@ class BaseTrackerViewController: UIViewController {
         tableView.reloadData()
     }
     
-    // ‼️ Не нравится мне как работает редактирование, сепаратор скачет, надо поправить
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
         guard isAddingCategory else { return }
         
@@ -297,17 +296,38 @@ extension BaseTrackerViewController: UITableViewDataSource {
     
     private func configureTypeTrackersCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        if indexPath.section == 0 {
-            cell.textLabel?.text = "Привычка"
-        } else if indexPath.section == 1 {
-            cell.textLabel?.text = "Нерегулярное событие"
+        
+        if #available(iOS 14.0, *) {
+            var content = cell.defaultContentConfiguration()
+            if indexPath.section == 0 {
+                content.text = "Привычка"
+            } else if indexPath.section == 1 {
+                content.text = "Нерегулярное событие"
+            }
+            content.textProperties.alignment = .center
+            content.textProperties.color = .ypWhite
+            content.textProperties.font = UIFont.systemFont(
+                ofSize: 16,
+                weight: .medium
+            )
+            cell.contentConfiguration = content
+        } else {
+            if indexPath.section == 0 {
+                cell.textLabel?.text = "Привычка"
+            } else if indexPath.section == 1 {
+                cell.textLabel?.text = "Нерегулярное событие"
+            }
+            cell.textLabel?.textAlignment = .center
+            cell.textLabel?.font = UIFont.systemFont(
+                ofSize: 16,
+                weight: .medium
+            )
+            cell.textLabel?.textColor = .ypWhite
         }
-        cell.textLabel?.textAlignment = .center
-        cell.backgroundColor = .ypBlack
-        cell.textLabel?.textColor = .ypWhite
         cell.layer.cornerRadius = 16
         cell.clipsToBounds = true
         cell.selectionStyle = .none
+        cell.backgroundColor = .ypBlack
         return cell
     }
     
@@ -342,7 +362,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         }
         cell.delegate = self
         
-        if let editingIndex = editingCategoryIndex, editingIndex.row == indexPath.row {
+        if let editingIndex = editingCategoryIndex {
             let category = categories[editingIndex.row]
             cell.getText().text = category.title
             self.title = "Редактирование категории"
@@ -367,7 +387,10 @@ extension BaseTrackerViewController: UITableViewDataSource {
             if #available(iOS 14.0, *) {
                 var content = cell.defaultContentConfiguration()
                 content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                content.textProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+                content.textProperties.font = UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .regular
+                )
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -377,12 +400,18 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     content.secondaryText = selectedDaysString()
                 }
                 content.secondaryTextProperties.color = .ypGray
-                content.secondaryTextProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+                content.secondaryTextProperties.font = UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .regular
+                )
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
                 cell.detailTextLabel?.textColor = .ypGray
-                cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+                cell.detailTextLabel?.font = UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .regular
+                )
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -528,12 +557,13 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
                     let editAction = UIAction(title: "Редактировать") { _ in
                         self?.startEditingCategory(at: indexPath)
+                        tableView.reloadData()
                     }
                     
                     let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
                         self?.deleteCategory(at: indexPath)
+                        tableView.reloadData()
                     }
-                    
                     return UIMenu(title: "", children: [editAction, deleteAction])
                 })
                 
@@ -641,7 +671,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
             footerLabel.translatesAutoresizingMaskIntoConstraints = false
             footerLabel.text = footerTitle
             footerLabel.textColor = .ypRed
-            footerLabel.font = UIFont.systemFont(ofSize: 17)
+            footerLabel.font = UIFont.systemFont(
+                ofSize: 17,
+                weight: .regular
+            )
             footerLabel.textAlignment = .center
             
             footerView.addSubview(footerLabel)

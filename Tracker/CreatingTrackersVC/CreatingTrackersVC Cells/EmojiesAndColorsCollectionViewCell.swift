@@ -14,7 +14,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 32)
+        label.font = UIFont.boldSystemFont(ofSize: 32)
         return label
     }()
     

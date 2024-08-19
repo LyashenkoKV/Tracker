@@ -22,7 +22,7 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
             image: UIImage(named: "Error"),
-            text: "Что будем отслеживать?"
+            text: "Привычки и события можно\nобъединить по смыслу"
         )
         return placeholder
     }()
@@ -32,7 +32,10 @@ final class CategoryViewController: BaseTrackerViewController {
         backgroundColor: .ypBlack,
         titleColor: .ypWhite,
         cornerRadius: 20,
-        font: UIFont.systemFont(ofSize: 16),
+        font: UIFont.systemFont(
+            ofSize: 16,
+            weight: .medium
+        ),
         target: self,
         action: #selector(addCategoryButtonAction)
     )

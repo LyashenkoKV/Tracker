@@ -40,7 +40,10 @@ final class TrackersCardCell: UICollectionViewCell {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(
+            ofSize: 12,
+            weight: .medium
+        )
         label.textColor = .ypWhite
         label.numberOfLines = 0
         return label
@@ -48,7 +51,10 @@ final class TrackersCardCell: UICollectionViewCell {
     
     private let emoji: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.systemFont(
+            ofSize: 16,
+            weight: .medium
+        )
         label.layer.cornerRadius = 12
         label.layer.masksToBounds = true
         label.backgroundColor = .systemBackground.withAlphaComponent(0.3)
@@ -94,7 +100,10 @@ final class TrackersCardCell: UICollectionViewCell {
     
     private lazy var counterLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(
+            ofSize: 12,
+            weight: .medium
+        )
         label.textColor = .ypBlack
         return label
     }()

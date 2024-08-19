@@ -13,7 +13,10 @@ final class SectionHeaderView: UICollectionReusableView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        label.font = UIFont.systemFont(
+            ofSize: 19,
+            weight: .bold
+        )
         label.numberOfLines = 0
         return label
     }()

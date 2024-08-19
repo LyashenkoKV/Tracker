@@ -86,7 +86,10 @@ final class CreateButtonsViewCell: UITableViewCell {
         button.backgroundColor = backgroundColor
         button.setTitleColor(titleColor, for: .normal)
         button.setTitle(title, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.titleLabel?.font = UIFont.systemFont(
+            ofSize: 16,
+            weight: .medium
+        )
         button.layer.cornerRadius = 15
         button.isUserInteractionEnabled = true
         button.addTarget(self, action: action, for: .touchUpInside)

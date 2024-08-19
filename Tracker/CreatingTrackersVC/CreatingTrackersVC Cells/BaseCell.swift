@@ -13,7 +13,10 @@ class CategoryBaseCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIFont.systemFont(
+            ofSize: 17,
+            weight: .regular
+        )
         return label
     }()
     

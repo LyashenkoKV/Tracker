@@ -27,7 +27,10 @@ final class TextViewCell: UITableViewCell {
     
     private let textView: UITextView = {
         let textView = UITextView()
-        textView.font = UIFont.systemFont(ofSize: 16)
+        textView.font = UIFont.systemFont(
+            ofSize: 17,
+            weight: .regular
+        )
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.textColor = .lightGray
         textView.tintColor = .systemBlue
@@ -45,11 +48,21 @@ final class TextViewCell: UITableViewCell {
         setupUI()
         textView.delegate = self
         textView.text = placeholderText
-        textView.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textView.font = UIFont.systemFont(
+            ofSize: 17,
+            weight: .regular
+        )
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        textView.text = placeholderText
+        textView.textColor = .lightGray
+        isVisiblePlaceholder = true
     }
     
     private func setupUI() {

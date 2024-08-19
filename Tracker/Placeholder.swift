@@ -24,9 +24,13 @@ struct Placeholder {
         
         label = UILabel()
         label.text = text
-        label.font = .systemFont(ofSize: 12)
+        label.font = .systemFont(
+            ofSize: 12,
+            weight: .medium
+        )
         label.textColor = .ypBlack
         label.textAlignment = .center
+        label.numberOfLines = 0
         
         let stackView = UIStackView(arrangedSubviews: [imageView, label])
         stackView.axis = .vertical
