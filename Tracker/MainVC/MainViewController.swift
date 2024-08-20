@@ -15,6 +15,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
+        UserDefaults.standard.clearSavedData()
     }
     
     private func switchToTapBarController() {

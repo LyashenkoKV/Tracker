@@ -187,11 +187,6 @@ extension BaseTrackerViewController {
         }
     }
     
-    func clearSavedData() {
-        UserDefaults.standard.removeObject(forKey: "selectedCategory")
-        UserDefaults.standard.removeObject(forKey: "selectedDays")
-    }
-    
     func deleteCategory(at indexPath: IndexPath) {
         let deletedCategory = categories[indexPath.row]
         categories.remove(at: indexPath.row)

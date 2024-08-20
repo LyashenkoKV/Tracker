@@ -86,4 +86,9 @@ extension UserDefaults {
             return []
         }
     }
+    
+    func clearSavedData() {
+        UserDefaults.standard.removeObject(forKey: "selectedCategory")
+        UserDefaults.standard.removeObject(forKey: "selectedDays")
+    }
 }
