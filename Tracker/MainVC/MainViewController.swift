@@ -15,6 +15,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
+        UserDefaults.standard.clearSavedData()
     }
     
     private func switchToTapBarController() {
@@ -35,6 +36,8 @@ final class MainViewController: UIViewController {
     
     private func createTabBarController() -> UITabBarController {
         let navigationController = trackersViewController.setupNavigationBar()
+        
+        trackersViewController.configure(TrackersPresenter(view: trackersViewController))
         
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",
