@@ -13,10 +13,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     private var selectedColor: UIColor?
     private var selectedEmoji: String?
     private var isRegularEvent: Bool
-    
-    init(type: TrackerViewControllerType,
-         isRegularEvent: Bool
-    ) {
+
+    init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
         super.init(type: type)
     }
@@ -65,15 +63,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             isValid = textIsValid && categoryIsSelected && colorIsSelected && emojiIsSelected
         }
         
-        if isValid {
-            switch viewControllerType {
-            case .creatingTracker:
-                self.title = "Создание привычки"
-            default:
-                break
-            }
-        }
-        
         if let createButtonCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.createButtons.rawValue)
         ) as? CreateButtonsViewCell {
@@ -100,9 +89,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         ) as? TextViewCell,
         let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
         let selectedColor = selectedColor,
-        let selectedEmoji = selectedEmoji else {
-            return
-        }
+        let selectedEmoji = selectedEmoji else { return }
         
         let categoryTitle: String
         
@@ -116,7 +103,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         if selectedDays != nil {
             updateCreateButtonState()
         }
-
+        
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,

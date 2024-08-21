@@ -132,12 +132,12 @@ class BaseTrackerViewController: UIViewController {
     
     
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
-//        switch viewControllerType {
-//        case .creatingTracker:
-//            self.title = "Создание привычки"
-//        default:
-//            break
-//        }
+        switch viewControllerType {
+        case .creatingTracker:
+            self.title = "Создание привычки"
+        default:
+            break
+        }
     }
     
     func dismissOrCancel() {

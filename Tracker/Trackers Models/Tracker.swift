@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Tracker: Codable {
+struct Tracker: Codable, Hashable {
     let id: UUID
     let name: String
     let color: UIColor
@@ -70,5 +70,13 @@ struct Tracker: Codable {
         categoryTitle = try container.decode(String.self, forKey: .categoryTitle)
         isRegularEvent = try container.decodeIfPresent(Bool.self, forKey: .isRegularEvent) ?? true
         creationDate = try container.decodeIfPresent(Date.self, forKey: .creationDate) ?? Date()
+    }
+    
+    static func == (lhs: Tracker, rhs: Tracker) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

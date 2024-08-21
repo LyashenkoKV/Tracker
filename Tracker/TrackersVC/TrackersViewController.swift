@@ -130,8 +130,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addNotification() {
-        NotificationCenter.default.addObserver(
-            self,
+        NotificationCenter.default.addObserver(            self,
             selector: #selector(handleTrackerCreated),
             name: .trackerCreated,
             object: nil
@@ -178,7 +177,7 @@ final class TrackersViewController: UIViewController {
 //        }
 //        updatePlaceholderView()
 //    }
-//    
+//
     func deleteTracker(at indexPath: IndexPath) {
         let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
             if index == indexPath.section {
@@ -243,7 +242,7 @@ extension TrackersViewController {
               let categoryTitle = userInfo["categoryTitle"] as? String else {
             return
         }
-
+        
         var updatedTracker = tracker
 
         if !tracker.isRegularEvent {
@@ -259,7 +258,7 @@ extension TrackersViewController {
                 emoji: tracker.emoji,
                 schedule: Schedule(days: [selectedDay]),
                 categoryTitle: categoryTitle,
-                isRegularEvent: tracker.isRegularEvent, 
+                isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate
             )
         }

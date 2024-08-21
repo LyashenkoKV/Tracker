@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 // MARK: - Protocol
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
@@ -23,7 +24,6 @@ protocol TrackersPresenterProtocol {
 // MARK: - Object
 final class TrackersPresenter {
     weak var view: TrackersViewControllerProtocol?
-    
     
     lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -43,12 +43,12 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func addTracker(_ tracker: Tracker, categotyTitle: String) {
         guard let view else { return }
-        
+        var allTrackers = UserDefaults.standard.loadTrackers()
         var updatedCategories = view.categories
-        
+
         if let sectionIndex = view.categories.firstIndex(where: { $0.title == categotyTitle }) {
             let category = view.categories[sectionIndex]
-            
+
             if !category.trackers.contains(where: { $0.id == tracker.id }) {
                 let updatedTrackers = category.trackers + [tracker]
                 let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
@@ -58,9 +58,13 @@ extension TrackersPresenter: TrackersPresenterProtocol {
             let newCategory = TrackerCategory(title: categotyTitle, trackers: [tracker])
             updatedCategories.append(newCategory)
         }
+
         view.categories = updatedCategories
         view.reloadData()
-        saveTrackers()
+        allTrackers.append(tracker)
+        allTrackers = Array(Set(allTrackers))
+        
+        UserDefaults.standard.saveTrackers(allTrackers)
     }
 
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
@@ -108,7 +112,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     
     func filterTrackers(for date: Date) {
         let savedTrackers = UserDefaults.standard.loadTrackers()
-        
+
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
@@ -141,7 +145,12 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     private func saveTrackers() {
-        let allTrackers = view?.categories.flatMap { $0.trackers } ?? []
+        var allTrackers = UserDefaults.standard.loadTrackers()
+
+        if let currentTrackers = view?.categories.flatMap({ $0.trackers }) {
+            allTrackers += currentTrackers
+        }
+        allTrackers = Array(Set(allTrackers))
         UserDefaults.standard.saveTrackers(allTrackers)
     }
     
