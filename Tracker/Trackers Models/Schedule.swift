@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct Schedule: Codable {
     let days: [DayOfTheWeek]
 
