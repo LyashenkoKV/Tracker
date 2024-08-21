@@ -16,7 +16,7 @@ class BaseTrackerViewController: UIViewController {
     var categories: [TrackerCategory] = []
     
     private var selectedCategories: [TrackerCategory] = []
-    var selectedDays: Schedule?
+    var selectedDays: [DayOfTheWeek] = []
     var selectedCategory: TrackerCategory?
     
     var editingCategoryIndex: IndexPath?
@@ -130,7 +130,6 @@ class BaseTrackerViewController: UIViewController {
         tableView.reloadData()
     }
     
-    
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         switch viewControllerType {
         case .creatingTracker:
@@ -139,6 +138,9 @@ class BaseTrackerViewController: UIViewController {
             break
         }
     }
+    
+    func didSelectCategory(_ category: TrackerCategory) {}
+    func didSelect(_ days: [DayOfTheWeek]) {}
     
     func dismissOrCancel() {
         isAddingCategory = false
@@ -160,12 +162,8 @@ extension BaseTrackerViewController {
     }
     
     func saveSelectedDays() {
-        if let selectedDays = selectedDays?.days {
-            let encodedDays = selectedDays.map { $0.rawValue }
-            UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "selectedDays")
-        }
+        let encodedDays = selectedDays.map { $0.rawValue }
+        UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
     }
     
     func loadCategoriesFromUserDefaults() {
@@ -180,10 +178,9 @@ extension BaseTrackerViewController {
     
     func loadSelectedDays() {
         if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
-            let loadedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
-            selectedDays = Schedule(days: loadedDays)
+            selectedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
         } else {
-            selectedDays = nil
+            selectedDays = []
         }
     }
     
@@ -202,24 +199,9 @@ extension BaseTrackerViewController {
 }
 
 // MARK: - ScheduleSelectionDelegate
-extension BaseTrackerViewController: ScheduleSelectionDelegate {
-    func didSelect(_ days: [DayOfTheWeek]) {
-        selectedDays = Schedule(days: days)
-        tableView.reloadRows(
-            at: [IndexPath(
-                row: 1,
-                section: TrackerSection.buttons.rawValue
-            )], with: .automatic)
-    }
-}
-
+extension BaseTrackerViewController: ScheduleSelectionDelegate {}
 // MARK: - CategorySelectionDelegate
-extension BaseTrackerViewController: CategorySelectionDelegate {
-    func didSelectCategory(_ category: TrackerCategory) {
-        selectedCategory = category
-        tableView.reloadData()
-    }
-}
+extension BaseTrackerViewController: CategorySelectionDelegate {}
 
 // MARK: - TextViewCellDelegate
 extension BaseTrackerViewController: TextViewCellDelegate {
@@ -755,7 +737,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
 // MARK: - selectedDaysString
 extension BaseTrackerViewController {
     private func selectedDaysString() -> String {
-        guard let days = selectedDays?.days else {
+        if selectedDays.isEmpty {
             return ""
         }
         
@@ -766,13 +748,13 @@ extension BaseTrackerViewController {
         ]
         
         let fullWeek = Set(daysOrder)
-        let selectedSet = Set(days)
+        let selectedSet = Set(selectedDays)
         
         if selectedSet == fullWeek {
             return "Каждый день"
         }
         
-        let sortedDays = days.sorted {
+        let sortedDays = selectedDays.sorted {
             daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
         }
         

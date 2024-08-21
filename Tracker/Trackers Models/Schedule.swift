@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Schedule: Codable {
-    let days: [DayOfTheWeek]
-
-    func containsDay(_ day: DayOfTheWeek) -> Bool {
-        return days.contains(day)
-    }
-}
+//struct Schedule: Codable {
+//    let days: [DayOfTheWeek]
+//
+//    func containsDay(_ day: DayOfTheWeek) -> Bool {
+//        return days.contains(day)
+//    }
+//}

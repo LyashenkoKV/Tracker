@@ -256,7 +256,7 @@ extension TrackersViewController {
                 name: tracker.name,
                 color: tracker.color,
                 emoji: tracker.emoji,
-                schedule: Schedule(days: [selectedDay]),
+                schedule: [selectedDay],
                 categoryTitle: categoryTitle,
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate

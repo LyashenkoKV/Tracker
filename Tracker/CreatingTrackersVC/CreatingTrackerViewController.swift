@@ -44,7 +44,23 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         updateCreateButtonState()
     }
     
-    private func updateCreateButtonState() {
+    override func didSelectCategory(_ category: TrackerCategory) {
+        selectedCategory = category
+        tableView.reloadData()
+        updateCreateButtonState()
+    }
+    
+    override func didSelect(_ days: [DayOfTheWeek]) {
+        selectedDays = days
+        tableView.reloadRows(
+            at: [IndexPath(
+                row: 1,
+                section: TrackerSection.buttons.rawValue
+            )], with: .automatic)
+        updateCreateButtonState()
+    }
+    
+    func updateCreateButtonState() {
         guard let textViewCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
@@ -53,8 +69,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
         let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
-        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true) && selectedDays != nil
-
+        let daysAreSelected = !selectedDays.isEmpty
+        
         let isValid: Bool
 
         if isRegularEvent {
@@ -94,14 +110,9 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryTitle: String
         
         if let selectedCategory = selectedCategory {
-            updateCreateButtonState()
             categoryTitle = selectedCategory.title
         } else {
             categoryTitle = "Новая категория"
-        }
-        
-        if selectedDays != nil {
-            updateCreateButtonState()
         }
         
         let tracker = Tracker(
@@ -109,7 +120,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             name: trackerName,
             color: selectedColor,
             emoji: selectedEmoji,
-            schedule: selectedDays ?? Schedule(days: []),
+            schedule: selectedDays,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date()

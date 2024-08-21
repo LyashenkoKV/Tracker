@@ -121,7 +121,7 @@ extension TrackersPresenter: TrackersPresenterProtocol {
         
         let filteredTrackers = savedTrackers.filter { tracker in
             if tracker.isRegularEvent {
-                return tracker.schedule.days.contains(selectedDay)
+                return tracker.schedule.contains(selectedDay)
             } else {
                 let creationDateString = dateFormatter.string(from: tracker.creationDate ?? Date())
                 let selectedDateString = dateFormatter.string(from: date)

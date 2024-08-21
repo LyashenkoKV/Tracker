@@ -42,7 +42,7 @@ class ScheduleViewController: BaseTrackerViewController {
         super.viewDidLoad()
         setupUI()
         loadSelectedDays()
-        selectDays = selectedDays?.days ?? []
+        selectDays = selectedDays
         tableView.reloadData()
     }
     
@@ -99,11 +99,11 @@ class ScheduleViewController: BaseTrackerViewController {
         } else {
             selectDays.removeAll { $0 == selectedDay }
         }
-        selectedDays = Schedule(days: selectDays)
+        selectedDays = selectDays
     }
     
     @objc private func addDoneButtonAction() {
-        selectedDays = Schedule(days: selectDays)
+        selectedDays = selectDays
         delegate?.didSelect(selectDays)
         saveSelectedDays()
         dismiss(animated: true)
