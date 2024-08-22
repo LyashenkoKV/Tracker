@@ -12,7 +12,7 @@ struct Tracker: Codable, Hashable {
     let name: String
     let color: UIColor
     let emoji: String
-    let schedule: [DayOfTheWeek]  // Изменение здесь
+    let schedule: [DayOfTheWeek]
     let categoryTitle: String
     let isRegularEvent: Bool
     let creationDate: Date?
@@ -25,7 +25,7 @@ struct Tracker: Codable, Hashable {
          name: String,
          color: UIColor,
          emoji: String,
-         schedule: [DayOfTheWeek],  // Изменение здесь
+         schedule: [DayOfTheWeek],
          categoryTitle: String,
          isRegularEvent: Bool,
          creationDate: Date? = nil) {
@@ -45,7 +45,7 @@ struct Tracker: Codable, Hashable {
         try container.encode(name, forKey: .name)
         try container.encode(color.toHexString(), forKey: .color)
         try container.encode(emoji, forKey: .emoji)
-        try container.encode(schedule, forKey: .schedule)  // Изменение здесь
+        try container.encode(schedule, forKey: .schedule)
         try container.encode(categoryTitle, forKey: .categoryTitle)
         try container.encode(isRegularEvent, forKey: .isRegularEvent)
         try container.encode(creationDate, forKey: .creationDate)
@@ -58,7 +58,7 @@ struct Tracker: Codable, Hashable {
         let colorHex = try container.decode(String.self, forKey: .color)
         color = UIColor(hex: colorHex) ?? UIColor()
         emoji = try container.decode(String.self, forKey: .emoji)
-        schedule = try container.decode([DayOfTheWeek].self, forKey: .schedule)  // Изменение здесь
+        schedule = try container.decode([DayOfTheWeek].self, forKey: .schedule)
         categoryTitle = try container.decode(String.self, forKey: .categoryTitle)
         isRegularEvent = try container.decodeIfPresent(Bool.self, forKey: .isRegularEvent) ?? true
         creationDate = try container.decodeIfPresent(Date.self, forKey: .creationDate) ?? Date()
