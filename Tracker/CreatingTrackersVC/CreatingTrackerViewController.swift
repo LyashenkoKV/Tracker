@@ -37,7 +37,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        UserDefaults.standard.clearSavedData()
+        //UserDefaults.standard.clearSavedData()
     }
     
     override func textViewCellDidChange(_ cell: TextViewCell) {
@@ -100,38 +100,35 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
-        ) as? TextViewCell,
-        let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
-        let selectedColor = selectedColor,
-        let selectedEmoji = selectedEmoji else { return }
-        
-        let categoryTitle: String
-        
-        if let selectedCategory = selectedCategory {
-            categoryTitle = selectedCategory.title
-        } else {
-            categoryTitle = "Новая категория"
+        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+              let selectedColor = selectedColor,
+              let selectedEmoji = selectedEmoji else {
+            Logger.shared.log(.error, message: "Не все обязательные поля заполнены для создания трекера")
+            return
         }
+        
+        let categoryTitle = selectedCategory?.title ?? "Новая категория"
+        Logger.shared.log(.info, message: "Создание трекера: \(trackerName), категория: \(categoryTitle)")
         
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
-            color: selectedColor,
+            color: selectedColor.toHexString(),
             emoji: selectedEmoji,
             schedule: selectedDays,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date()
         )
-
+        
         let userInfo: [String: Any] = [
             "tracker": tracker,
             "categoryTitle": categoryTitle
         ]
         
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+        Logger.shared.log(.info, message: "Уведомление о создании трекера отправлено")
         
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }

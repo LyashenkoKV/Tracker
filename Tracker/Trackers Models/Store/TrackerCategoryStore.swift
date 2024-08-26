@@ -5,42 +5,55 @@
 //  Created by Konstantin Lyashenko on 21.08.2024.
 //
 
-import UIKit
+import Foundation
 import CoreData
 
 final class TrackerCategoryStore {
-    private let context: NSManagedObjectContext
+    private let persistentContainer: NSPersistentContainer
+    private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>
 
-    init(context: NSManagedObjectContext = CoreDataStack.shared.context) {
-        self.context = context
+    init(persistentContainer: NSPersistentContainer) {
+        self.persistentContainer = persistentContainer
+        
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        
+        do {
+            try fetchedResultsController.performFetch()
+            Logger.shared.log(.info, message: "Категории успешно загружены из Core Data, всего загружено: \(fetchedResultsController.fetchedObjects?.count ?? 0)")
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при загрузке категорий из Core Data: \(error)")
+            fatalError("Failed to fetch entities: \(error)")
+        }
     }
+    
+    func addCategory(_ category: TrackerCategory) throws {
+        let context = persistentContainer.viewContext
+        let categoryCoreData = TrackerCategoryCoreData(context: context)
+        
+        categoryCoreData.title = category.title
+        Logger.shared.log(.info, message: "Добавляем категорию: \(category.title)")
 
-    func addCategory(title: String) {
-        let category = TrackerCategoryCoreData(context: context)
-        category.title = title
-        saveContext()
+        do {
+            try context.save()
+            Logger.shared.log(.info, message: "Категория успешно сохранена в Core Data: \(category.title)")
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при сохранении категории в Core Data: \(category.title) - \(error)")
+            throw error
+        }
     }
 
     func fetchCategories() -> [TrackerCategoryCoreData] {
-        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
-        do {
-            return try context.fetch(request)
-        } catch {
-            Logger.shared.log(.error,
-                              message: "TrackerCategoryStore: Не удалось получить категории",
-                              metadata: ["❌": error.localizedDescription])
-            return []
-        }
-    }
-
-    private func saveContext() {
-        do {
-            try context.save()
-        } catch {
-            context.rollback()
-            Logger.shared.log(.error,
-                              message: "TrackerCategoryStore: Ошибка сохрания контекста",
-                              metadata: ["❌": error.localizedDescription])
-        }
+        Logger.shared.log(.info, message: "Попытка загрузки категорий из Core Data")
+        let categories = fetchedResultsController.fetchedObjects ?? []
+        Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categories.count)")
+        return categories
     }
 }

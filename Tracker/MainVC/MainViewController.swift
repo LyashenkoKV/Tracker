@@ -15,7 +15,8 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
-        UserDefaults.standard.clearSavedData()
+        //UserDefaults.standard.clearSavedData()
+        //CoreDataStack.shared.clearCoreData()
     }
     
     private func switchToTapBarController() {
@@ -37,7 +38,16 @@ final class MainViewController: UIViewController {
     private func createTabBarController() -> UITabBarController {
         let navigationController = trackersViewController.setupNavigationBar()
         
-        trackersViewController.configure(TrackersPresenter(view: trackersViewController))
+        let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let trackersPresenter = TrackersPresenter(
+            trackerStore: trackerStore,
+            categoryStore: categoryStore,
+            recordStore: recordStore
+        )
+        
+        trackersViewController.configure(trackersPresenter as TrackersPresenterProtocol)
         
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",

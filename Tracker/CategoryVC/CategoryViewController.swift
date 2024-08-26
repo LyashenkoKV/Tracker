@@ -58,7 +58,7 @@ final class CategoryViewController: BaseTrackerViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadCategoriesFromUserDefaults()
+        //loadCategoriesFromUserDefaults()
         tableView.reloadData()
         updateUI()
     }
@@ -121,7 +121,7 @@ extension CategoryViewController {
             if !isAddingCategory {
                 let selectedCategory = categories[indexPath.row]
                 self.selectedCategory = selectedCategory
-                saveCategoriesToUserDefaults()
+                //saveCategoriesToUserDefaults()
                 delegate?.didSelectCategory(selectedCategory)
                 
                 tableView.reloadData()

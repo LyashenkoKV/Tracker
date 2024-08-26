@@ -5,63 +5,74 @@
 //  Created by Konstantin Lyashenko on 21.08.2024.
 //
 
-import UIKit
+import Foundation
 import CoreData
 
 final class TrackerStore {
-    private let context: NSManagedObjectContext
+    private let persistentContainer: NSPersistentContainer
+    private let fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
 
-    init(context: NSManagedObjectContext = CoreDataStack.shared.context) {
-        self.context = context
-    }
-
-    func addTracker(
-        name: String,
-        color: UIColor,
-        emoji: String,
-        schedule: [DayOfTheWeek],
-        categoryTitle: String,
-        isRegularEvent: Bool,
-        creationDate: Date
-    ) {
-        let tracker = TrackerCoreData(context: context)
-        tracker.id = UUID()
-        tracker.name = name
-        tracker.color = color.toHexString()
-        tracker.emoji = emoji
-        tracker.schedule = schedule.map { $0.rawValue } as NSObject
-        tracker.categoryTitle = categoryTitle
-        tracker.isRegularEvent = isRegularEvent
-        tracker.creationDate = creationDate
+    init(persistentContainer: NSPersistentContainer) {
+        self.persistentContainer = persistentContainer
         
-        saveContext()
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            Logger.shared.log(.error, message: "Не удалось получить данные: \(error.localizedDescription)")
+            fatalError("Не удалось получить данные: \(error)")
+        }
+    }
+    
+    func addTracker(_ tracker: Tracker) throws {
+        let context = persistentContainer.viewContext
+        let trackerCoreData = TrackerCoreData(context: context)
+        
+        trackerCoreData.id = tracker.id
+        trackerCoreData.name = tracker.name
+        trackerCoreData.color = tracker.color
+        trackerCoreData.emoji = tracker.emoji
+        trackerCoreData.isRegularEvent = tracker.isRegularEvent
+        
+        // Сохранение категории
+        trackerCoreData.categoryTitle = tracker.categoryTitle
+        
+        // Сохранение расписания
+        if let scheduleData = try? JSONEncoder().encode(tracker.schedule) {
+            trackerCoreData.schedule = scheduleData as NSData
+            Logger.shared.log(.info, message: "Расписание успешно сериализовано для трекера: \(tracker.name)")
+        } else {
+            Logger.shared.log(.error, message: "Ошибка сериализации расписания для трекера: \(tracker.name)")
+        }
+        
+        trackerCoreData.creationDate = tracker.creationDate
+        
+        do {
+            try context.save()
+            Logger.shared.log(.info, message: "Трекер успешно сохранен в Core Data: \(tracker.name)")
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при сохранении трекера в Core Data: \(tracker.name) - \(error)")
+            throw error
+        }
     }
 
     func fetchTrackers() -> [TrackerCoreData] {
-        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         do {
-            return try context.fetch(request)
+            Logger.shared.log(.info, message: "Попытка загрузки трекеров из Core Data")
+            try fetchedResultsController.performFetch()
+            Logger.shared.log(.info, message: "Трекеры успешно загружены из Core Data, всего загружено: \(fetchedResultsController.fetchedObjects?.count ?? 0)")
         } catch {
-            Logger.shared.log(.error,
-                              message: "TrackerStore: Не удалось получить трекеры",
-                              metadata: ["❌": error.localizedDescription])
-            return []
+            Logger.shared.log(.error, message: "Ошибка при загрузке трекеров из Core Data: \(error)")
         }
-    }
-
-    func deleteTracker(_ tracker: TrackerCoreData) {
-        context.delete(tracker)
-        saveContext()
-    }
-
-    private func saveContext() {
-        do {
-            try context.save()
-        } catch {
-            context.rollback()
-            Logger.shared.log(.error,
-                              message: "TrackerStore: Ошибка сохрания контекста",
-                              metadata: ["❌": error.localizedDescription])
-        }
+        return fetchedResultsController.fetchedObjects ?? []
     }
 }

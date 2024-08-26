@@ -240,8 +240,11 @@ extension TrackersViewController {
         guard let userInfo = notification.userInfo,
               let tracker = userInfo["tracker"] as? Tracker,
               let categoryTitle = userInfo["categoryTitle"] as? String else {
+            Logger.shared.log(.error, message: "Ошибка: не удалось извлечь трекер или название категории из уведомления")
             return
         }
+        
+        Logger.shared.log(.info, message: "Получено уведомление о создании трекера: \(tracker.name) в категории: \(categoryTitle)")
         
         var updatedTracker = tracker
 
@@ -262,7 +265,8 @@ extension TrackersViewController {
                 creationDate: creationDate
             )
         }
-        presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
+        
+        presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
         presenter?.filterTrackers(for: currentDate)
     }
 }

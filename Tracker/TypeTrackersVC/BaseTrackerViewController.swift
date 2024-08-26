@@ -125,7 +125,7 @@ class BaseTrackerViewController: UIViewController {
         } else {
             categories.append(newCategory)
         }
-        saveCategoriesToUserDefaults()
+        //saveCategoriesToUserDefaults()
         isAddingCategory = false
         tableView.reloadData()
     }
@@ -150,39 +150,39 @@ class BaseTrackerViewController: UIViewController {
 
 // MARK: - UserDafaults
 extension BaseTrackerViewController {
-    // Не забыть вынести в глоб экст
-    func saveCategoriesToUserDefaults() {
-        UserDefaults.standard.savedCategories(categories)
-        
-        if let selectedCategory = selectedCategory {
-            UserDefaults.standard.set(selectedCategory.title, forKey: "selectedCategory")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "selectedCategory")
-        }
-    }
-    
-    func saveSelectedDays() {
-        let encodedDays = selectedDays.map { $0.rawValue }
-        UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
-    }
-    
-    func loadCategoriesFromUserDefaults() {
-        categories = UserDefaults.standard.loadCategories()
-        
-        if let savedCategoryTitle = UserDefaults.standard.string(forKey: "selectedCategory") {
-            selectedCategory = categories.first { $0.title == savedCategoryTitle }
-        } else {
-            selectedCategory = nil
-        }
-    }
-    
-    func loadSelectedDays() {
-        if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
-            selectedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
-        } else {
-            selectedDays = []
-        }
-    }
+//    // Не забыть вынести в глоб экст
+//    func saveCategoriesToUserDefaults() {
+//        UserDefaults.standard.savedCategories(categories)
+//        
+//        if let selectedCategory = selectedCategory {
+//            UserDefaults.standard.set(selectedCategory.title, forKey: "selectedCategory")
+//        } else {
+//            UserDefaults.standard.removeObject(forKey: "selectedCategory")
+//        }
+//    }
+//    
+//    func saveSelectedDays() {
+//        let encodedDays = selectedDays.map { $0.rawValue }
+//        UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
+//    }
+//    
+//    func loadCategoriesFromUserDefaults() {
+//        categories = UserDefaults.standard.loadCategories()
+//        
+//        if let savedCategoryTitle = UserDefaults.standard.string(forKey: "selectedCategory") {
+//            selectedCategory = categories.first { $0.title == savedCategoryTitle }
+//        } else {
+//            selectedCategory = nil
+//        }
+//    }
+//    
+//    func loadSelectedDays() {
+//        if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
+//            selectedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
+//        } else {
+//            selectedDays = []
+//        }
+//    }
     
     func deleteCategory(at indexPath: IndexPath) {
         let deletedCategory = categories[indexPath.row]
@@ -190,10 +190,10 @@ extension BaseTrackerViewController {
         
         if selectedCategory?.title == deletedCategory.title {
             selectedCategory = nil
-            UserDefaults.standard.removeObject(forKey: "selectedCategory")
+            //UserDefaults.standard.removeObject(forKey: "selectedCategory")
         }
         
-        saveCategoriesToUserDefaults()
+       // saveCategoriesToUserDefaults()
         tableView.deleteRows(at: [indexPath], with: .automatic)
     }
 }

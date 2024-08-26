@@ -151,14 +151,18 @@ final class TrackersCardCell: UICollectionViewCell {
                    isRegularEvent: Bool) {
         nameLabel.text = tracker.name
         self.emoji.text = tracker.emoji
-        messageStack.backgroundColor = tracker.color
-        completeButton.backgroundColor = tracker.color
         
-        let buttonImage = isCompleted ? "checkmark" : "plus"
-        let buttonColor = isCompleted ? tracker.color.withAlphaComponent(0.3) : tracker.color
+        if let color = UIColor(hex: tracker.color) {
+            messageStack.backgroundColor = color
+            completeButton.backgroundColor = color
+            
+            let buttonImage = isCompleted ? "checkmark" : "plus"
+            let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
+            
+            completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
+            completeButton.backgroundColor = buttonColor
+        }
         
-        completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
-        completeButton.backgroundColor = buttonColor
         completeButton.isEnabled = isDateValidForCompletion
         
         counterLabel.isHidden = !isRegularEvent
