@@ -83,15 +83,19 @@ extension TrackersViewController: UICollectionViewDataSource {
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath
     ) -> UICollectionReusableView {
-        
+
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: SectionHeaderView.reuseIdentifier,
-            for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
-        
+            for: indexPath) as? SectionHeaderView else {
+            Logger.shared.log(.error, message: "Не удалось деактивировать SectionHeaderView")
+            return UICollectionReusableView()
+        }
+
         let title = categories[indexPath.section].title
+        Logger.shared.log(.info, message: "Заголовок секции \(indexPath.section): \(title)")
         header.addTitle(title)
-        
+
         return header
     }
 }
