@@ -37,7 +37,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        //UserDefaults.standard.clearSavedData()
     }
     
     override func textViewCellDidChange(_ cell: TextViewCell) {

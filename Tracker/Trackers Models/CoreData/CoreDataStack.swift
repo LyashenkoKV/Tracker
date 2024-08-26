@@ -36,9 +36,7 @@ final class CoreDataStack {
                 Logger.shared.log(.info, message: "Изменения успешно сохранены")
             } catch {
                 let nserror = error as NSError
-                Logger.shared.log(.error,
-                                  message: "Ошибка сохранения контекста CoreData",
-                                  metadata: ["❌": nserror.localizedDescription])
+                Logger.shared.log(.error, message: "Ошибка сохранения контекста CoreData: \(nserror.localizedDescription)")
             }
         }
     }

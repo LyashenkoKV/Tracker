@@ -105,14 +105,47 @@ final class CategoryViewController: BaseTrackerViewController {
         tableView.reloadData()
     }
 
-    
     override func textViewCellDidChange(_ cell: TextViewCell) {
         super.textViewCellDidChange(cell)
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
     }
+    
+    func saveNewCategory(named categoryName: String) {
+        let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        
+        let newCategory = TrackerCategory(title: categoryName, trackers: [])
+        
+        do {
+            // Сохраняем новую категорию в Core Data
+            try trackerCategoryStore.addCategory(newCategory)
+            Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryName)")
+            
+            // Загружаем обновленный список категорий
+            loadCategories()
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при добавлении категории: \(categoryName) - \(error.localizedDescription)")
+        }
+    }
+    
+    func loadCategories() {
+        let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        Logger.shared.log(.info, message: "Начало загрузки категорий из Core Data")
+        
+        // Загружаем категории из Core Data
+        let categoriesCoreData = trackerCategoryStore.fetchCategories()
+        
+        // Преобразуем объекты Core Data в модель TrackerCategory
+        self.categories = categoriesCoreData.map { TrackerCategory(from: $0) }
+        
+        Logger.shared.log(.info, message: "Категории загружены: \(categories.count)")
+        
+        // Обновляем интерфейс
+        tableView.reloadData()
+    }
 }
+
 // MARK: - UITableVIewDelegate
 extension CategoryViewController {
     override func tableView(
@@ -121,7 +154,6 @@ extension CategoryViewController {
             if !isAddingCategory {
                 let selectedCategory = categories[indexPath.row]
                 self.selectedCategory = selectedCategory
-                //saveCategoriesToUserDefaults()
                 delegate?.didSelectCategory(selectedCategory)
                 
                 tableView.reloadData()

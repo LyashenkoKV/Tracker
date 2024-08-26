@@ -45,10 +45,20 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     
     func addTracker(_ tracker: Tracker, categoryTitle: String) {
         Logger.shared.log(.info, message: "Попытка добавления трекера: \(tracker.name) с категорией: \(categoryTitle)")
+        
         do {
+            // Добавляем категорию, если она новая
+            let category = TrackerCategory(title: categoryTitle, trackers: [])
+            try categoryStore.addCategory(category)
+            Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryTitle)")
+            
+            // Добавляем трекер в Core Data
             try trackerStore.addTracker(tracker)
             Logger.shared.log(.info, message: "Трекер успешно добавлен: \(tracker.name)")
+            
+            // Перезагружаем трекеры
             loadTrackers()
+            
         } catch {
             Logger.shared.log(.error, message: "Ошибка при добавлении трекера: \(tracker.name) - \(error.localizedDescription)")
         }
@@ -110,7 +120,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         let filteredTrackers = allTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
             
-            // Логирование данных трекера перед фильтрацией
             Logger.shared.log(.info, message: """
                 Трекер: \(tracker.name)
                 Цвет: \(tracker.color)
@@ -133,23 +142,57 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func loadTrackers() {
+        Logger.shared.log(.info, message: "Начало загрузки трекеров из Core Data")
+
         let loadedTrackers = trackerStore.fetchTrackers()
-        view?.categories = categorizeTrackers(loadedTrackers)
-        view?.reloadData()
+        Logger.shared.log(.info, message: "Трекеры загружены: \(loadedTrackers.count) трекеров")
+
+        let categorizedTrackers = categorizeTrackers(loadedTrackers)
+        Logger.shared.log(.info, message: "Трекеры успешно категоризированы. Всего категорий: \(categorizedTrackers.count)")
+
+        view?.categories = categorizedTrackers
+        
+        DispatchQueue.main.async {
+            Logger.shared.log(.info, message: "Данные обновлены в представлении")
+            self.view?.reloadData()
+        }
     }
-    
+
     func loadCompletedTrackers() {
+        Logger.shared.log(.info, message: "Начало загрузки завершенных трекеров")
+
         let loadedCompletedTrackers = recordStore.fetchRecords()
+        Logger.shared.log(.info, message: "Завершенные трекеры загружены: \(loadedCompletedTrackers.count) записей")
+
         view?.completedTrackers = Set(loadedCompletedTrackers.map { TrackerRecord(from: $0) })
         view?.reloadData()
+        Logger.shared.log(.info, message: "Данные завершенных трекеров обновлены в представлении")
     }
 
     private func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
-        let trackers = trackerCoreDataList.map { Tracker(from: $0) }
-        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
-        
-        return groupedTrackers.map { (title, trackers) in
-            TrackerCategory(title: title, trackers: trackers)
+        Logger.shared.log(.info, message: "Начало категоризации трекеров. Всего трекеров: \(trackerCoreDataList.count)")
+
+        let trackers = trackerCoreDataList.map { trackerCoreData -> Tracker in
+            let tracker = Tracker(from: trackerCoreData)
+            Logger.shared.log(.info, message: "Трекер: \(tracker.name), категория: \(tracker.categoryTitle)")
+            return tracker
         }
+
+        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
+
+        Logger.shared.log(.info, message: "Трекеры сгруппированы по категориям. Всего категорий: \(groupedTrackers.count)")
+        groupedTrackers.forEach { (title, trackers) in
+            Logger.shared.log(.info, message: "Категория: \(title), Количество трекеров: \(trackers.count)")
+        }
+
+        let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
+            Logger.shared.log(.info, message: "Создание TrackerCategory с названием: \(title)")
+            Logger.shared.log(.info, message: "Трекеры: \(trackers)")
+            return TrackerCategory(title: title, trackers: trackers)
+        }
+
+        Logger.shared.log(.info, message: "Категоризация завершена. Всего категорий: \(trackerCategories.count)")
+        
+        return trackerCategories
     }
 }

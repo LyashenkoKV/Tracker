@@ -8,9 +8,11 @@
 import Foundation
 import CoreData
 
-final class TrackerCategoryStore {
+final class TrackerCategoryStore: NSObject {
     private let persistentContainer: NSPersistentContainer
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>
+    
+    var didUpdateData: (() -> Void)?
 
     init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
@@ -21,10 +23,10 @@ final class TrackerCategoryStore {
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: persistentContainer.viewContext,
-            sectionNameKeyPath: nil,
+            sectionNameKeyPath: "title",
             cacheName: nil
         )
-        
+
         do {
             try fetchedResultsController.performFetch()
             Logger.shared.log(.info, message: "Категории успешно загружены из Core Data, всего загружено: \(fetchedResultsController.fetchedObjects?.count ?? 0)")
@@ -42,18 +44,37 @@ final class TrackerCategoryStore {
         Logger.shared.log(.info, message: "Добавляем категорию: \(category.title)")
 
         do {
+            Logger.shared.log(.info, message: "Попытка сохранения категории в Core Data")
             try context.save()
             Logger.shared.log(.info, message: "Категория успешно сохранена в Core Data: \(category.title)")
+            
+            // Принудительное обновление данных в NSFetchedResultsController
+            Logger.shared.log(.info, message: "Попытка обновления NSFetchedResultsController после добавления трекера")
+            try fetchedResultsController.performFetch()
+            Logger.shared.log(.info, message: "Обновление NSFetchedResultsController успешно выполнено")
+            
         } catch {
             Logger.shared.log(.error, message: "Ошибка при сохранении категории в Core Data: \(category.title) - \(error)")
             throw error
+        }
+        
+        // Вызов замыкания для уведомления о необходимости обновления данных
+        DispatchQueue.main.async {
+            self.didUpdateData?()
         }
     }
 
     func fetchCategories() -> [TrackerCategoryCoreData] {
         Logger.shared.log(.info, message: "Попытка загрузки категорий из Core Data")
-        let categories = fetchedResultsController.fetchedObjects ?? []
-        Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categories.count)")
-        return categories
+
+        do {
+            try fetchedResultsController.performFetch()
+            let categories = fetchedResultsController.fetchedObjects ?? []
+            Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categories.count)")
+            return categories
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при загрузке категорий из Core Data: \(error.localizedDescription)")
+            return []
+        }
     }
 }

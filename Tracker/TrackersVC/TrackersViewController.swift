@@ -19,7 +19,8 @@ protocol TrackersViewControllerProtocol: AnyObject {
 final class TrackersViewController: UIViewController {
     
     var presenter: TrackersPresenterProtocol?
-    
+    var trackerStore: TrackerStore?
+    var trackerCategoryStore: TrackerCategoryStore?
     var categories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
@@ -112,14 +113,17 @@ final class TrackersViewController: UIViewController {
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()
+        _ = trackerStore?.fetchTrackers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.hidesBarsOnSwipe = false
+        guard let navigationController else { return }
+        
+        navigationController.hidesBarsOnSwipe = false
+        navigationController.navigationBar.prefersLargeTitles = true
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.searchController = searchController
     }
@@ -161,23 +165,7 @@ final class TrackersViewController: UIViewController {
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
     }
-    
-    // Надо вернуться к добавлению через .performBatchUpdates
-//
-//    func reloadDataWithBatchUpdates(
-//        insertedSections: IndexSet? = nil,
-//        insertedIndexPaths: [IndexPath]? = nil) {
-//        collectionView.performBatchUpdates {
-//            if let sections = insertedSections {
-//                collectionView.insertSections(sections)
-//            }
-//            if let indexPaths = insertedIndexPaths {
-//                collectionView.insertItems(at: indexPaths)
-//            }
-//        }
-//        updatePlaceholderView()
-//    }
-//
+
     func deleteTracker(at indexPath: IndexPath) {
         let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
             if index == indexPath.section {
@@ -264,6 +252,11 @@ extension TrackersViewController {
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate
             )
+        }
+        
+        trackerCategoryStore?.didUpdateData = { [weak self] in
+            Logger.shared.log(.info, message: "Принудительная перезагрузка данных в UICollectionView")
+            self?.reloadData()
         }
         
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)

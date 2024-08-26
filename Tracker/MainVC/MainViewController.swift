@@ -15,7 +15,6 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
-        //UserDefaults.standard.clearSavedData()
         //CoreDataStack.shared.clearCoreData()
     }
     
