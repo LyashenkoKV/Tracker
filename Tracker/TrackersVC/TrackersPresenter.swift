@@ -129,10 +129,15 @@ final class TrackersPresenter: TrackersPresenterProtocol {
                 Расписание: \(tracker.schedule.map { $0.rawValue }.joined(separator: ", "))
                 """)
             
-            let containsDay = tracker.schedule.contains(selectedDay)
-            Logger.shared.log(.info, message: "Трекер \(tracker.name) содержит день \(selectedDay.rawValue): \(containsDay)")
-            
-            return containsDay
+            if tracker.isRegularEvent {
+                let containsDay = tracker.schedule.contains(selectedDay)
+                Logger.shared.log(.info, message: "Трекер \(tracker.name) содержит день \(selectedDay.rawValue): \(containsDay)")
+                return containsDay
+            } else {
+                let isSameDay = calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
+                Logger.shared.log(.info, message: "Трекер \(tracker.name) имеет дату \(dateFormatter.string(from: tracker.creationDate ?? Date())): \(isSameDay)")
+                return isSameDay
+            }
         }
         
         Logger.shared.log(.info, message: "Трекеров после фильтрации: \(filteredTrackers.count)")
@@ -187,7 +192,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
 
         let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
             Logger.shared.log(.info, message: "Создание TrackerCategory с названием: \(title)")
-            Logger.shared.log(.info, message: "Трекеры: \(trackers)")
             return TrackerCategory(title: title, trackers: trackers)
         }
 
