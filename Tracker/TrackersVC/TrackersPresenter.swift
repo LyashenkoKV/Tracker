@@ -180,11 +180,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
 
         if tempCompletedTrackers != view?.completedTrackers {
             view?.completedTrackers = tempCompletedTrackers
-        } else {
-            Logger.shared.log(
-                .info,
-                message: "completedTrackers уже содержит актуальные данные. Обновление не требуется."
-            )
         }
         view?.reloadData()
     }

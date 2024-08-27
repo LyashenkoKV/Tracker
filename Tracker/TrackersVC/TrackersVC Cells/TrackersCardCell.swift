@@ -149,8 +149,7 @@ final class TrackersCardCell: UICollectionViewCell {
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool,
                    isRegularEvent: Bool) {
-        Logger.shared.log(.info, message: "Начата настройка ячейки для трекера \(tracker.name) (ID: \(tracker.id)). Завершен: \(isCompleted), Дата валидна: \(isDateValidForCompletion)")
-        
+
         nameLabel.text = tracker.name
         self.emoji.text = tracker.emoji
         
@@ -165,9 +164,7 @@ final class TrackersCardCell: UICollectionViewCell {
         completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
         completeButton.backgroundColor = buttonColor
         completeButton.isEnabled = isDateValidForCompletion
-        
-        Logger.shared.log(.info, message: "Кнопка завершения трекера \(tracker.name) настроена: \(isCompleted ? "Завершена" : "Не завершена"), доступна для нажатия: \(completeButton.isEnabled)")
-        
+
         counterLabel.isHidden = !isRegularEvent
         
         let countDays = countComplete.filter { record in
@@ -176,8 +173,6 @@ final class TrackersCardCell: UICollectionViewCell {
         
         let day = declensionDay(for: countDays)
         counterLabel.text = "\(countDays) \(day)"
-        
-        Logger.shared.log(.info, message: "Завершенных дней для трекера \(tracker.name): \(countDays).")
     }
     
     private func declensionDay(for countDays: Int) -> String {

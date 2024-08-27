@@ -26,6 +26,9 @@ final class TrackerCategoryStore: NSObject {
             sectionNameKeyPath: "title",
             cacheName: nil
         )
+        
+        super.init()
+        fetchedResultsController.delegate = self
 
         do {
             try fetchedResultsController.performFetch()
@@ -38,27 +41,54 @@ final class TrackerCategoryStore: NSObject {
     
     func addCategory(_ category: TrackerCategory) throws {
         let context = persistentContainer.viewContext
-        let categoryCoreData = TrackerCategoryCoreData(context: context)
         
+        // Проверка на существование категории
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", category.title)
+        
+        let existingCategories = try context.fetch(fetchRequest)
+        
+        if existingCategories.first != nil {
+            Logger.shared.log(.info, message: "Категория \(category.title) уже существует, использование существующей категории.")
+            return
+        }
+        
+        let categoryCoreData = TrackerCategoryCoreData(context: context)
         categoryCoreData.title = category.title
-        Logger.shared.log(.info, message: "Добавляем категорию: \(category.title)")
-
+        
+        try context.save()
+        Logger.shared.log(.info, message: "Категория успешно сохранена в Core Data: \(category.title)")
+        
+        try fetchedResultsController.performFetch()
+        Logger.shared.log(.info, message: "Обновление NSFetchedResultsController выполнено после добавления категории.")
+        
+        DispatchQueue.main.async {
+            self.didUpdateData?()
+        }
+    }
+    
+    func deleteCategory(_ category: TrackerCategory) throws {
+        let context = persistentContainer.viewContext
+        
+        let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", category.title)
+        
         do {
-            Logger.shared.log(.info, message: "Попытка сохранения категории в Core Data")
-            try context.save()
-            Logger.shared.log(.info, message: "Категория успешно сохранена в Core Data: \(category.title)")
-            
-            // Принудительное обновление данных в NSFetchedResultsController
-            Logger.shared.log(.info, message: "Попытка обновления NSFetchedResultsController после добавления трекера")
-            try fetchedResultsController.performFetch()
-            Logger.shared.log(.info, message: "Обновление NSFetchedResultsController успешно выполнено")
-            
+            let results = try context.fetch(fetchRequest)
+            if let categoryToDelete = results.first {
+                context.delete(categoryToDelete)
+                try context.save()
+                
+                Logger.shared.log(.info, message: "Категория \(category.title) успешно удалена из Core Data")
+                
+                try fetchedResultsController.performFetch()
+                Logger.shared.log(.info, message: "Обновление NSFetchedResultsController после удаления категории выполнено")
+            }
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при сохранении категории в Core Data: \(category.title) - \(error)")
+            Logger.shared.log(.error, message: "Ошибка при удалении категории \(category.title) из Core Data: \(error.localizedDescription)")
             throw error
         }
         
-        // Вызов замыкания для уведомления о необходимости обновления данных
         DispatchQueue.main.async {
             self.didUpdateData?()
         }
@@ -72,11 +102,16 @@ final class TrackerCategoryStore: NSObject {
             let categoriesCoreData = fetchedResultsController.fetchedObjects ?? []
             Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categoriesCoreData.count)")
             
-            // Преобразование TrackerCategoryCoreData в TrackerCategory
             return categoriesCoreData.map { TrackerCategory(from: $0) }
         } catch {
             Logger.shared.log(.error, message: "Ошибка при загрузке категорий из Core Data: \(error.localizedDescription)")
             return []
         }
+    }
+}
+
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        didUpdateData?()
     }
 }

@@ -140,6 +140,7 @@ class BaseTrackerViewController: UIViewController {
     
     func didSelectCategory(_ category: TrackerCategory) {}
     func didSelect(_ days: [DayOfTheWeek]) {}
+    func deleteCategory(at indexPath: IndexPath) {}
     
     func dismissOrCancel() {
         isAddingCategory = false
@@ -149,15 +150,7 @@ class BaseTrackerViewController: UIViewController {
 
 // MARK: - UserDafaults
 extension BaseTrackerViewController {
-    func deleteCategory(at indexPath: IndexPath) {
-        let deletedCategory = categories[indexPath.row]
-        categories.remove(at: indexPath.row)
-        
-        if selectedCategory?.title == deletedCategory.title {
-            selectedCategory = nil
-        }
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-    }
+    //func deleteCategory(at indexPath: IndexPath) {}
 }
 
 // MARK: - ScheduleSelectionDelegate

@@ -63,14 +63,16 @@ final class TrackerStore: NSObject {
                 Logger.shared.log(.info, message: "Создана новая категория: \(String(describing: newCategory.title))")
             }
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при поиске или создании категории: \(error.localizedDescription)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при поиске или создании категории: \(error.localizedDescription)"
+            )
             throw error
         }
         
         // Сохранение расписания
         if let scheduleData = try? JSONEncoder().encode(tracker.schedule) {
             trackerCoreData.schedule = scheduleData as NSData
-            Logger.shared.log(.info, message: "Расписание успешно сериализовано для трекера: \(tracker.name)")
         } else {
             Logger.shared.log(.error, message: "Ошибка сериализации расписания для трекера: \(tracker.name)")
         }
@@ -88,10 +90,8 @@ final class TrackerStore: NSObject {
     
     func fetchTrackers() -> [TrackerCoreData] {
         do {
-            Logger.shared.log(.info, message: "Попытка загрузки трекеров из Core Data")
             try fetchedResultsController.performFetch()
             let trackers = fetchedResultsController.fetchedObjects ?? []
-            Logger.shared.log(.info, message: "Трекеры успешно загружены из Core Data, всего загружено: \(trackers.count)")
             return trackers
         } catch {
             Logger.shared.log(.error, message: "Ошибка при загрузке трекеров из Core Data: \(error)")

@@ -116,9 +116,7 @@ final class TrackersViewController: UIViewController {
         addNotification()
         
         presenter?.filterTrackers(for: currentDate)
-        Logger.shared.log(.info, message: "viewDidLoad Перед вызовом loadCompletedTrackers, completedTrackers: \(completedTrackers.count)")
         presenter?.loadCompletedTrackers()
-        Logger.shared.log(.info, message: "viewDidLoad После вызова loadCompletedTrackers, completedTrackers: \(completedTrackers.count)")
         _ = trackerStore?.fetchTrackers()
     }
     
@@ -230,10 +228,7 @@ extension TrackersViewController {
         let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
         if previousCompletedTrackersCount != completedTrackers.count {
-            Logger.shared.log(.info, message: "Количество завершенных трекеров изменилось. Перезагрузка данных в UICollectionView.")
             reloadData()
-        } else {
-            Logger.shared.log(.info, message: "Количество завершенных трекеров не изменилось. Перезагрузка данных не требуется.")
         }
     }
     
@@ -241,12 +236,13 @@ extension TrackersViewController {
         guard let userInfo = notification.userInfo,
               let tracker = userInfo["tracker"] as? Tracker,
               let categoryTitle = userInfo["categoryTitle"] as? String else {
-            Logger.shared.log(.error, message: "Ошибка: не удалось извлечь трекер или название категории из уведомления")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка: не удалось извлечь трекер или название категории из уведомления"
+            )
             return
         }
-        
-        Logger.shared.log(.info, message: "Получено уведомление о создании трекера: \(tracker.name) в категории: \(categoryTitle)")
-        
+
         var updatedTracker = tracker
 
         if !tracker.isRegularEvent {
@@ -268,7 +264,6 @@ extension TrackersViewController {
         }
         
         trackerCategoryStore?.didUpdateData = { [weak self] in
-            Logger.shared.log(.info, message: "Принудительная перезагрузка данных в UICollectionView")
             self?.reloadData()
         }
         
@@ -280,13 +275,8 @@ extension TrackersViewController {
 // MARK: - TrackersViewControllerProtocol
 extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
-        Logger.shared.log(.info, message: "Начата перезагрузка данных в UICollectionView.")
-        Logger.shared.log(.info, message: "Количество завершенных трекеров перед перезагрузкой: \(completedTrackers.count)")
-        
         collectionView.reloadData()
         updatePlaceholderView()
-        
-        Logger.shared.log(.info, message: "Перезагрузка данных в UICollectionView завершена.")
     }
 }
 
