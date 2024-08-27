@@ -18,6 +18,8 @@ final class CategoryViewController: BaseTrackerViewController {
     
     weak var delegate: CategorySelectionDelegate?
     
+    private let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+    
     // MARK: - UI Elements
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
@@ -58,7 +60,7 @@ final class CategoryViewController: BaseTrackerViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //loadCategoriesFromUserDefaults()
+        loadCategories()
         tableView.reloadData()
         updateUI()
     }
@@ -86,7 +88,18 @@ final class CategoryViewController: BaseTrackerViewController {
 
     // MARK: - Actions
     @objc private func addCategoryButtonAction() {
-        if !isAddingCategory {
+        if isAddingCategory {
+            // Если добавляется категория, сохраняем ее в Core Data
+            if let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text, !categoryName.isEmpty {
+                do {
+                    try trackerCategoryStore.addCategory(TrackerCategory(title: categoryName, trackers: []))
+                    Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryName)")
+                } catch {
+                    Logger.shared.log(.error, message: "Ошибка при добавлении категории: \(error.localizedDescription)")
+                }
+            }
+            isAddingCategory = false
+        } else {
             isAddingCategory.toggle()
         }
         updateUI()
@@ -112,36 +125,9 @@ final class CategoryViewController: BaseTrackerViewController {
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
     }
     
-    func saveNewCategory(named categoryName: String) {
-        let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
-        
-        let newCategory = TrackerCategory(title: categoryName, trackers: [])
-        
-        do {
-            // Сохраняем новую категорию в Core Data
-            try trackerCategoryStore.addCategory(newCategory)
-            Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryName)")
-            
-            // Загружаем обновленный список категорий
-            loadCategories()
-        } catch {
-            Logger.shared.log(.error, message: "Ошибка при добавлении категории: \(categoryName) - \(error.localizedDescription)")
-        }
-    }
-    
-    func loadCategories() {
-        let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
-        Logger.shared.log(.info, message: "Начало загрузки категорий из Core Data")
-        
-        // Загружаем категории из Core Data
-        let categoriesCoreData = trackerCategoryStore.fetchCategories()
-        
-        // Преобразуем объекты Core Data в модель TrackerCategory
-        self.categories = categoriesCoreData.map { TrackerCategory(from: $0) }
-        
+    private func loadCategories() {
+        categories = trackerCategoryStore.fetchCategories()
         Logger.shared.log(.info, message: "Категории загружены: \(categories.count)")
-        
-        // Обновляем интерфейс
         tableView.reloadData()
     }
 }

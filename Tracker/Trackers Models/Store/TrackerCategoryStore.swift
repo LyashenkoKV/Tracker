@@ -63,15 +63,17 @@ final class TrackerCategoryStore: NSObject {
             self.didUpdateData?()
         }
     }
-
-    func fetchCategories() -> [TrackerCategoryCoreData] {
+    
+    func fetchCategories() -> [TrackerCategory] {
         Logger.shared.log(.info, message: "Попытка загрузки категорий из Core Data")
-
+        
         do {
             try fetchedResultsController.performFetch()
-            let categories = fetchedResultsController.fetchedObjects ?? []
-            Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categories.count)")
-            return categories
+            let categoriesCoreData = fetchedResultsController.fetchedObjects ?? []
+            Logger.shared.log(.info, message: "Категории успешно загружены, всего категорий: \(categoriesCoreData.count)")
+            
+            // Преобразование TrackerCategoryCoreData в TrackerCategory
+            return categoriesCoreData.map { TrackerCategory(from: $0) }
         } catch {
             Logger.shared.log(.error, message: "Ошибка при загрузке категорий из Core Data: \(error.localizedDescription)")
             return []
