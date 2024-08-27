@@ -28,7 +28,11 @@ final class TrackerStore: NSObject {
         do {
             try fetchedResultsController.performFetch()
         } catch {
-            Logger.shared.log(.error, message: "Не удалось получить данные: \(error.localizedDescription)")
+            Logger.shared.log(
+                .error,
+                message: "Не удалось получить данные",
+                metadata: ["❌": error.localizedDescription]
+            )
         }
     }
     
@@ -42,30 +46,26 @@ final class TrackerStore: NSObject {
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.isRegularEvent = tracker.isRegularEvent
         trackerCoreData.creationDate = tracker.creationDate
-        
-        // Логируем значение categoryTitle перед сохранением
-        Logger.shared.log(.info, message: "Трекер \(tracker.name) будет сохранен с categoryTitle: \(tracker.categoryTitle)")
-        
+
         // Поиск или создание категории
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", tracker.categoryTitle)
         
         do {
             let categories = try context.fetch(fetchRequest)
-            Logger.shared.log(.info, message: "Найдено категорий с названием '\(tracker.categoryTitle)': \(categories.count)")
-            
+  
             if let existingCategory = categories.first {
                 trackerCoreData.categoryTitle = existingCategory.title
             } else {
                 let newCategory = TrackerCategoryCoreData(context: context)
                 newCategory.title = tracker.categoryTitle
                 trackerCoreData.categoryTitle = newCategory.title
-                Logger.shared.log(.info, message: "Создана новая категория: \(String(describing: newCategory.title))")
             }
         } catch {
             Logger.shared.log(
                 .error,
-                message: "Ошибка при поиске или создании категории: \(error.localizedDescription)"
+                message: "Ошибка при поиске или создании категории",
+                metadata: ["❌": error.localizedDescription]
             )
             throw error
         }
@@ -74,16 +74,17 @@ final class TrackerStore: NSObject {
         if let scheduleData = try? JSONEncoder().encode(tracker.schedule) {
             trackerCoreData.schedule = scheduleData as NSData
         } else {
-            Logger.shared.log(.error, message: "Ошибка сериализации расписания для трекера: \(tracker.name)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка сериализации расписания для трекера",
+                metadata: ["❌": "\(tracker.name)"]
+            )
         }
         
         // Сохранение трекера и категории
         do {
-            Logger.shared.log(.info, message: "Попытка сохранения контекста для трекера: \(tracker.name)")
             try context.save()
-            Logger.shared.log(.info, message: "Контекст успешно сохранен для трекера: \(tracker.name)")
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при сохранении контекста: \(error)")
             throw error
         }
     }
@@ -94,7 +95,11 @@ final class TrackerStore: NSObject {
             let trackers = fetchedResultsController.fetchedObjects ?? []
             return trackers
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при загрузке трекеров из Core Data: \(error)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при загрузке трекеров из Core Data",
+                metadata: ["❌": error.localizedDescription]
+            )
             return []
         }
     }

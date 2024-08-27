@@ -50,13 +50,13 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     override func didSelect(_ days: [DayOfTheWeek]) {
-        selectedDays = days
-        tableView.reloadRows(
-            at: [IndexPath(
-                row: 1,
-                section: TrackerSection.buttons.rawValue
-            )], with: .automatic)
+        self.selectedDays = days
         updateCreateButtonState()
+        tableView.reloadRows(
+            at: [IndexPath(row: 1,
+                           section: TrackerSection.buttons.rawValue)],
+            with: .automatic
+        )
     }
     
     func updateCreateButtonState() {
@@ -103,7 +103,10 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
               let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
-            Logger.shared.log(.error, message: "Не все обязательные поля заполнены для создания трекера")
+            Logger.shared.log(
+                .error,
+                message: "Не все обязательные поля заполнены для создания трекера"
+            )
             return
         }
         

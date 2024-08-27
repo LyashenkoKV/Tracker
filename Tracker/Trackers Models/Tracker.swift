@@ -32,7 +32,11 @@ extension Tracker {
             if let decodedSchedule = try? JSONDecoder().decode([DayOfTheWeek].self, from: scheduleData) {
                 self.schedule = decodedSchedule
             } else {
-                Logger.shared.log(.error, message: "Ошибка десериализации расписания для трекера: \(self.name)")
+                Logger.shared.log(
+                    .error,
+                    message: "Ошибка десериализации расписания для трекера",
+                    metadata: ["❌": "\(self.name)"]
+                )
                 self.schedule = []
             }
         } else {

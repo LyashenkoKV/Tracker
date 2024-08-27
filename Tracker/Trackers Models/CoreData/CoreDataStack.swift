@@ -18,8 +18,6 @@ final class CoreDataStack {
                 Logger.shared.log(.error,
                                   message: "Ошибка при создании контейнера CoreData",
                                   metadata: ["❌": error.localizedDescription])
-            } else {
-                Logger.shared.log(.info, message: "Успешно загружен persistent store \(storeDescription.url?.absoluteString ?? "Unknown URL")")
             }
         }
         return container
@@ -33,10 +31,12 @@ final class CoreDataStack {
         if context.hasChanges {
             do {
                 try context.save()
-                Logger.shared.log(.info, message: "Изменения успешно сохранены")
             } catch {
                 let nserror = error as NSError
-                Logger.shared.log(.error, message: "Ошибка сохранения контекста CoreData: \(nserror.localizedDescription)")
+                Logger.shared.log(
+                    .error, message: "Ошибка сохранения контекста CoreData",
+                    metadata: ["❌": error.localizedDescription]
+                )
             }
         }
     }
@@ -48,15 +48,32 @@ final class CoreDataStack {
             guard let storeURL = store.url else { continue }
             
             do {
-                try persistentStoreCoordinator.destroyPersistentStore(at: storeURL, ofType: store.type, options: nil)
+                try persistentStoreCoordinator.destroyPersistentStore(
+                    at: storeURL,
+                    ofType: store.type,
+                    options: nil
+                )
             } catch {
-                print("Failed to destroy persistent store: \(error)")
+                Logger.shared.log(
+                    .error,
+                    message: "Не удалось очистить постоянное хранилище CoreData",
+                    metadata: ["❌": error.localizedDescription]
+                )
             }
             
             do {
-                try persistentStoreCoordinator.addPersistentStore(ofType: store.type, configurationName: nil, at: storeURL, options: nil)
+                try persistentStoreCoordinator.addPersistentStore(
+                    ofType: store.type,
+                    configurationName: nil,
+                    at: storeURL,
+                    options: nil
+                )
             } catch {
-                print("Failed to recreate persistent store: \(error)")
+                Logger.shared.log(
+                    .error,
+                    message: "Не удалось повторно создать постоянное хранилище CoreData",
+                    metadata: ["❌": error.localizedDescription]
+                )
             }
         }
     }

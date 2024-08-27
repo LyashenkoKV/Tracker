@@ -22,11 +22,7 @@ final class TrackersViewController: UIViewController {
     var trackerStore: TrackerStore?
     var trackerCategoryStore: TrackerCategoryStore?
     var categories: [TrackerCategory] = []
-    var completedTrackers: Set<TrackerRecord> = [] {
-        didSet {
-            Logger.shared.log(.info, message: "completedTrackers изменился. Текущее количество: \(completedTrackers.count)")
-        }
-    }
+    var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
     
     let params = GeometricParams(
@@ -138,7 +134,8 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addNotification() {
-        NotificationCenter.default.addObserver(            self,
+        NotificationCenter.default.addObserver(            
+            self,
             selector: #selector(handleTrackerCreated),
             name: .trackerCreated,
             object: nil

@@ -148,11 +148,6 @@ class BaseTrackerViewController: UIViewController {
     }
 }
 
-// MARK: - UserDafaults
-extension BaseTrackerViewController {
-    //func deleteCategory(at indexPath: IndexPath) {}
-}
-
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {}
 // MARK: - CategorySelectionDelegate
@@ -453,12 +448,14 @@ extension BaseTrackerViewController: UITableViewDelegate {
             if indexPath.row == 0 {
                 let categoryVC = CategoryViewController(type: .category)
                 categoryVC.delegate = self
+                categoryVC.selectedCategory = self.selectedCategory
                 let navController = UINavigationController(rootViewController: categoryVC)
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true)
             } else if indexPath.row == 1 {
                 let scheduleVC = ScheduleViewController(type: .schedule)
                 scheduleVC.delegate = self
+                scheduleVC.selectedDays = self.selectedDays
                 let navController = UINavigationController(rootViewController: scheduleVC)
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true)

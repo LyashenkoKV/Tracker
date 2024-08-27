@@ -28,7 +28,11 @@ final class TrackerRecordStore {
         do {
             try fetchedResultsController.performFetch()
         } catch {
-            fatalError("Failed to fetch entities: \(error)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при загрузке записи из Core Data",
+                metadata: ["❌": error.localizedDescription]
+            )
         }
     }
     
@@ -62,11 +66,14 @@ final class TrackerRecordStore {
         do {
             try fetchedResultsController.performFetch()
             let recordCoreData = fetchedResultsController.fetchedObjects ?? []
-            Logger.shared.log(.info, message: "Записи успешно загружены, всего категорий: \(recordCoreData.count)")
-            
+ 
             return recordCoreData
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при загрузке записей из Core Data: \(error.localizedDescription)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при загрузке записей из Core Data",
+                metadata: ["❌": error.localizedDescription]
+            )
             return []
         }
     }

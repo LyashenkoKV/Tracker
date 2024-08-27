@@ -47,13 +47,15 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         do {
             let category = TrackerCategory(title: categoryTitle, trackers: [])
             try categoryStore.addCategory(category)
-            Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryTitle)")
-            
             try trackerStore.addTracker(tracker)
             loadTrackers()
             
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при добавлении трекера: \(tracker.name) - \(error.localizedDescription)")
+            Logger.shared.log(
+                .error, 
+                message: "Ошибка при добавлении трекера: \(tracker.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
         }
     }
     
@@ -73,7 +75,8 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         } catch {
             Logger.shared.log(
                 .error,
-                message: "Ошибка при добавлении записи для трекера \(trackerId) на дату \(date): \(error.localizedDescription)"
+                message: "Ошибка при добавлении записи для трекера \(trackerId) на дату \(date)",
+                metadata: ["❌": error.localizedDescription]
             )
         }
     }
@@ -87,7 +90,8 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         } catch {
             Logger.shared.log(
                 .error,
-                message: "Ошибка при удалении записи для трекера \(trackerId) на дату \(date): \(error.localizedDescription)"
+                message: "Ошибка при удалении записи для трекера \(trackerId) на дату \(date)",
+                metadata: ["❌": error.localizedDescription]
             )
         }
     }
@@ -100,13 +104,9 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
         let currentDateString = dateFormatter.string(from: date)
 
-        Logger.shared.log(.info, message: "Обработка выбора трекера \(tracker.name) (ID: \(tracker.id)), isCompleted: \(isCompleted) на дату: \(currentDateString)")
-
         if isCompleted {
-            Logger.shared.log(.info, message: "Трекер \(tracker.name) будет отмечен как незавершенный")
             trackerCompletedUnmark(tracker.id, date: currentDateString)
         } else {
-            Logger.shared.log(.info, message: "Трекер \(tracker.name) будет отмечен как завершенный")
             trackerCompletedMark(tracker.id, date: currentDateString)
         }
 
@@ -129,35 +129,21 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         
         let filteredTrackers = allTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
-            
-            Logger.shared.log(.info, message: """
-                Трекер: \(tracker.name)
-                Цвет: \(tracker.color)
-                Эмодзи: \(tracker.emoji)
-                Категория: \(tracker.categoryTitle)
-                Регулярное событие: \(tracker.isRegularEvent)
-                Расписание: \(tracker.schedule.map { $0.rawValue }.joined(separator: ", "))
-                """)
-            
+
             if tracker.isRegularEvent {
                 return tracker.schedule.contains(selectedDay)
             } else {
                 return calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
             }
         }
-        
-        Logger.shared.log(.info, message: "Трекеров после фильтрации: \(filteredTrackers.count)")
-        
+
         let completedFilteredTrackers = filteredTrackers.filter { tracker in
             let isCompleted = view?.completedTrackers.contains {
                 $0.trackerId == tracker.id && $0.date == dateFormatter.string(from: date)
             } ?? false
-            
-            Logger.shared.log(.info, message: "Трекер \(String(describing: tracker.name)) завершен на дату \(dateFormatter.string(from: date)): \(isCompleted)")
+
             return !isCompleted || tracker.isRegularEvent
         }
-
-        Logger.shared.log(.info, message: "Завершенных трекеров после фильтрации: \(completedFilteredTrackers.count)")
 
         view?.categories = categorizeTrackers(completedFilteredTrackers)
         view?.reloadData()
@@ -187,24 +173,18 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     private func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
         let trackers = trackerCoreDataList.map { trackerCoreData -> Tracker in
             let tracker = Tracker(from: trackerCoreData)
-            Logger.shared.log(.info, message: "Трекер: \(tracker.name), категория: \(tracker.categoryTitle)")
             return tracker
         }
 
         let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
 
-        Logger.shared.log(.info, message: "Трекеры сгруппированы по категориям. Всего категорий: \(groupedTrackers.count)")
         groupedTrackers.forEach { (title, trackers) in
             Logger.shared.log(.info, message: "Категория: \(title), Количество трекеров: \(trackers.count)")
         }
 
         let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
-            Logger.shared.log(.info, message: "Создание TrackerCategory с названием: \(title)")
             return TrackerCategory(title: title, trackers: trackers)
         }
-
-        Logger.shared.log(.info, message: "Категоризация завершена. Всего категорий: \(trackerCategories.count)")
-        
         return trackerCategories
     }
 }

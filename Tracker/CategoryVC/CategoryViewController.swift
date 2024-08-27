@@ -105,7 +105,8 @@ final class CategoryViewController: BaseTrackerViewController {
         } catch {
             Logger.shared.log(
                 .error,
-                message: "Ошибка при удалении категории \(deletedCategory.title): \(error.localizedDescription)"
+                message: "Ошибка при удалении категории \(deletedCategory.title)",
+                metadata: ["❌": error.localizedDescription]
             )
         }
         tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -117,9 +118,12 @@ final class CategoryViewController: BaseTrackerViewController {
             if let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text, !categoryName.isEmpty {
                 do {
                     try trackerCategoryStore.addCategory(TrackerCategory(title: categoryName, trackers: []))
-                    Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryName)")
                 } catch {
-                    Logger.shared.log(.error, message: "Ошибка при добавлении категории: \(error.localizedDescription)")
+                    Logger.shared.log(
+                        .error,
+                        message: "Ошибка при добавлении категории:",
+                        metadata: ["❌": error.localizedDescription]
+                    )
                 }
             }
             isAddingCategory = false
@@ -153,8 +157,7 @@ final class CategoryViewController: BaseTrackerViewController {
     
     private func loadCategories() {
         categories = trackerCategoryStore.fetchCategories()
-        Logger.shared.log(.info, message: "Категории загружены: \(categories.count)")
-        
+  
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.tableView.reloadData()

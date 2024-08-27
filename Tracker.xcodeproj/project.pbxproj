@@ -24,7 +24,7 @@
 		2411D69F2C63B6670031C584 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D69E2C63B6670031C584 /* CategoryCell.swift */; };
 		2411D6A82C674B370031C584 /* BaseTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A72C674B370031C584 /* BaseTrackerViewController.swift */; };
 		2411D6AA2C6943300031C584 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6A92C69432F0031C584 /* ScheduleViewController.swift */; };
-		2411D6AC2C69456B0031C584 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6AB2C69456B0031C584 /* BaseCell.swift */; };
+		2411D6AC2C69456B0031C584 /* CategoryBaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6AB2C69456B0031C584 /* CategoryBaseCell.swift */; };
 		2411D6AE2C6945D40031C584 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2411D6AD2C6945D40031C584 /* ScheduleCell.swift */; };
 		241FE2B62C735C3200903AC8 /* TrackerCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 241FE2B42C735C3200903AC8 /* TrackerCoreData.xcdatamodeld */; };
 		241FE2C52C7383CB00903AC8 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */; };
@@ -75,7 +75,7 @@
 		2411D69E2C63B6670031C584 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		2411D6A72C674B370031C584 /* BaseTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTrackerViewController.swift; sourceTree = "<group>"; };
 		2411D6A92C69432F0031C584 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
-		2411D6AB2C69456B0031C584 /* BaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
+		2411D6AB2C69456B0031C584 /* CategoryBaseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryBaseCell.swift; sourceTree = "<group>"; };
 		2411D6AD2C6945D40031C584 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
 		241FE2B52C735C3200903AC8 /* TrackerCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreData.xcdatamodel; sourceTree = "<group>"; };
 		241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 		2411D6832C623F750031C584 /* CreatingTrackersVC Cells */ = {
 			isa = PBXGroup;
 			children = (
-				2411D6AB2C69456B0031C584 /* BaseCell.swift */,
+				2411D6AB2C69456B0031C584 /* CategoryBaseCell.swift */,
 				2411D6842C623F950031C584 /* TextViewCell.swift */,
 				2411D67D2C6233F50031C584 /* EmojiesAndColorsTableViewCell.swift */,
 				2411D6902C635F0F0031C584 /* EmojiesAndColorsCollectionViewCell.swift */,
@@ -394,7 +394,7 @@
 				2411D67E2C6233F50031C584 /* EmojiesAndColorsTableViewCell.swift in Sources */,
 				243024F52C5289B500B0F1D3 /* StatisticViewController.swift in Sources */,
 				2411D6942C63676E0031C584 /* UIColor + Extensions.swift in Sources */,
-				2411D6AC2C69456B0031C584 /* BaseCell.swift in Sources */,
+				2411D6AC2C69456B0031C584 /* CategoryBaseCell.swift in Sources */,
 				2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */,
 				2411D6AA2C6943300031C584 /* ScheduleViewController.swift in Sources */,
 				2411D6712C60CAD00031C584 /* GeometricParams.swift in Sources */,

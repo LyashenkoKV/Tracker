@@ -53,8 +53,9 @@ class CategoryBaseCell: UITableViewCell {
         ])
     }
     
-    func configure(with text: String, showSwitch: Bool = false) {
+    func configure(with text: String, showSwitch: Bool = false, isSwitchOn: Bool = false) {
         categoryLabel.text = text
         toggleSwitch.isHidden = !showSwitch
+        toggleSwitch.isOn = isSwitchOn
     }
 }

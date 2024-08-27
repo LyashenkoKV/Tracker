@@ -15,25 +15,18 @@ class ScheduleViewController: BaseTrackerViewController {
     
     weak var delegate: ScheduleSelectionDelegate?
     
-    var selectDays: [DayOfTheWeek] = []
-    
     private lazy var addDoneButton = UIButton(
         title: "Готово",
         backgroundColor: .ypBlack,
         titleColor: .ypWhite,
         cornerRadius: 20,
-        font: UIFont.systemFont(
-            ofSize: 16,
-            weight: .medium),
+        font: UIFont.systemFont(ofSize: 16, weight: .medium),
         target: self,
         action: #selector(addDoneButtonAction)
     )
     
     private lazy var stack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [
-            tableView,
-            addDoneButton
-        ])
+        let stack = UIStackView(arrangedSubviews: [tableView, addDoneButton])
         stack.axis = .vertical
         return stack
     }()
@@ -41,23 +34,23 @@ class ScheduleViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        //loadSelectedDays()
-        selectDays = selectedDays
+        tableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         tableView.reloadData()
     }
     
     private func setupUI() {
-        [stack].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
-       
+        view.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             stack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            
             addDoneButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
@@ -70,13 +63,11 @@ class ScheduleViewController: BaseTrackerViewController {
         }
         
         let day = DayOfTheWeek.allCases[indexPath.row]
+        let isDaySelected = selectedDays.contains(day)
         
-        cell.configure(with: day.rawValue)
+        cell.configure(with: day.rawValue, showSwitch: true, isSwitchOn: isDaySelected)
         
-        let switchView = cell.toggleSwitch
-        switchView.isOn = selectDays.contains(day)
-        
-        switchView.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
+        cell.toggleSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         
         configureBaseCell(cell, at: indexPath, totalRows: DayOfTheWeek.allCases.count)
         configureSeparator(cell, isLastRow: indexPath.row == DayOfTheWeek.allCases.count - 1)
@@ -87,25 +78,26 @@ class ScheduleViewController: BaseTrackerViewController {
     @objc func switchChanged(sender: UISwitch) {
         guard let cell = sender.superview(of: ScheduleCell.self),
               let indexPath = tableView.indexPath(for: cell) else {
+            Logger.shared.log(
+                .error,
+                message: "Не удалось найти ячейку или indexPath для свича"
+            )
             return
         }
 
         let selectedDay = DayOfTheWeek.allCases[indexPath.row]
 
         if sender.isOn {
-            if !selectDays.contains(selectedDay) {
-                selectDays.append(selectedDay)
+            if !selectedDays.contains(selectedDay) {
+                selectedDays.append(selectedDay)
             }
         } else {
-            selectDays.removeAll { $0 == selectedDay }
+            selectedDays.removeAll { $0 == selectedDay }
         }
-        selectedDays = selectDays
     }
     
     @objc private func addDoneButtonAction() {
-        selectedDays = selectDays
-        delegate?.didSelect(selectDays)
-        //saveSelectedDays()
+        delegate?.didSelect(selectedDays)
         dismiss(animated: true)
     }
 }
