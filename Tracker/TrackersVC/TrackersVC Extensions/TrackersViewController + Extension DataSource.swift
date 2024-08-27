@@ -50,20 +50,26 @@ extension TrackersViewController: UICollectionViewDataSource {
         )
         
         cell.selectButtonTappedHandler = { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
+            
+            Logger.shared.log(.info, message: "Кнопка завершения трекера нажата для \(tracker.name) (ID: \(tracker.id))")
             
             if isDateValidForCompletion {
+                Logger.shared.log(.info, message: "Дата валидна для завершения трекера \(tracker.name)")
+                
                 self.presenter?.handleTrackerSelection(
                     tracker,
                     isCompleted: isCompletedToday,
-                    date: self.currentDate)
+                    date: self.currentDate
+                )
                 
+                Logger.shared.log(.info, message: "Данные трекера \(tracker.name) обновлены, перезагрузка ячейки")
                 collectionView.reloadItems(at: [indexPath])
             } else {
-                print("Нельзя отметить будущую дату как выполненную")
+                Logger.shared.log(.info, message: "Попытка отметить будущую дату как выполненную для трекера \(tracker.name)")
             }
         }
-        
+
         return cell
     }
     

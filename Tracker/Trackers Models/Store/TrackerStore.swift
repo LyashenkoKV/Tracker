@@ -29,7 +29,6 @@ final class TrackerStore: NSObject {
             try fetchedResultsController.performFetch()
         } catch {
             Logger.shared.log(.error, message: "Не удалось получить данные: \(error.localizedDescription)")
-            fatalError("Не удалось получить данные: \(error)")
         }
     }
     

@@ -59,6 +59,15 @@ final class TrackerRecordStore {
     }
 
     func fetchRecords() -> [TrackerRecordCoreData] {
-        return fetchedResultsController.fetchedObjects ?? []
+        do {
+            try fetchedResultsController.performFetch()
+            let recordCoreData = fetchedResultsController.fetchedObjects ?? []
+            Logger.shared.log(.info, message: "Записи успешно загружены, всего категорий: \(recordCoreData.count)")
+            
+            return recordCoreData
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при загрузке записей из Core Data: \(error.localizedDescription)")
+            return []
+        }
     }
 }

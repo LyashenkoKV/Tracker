@@ -44,42 +44,51 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func addTracker(_ tracker: Tracker, categoryTitle: String) {
-        Logger.shared.log(.info, message: "Попытка добавления трекера: \(tracker.name) с категорией: \(categoryTitle)")
-        
         do {
-            // Добавляем категорию, если она новая
             let category = TrackerCategory(title: categoryTitle, trackers: [])
             try categoryStore.addCategory(category)
             Logger.shared.log(.info, message: "Категория успешно добавлена: \(categoryTitle)")
             
-            // Добавляем трекер в Core Data
             try trackerStore.addTracker(tracker)
-            Logger.shared.log(.info, message: "Трекер успешно добавлен: \(tracker.name)")
-            
-            // Перезагружаем трекеры
             loadTrackers()
             
         } catch {
             Logger.shared.log(.error, message: "Ошибка при добавлении трекера: \(tracker.name) - \(error.localizedDescription)")
         }
     }
-
+    
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
+        guard let view else { return }
+
+        if isTrackerCompleted(trackerId, date: date) {
+            return
+        }
+        
+        let newRecord = TrackerRecord(trackerId: trackerId, date: date)
         do {
-            let record = TrackerRecord(trackerId: trackerId, date: date)
-            try recordStore.addRecord(record)
+            try recordStore.addRecord(newRecord)
+            
             loadCompletedTrackers()
+            view.reloadData()
         } catch {
-            print("Failed to mark tracker as completed: \(error)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при добавлении записи для трекера \(trackerId) на дату \(date): \(error.localizedDescription)"
+            )
         }
     }
-    
+
     func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
         do {
             try recordStore.removeRecord(for: trackerId, on: date)
-            loadCompletedTrackers()
+
+            self.loadCompletedTrackers()
+            view?.reloadData()
         } catch {
-            print("Failed to unmark tracker as completed: \(error)")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении записи для трекера \(trackerId) на дату \(date): \(error.localizedDescription)"
+            )
         }
     }
     
@@ -90,14 +99,20 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
         let currentDateString = dateFormatter.string(from: date)
-        
+
+        Logger.shared.log(.info, message: "Обработка выбора трекера \(tracker.name) (ID: \(tracker.id)), isCompleted: \(isCompleted) на дату: \(currentDateString)")
+
         if isCompleted {
+            Logger.shared.log(.info, message: "Трекер \(tracker.name) будет отмечен как незавершенный")
             trackerCompletedUnmark(tracker.id, date: currentDateString)
         } else {
+            Logger.shared.log(.info, message: "Трекер \(tracker.name) будет отмечен как завершенный")
             trackerCompletedMark(tracker.id, date: currentDateString)
         }
-        
-        view?.reloadData()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.view?.reloadData()
+        }
     }
     
     func isDateValidForCompletion(date: Date) -> Bool {
@@ -105,17 +120,12 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func filterTrackers(for date: Date) {
-        Logger.shared.log(.info, message: "Начало фильтрации трекеров по дате: \(dateFormatter.string(from: date))")
-        
         let allTrackers = trackerStore.fetchTrackers()
-        Logger.shared.log(.info, message: "Попытка загрузки трекеров из Core Data")
-        Logger.shared.log(.info, message: "Трекеры успешно загружены из Core Data, всего загружено: \(allTrackers.count)")
-        
+
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
         let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
-        Logger.shared.log(.info, message: "Фильтрация трекеров по дню недели: \(selectedDay.rawValue)")
         
         let filteredTrackers = allTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
@@ -130,53 +140,56 @@ final class TrackersPresenter: TrackersPresenterProtocol {
                 """)
             
             if tracker.isRegularEvent {
-                let containsDay = tracker.schedule.contains(selectedDay)
-                Logger.shared.log(.info, message: "Трекер \(tracker.name) содержит день \(selectedDay.rawValue): \(containsDay)")
-                return containsDay
+                return tracker.schedule.contains(selectedDay)
             } else {
-                let isSameDay = calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
-                Logger.shared.log(.info, message: "Трекер \(tracker.name) имеет дату \(dateFormatter.string(from: tracker.creationDate ?? Date())): \(isSameDay)")
-                return isSameDay
+                return calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
             }
         }
         
         Logger.shared.log(.info, message: "Трекеров после фильтрации: \(filteredTrackers.count)")
         
-        view?.categories = categorizeTrackers(filteredTrackers)
+        let completedFilteredTrackers = filteredTrackers.filter { tracker in
+            let isCompleted = view?.completedTrackers.contains {
+                $0.trackerId == tracker.id && $0.date == dateFormatter.string(from: date)
+            } ?? false
+            
+            Logger.shared.log(.info, message: "Трекер \(String(describing: tracker.name)) завершен на дату \(dateFormatter.string(from: date)): \(isCompleted)")
+            return !isCompleted || tracker.isRegularEvent
+        }
+
+        Logger.shared.log(.info, message: "Завершенных трекеров после фильтрации: \(completedFilteredTrackers.count)")
+
+        view?.categories = categorizeTrackers(completedFilteredTrackers)
         view?.reloadData()
     }
+
     
     func loadTrackers() {
-        Logger.shared.log(.info, message: "Начало загрузки трекеров из Core Data")
-
         let loadedTrackers = trackerStore.fetchTrackers()
-        Logger.shared.log(.info, message: "Трекеры загружены: \(loadedTrackers.count) трекеров")
-
         let categorizedTrackers = categorizeTrackers(loadedTrackers)
-        Logger.shared.log(.info, message: "Трекеры успешно категоризированы. Всего категорий: \(categorizedTrackers.count)")
-
         view?.categories = categorizedTrackers
         
         DispatchQueue.main.async {
-            Logger.shared.log(.info, message: "Данные обновлены в представлении")
             self.view?.reloadData()
         }
     }
 
     func loadCompletedTrackers() {
-        Logger.shared.log(.info, message: "Начало загрузки завершенных трекеров")
-
         let loadedCompletedTrackers = recordStore.fetchRecords()
-        Logger.shared.log(.info, message: "Завершенные трекеры загружены: \(loadedCompletedTrackers.count) записей")
+        let tempCompletedTrackers = Set(loadedCompletedTrackers.map { TrackerRecord(from: $0) })
 
-        view?.completedTrackers = Set(loadedCompletedTrackers.map { TrackerRecord(from: $0) })
+        if tempCompletedTrackers != view?.completedTrackers {
+            view?.completedTrackers = tempCompletedTrackers
+        } else {
+            Logger.shared.log(
+                .info,
+                message: "completedTrackers уже содержит актуальные данные. Обновление не требуется."
+            )
+        }
         view?.reloadData()
-        Logger.shared.log(.info, message: "Данные завершенных трекеров обновлены в представлении")
     }
 
     private func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
-        Logger.shared.log(.info, message: "Начало категоризации трекеров. Всего трекеров: \(trackerCoreDataList.count)")
-
         let trackers = trackerCoreDataList.map { trackerCoreData -> Tracker in
             let tracker = Tracker(from: trackerCoreData)
             Logger.shared.log(.info, message: "Трекер: \(tracker.name), категория: \(tracker.categoryTitle)")

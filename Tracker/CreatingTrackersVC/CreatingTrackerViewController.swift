@@ -108,8 +108,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         }
         
         let categoryTitle = selectedCategory?.title ?? "Новая категория"
-        Logger.shared.log(.info, message: "Создание трекера: \(trackerName), категория: \(categoryTitle)")
-        
+
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
@@ -127,8 +126,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         ]
         
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
-        Logger.shared.log(.info, message: "Уведомление о создании трекера отправлено")
-        
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 
