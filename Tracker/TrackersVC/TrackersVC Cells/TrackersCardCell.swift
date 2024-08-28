@@ -44,7 +44,7 @@ final class TrackersCardCell: UICollectionViewCell {
             ofSize: 12,
             weight: .medium
         )
-        label.textColor = .ypWhite
+        label.textColor = .white
         label.numberOfLines = 0
         return label
     }()
@@ -112,7 +112,7 @@ final class TrackersCardCell: UICollectionViewCell {
         let button = UIButton()
         button.layer.cornerRadius = 17
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.tintColor = .ypWhite
+        button.tintColor = .ypBackground
         button.widthAnchor.constraint(equalToConstant: 34).isActive = true
         button.heightAnchor.constraint(equalToConstant: 34).isActive = true
         button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
@@ -149,18 +149,22 @@ final class TrackersCardCell: UICollectionViewCell {
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool,
                    isRegularEvent: Bool) {
+
         nameLabel.text = tracker.name
         self.emoji.text = tracker.emoji
-        messageStack.backgroundColor = tracker.color
-        completeButton.backgroundColor = tracker.color
+        
+        guard let color = UIColor(hex: tracker.color) else { return }
+        
+        messageStack.backgroundColor = color
+        completeButton.backgroundColor = color
         
         let buttonImage = isCompleted ? "checkmark" : "plus"
-        let buttonColor = isCompleted ? tracker.color.withAlphaComponent(0.3) : tracker.color
+        let buttonColor = isCompleted ? color.withAlphaComponent(0.3) : color
         
         completeButton.setImage(UIImage(systemName: buttonImage), for: .normal)
         completeButton.backgroundColor = buttonColor
         completeButton.isEnabled = isDateValidForCompletion
-        
+
         counterLabel.isHidden = !isRegularEvent
         
         let countDays = countComplete.filter { record in

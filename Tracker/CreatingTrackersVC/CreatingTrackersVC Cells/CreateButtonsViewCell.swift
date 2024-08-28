@@ -18,7 +18,7 @@ final class CreateButtonsViewCell: UITableViewCell {
         let button = addButton(
             with: "Создать",
             backgroundColor: .ypGray,
-            titleColor: .ypWhite,
+            titleColor: .white,
             action: #selector(createButtonAction)
         )
         return button
@@ -52,6 +52,7 @@ final class CreateButtonsViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        contentView.backgroundColor = .ypBackground
     }
     
     required init?(coder: NSCoder) {
@@ -107,9 +108,11 @@ final class CreateButtonsViewCell: UITableViewCell {
     func updateCreateButtonState(isEnabled: Bool) {
         if isEnabled {
             createButton.backgroundColor = .ypBlack
+            createButton.titleLabel?.textColor = .ypBackground
             createButton.isUserInteractionEnabled = true
         } else {
             createButton.backgroundColor = .ypGray
+            
         }
     }
 }

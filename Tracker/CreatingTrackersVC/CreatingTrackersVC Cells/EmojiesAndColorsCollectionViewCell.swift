@@ -21,7 +21,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     private let colorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 7
+        view.layer.cornerRadius = 10
         return view
     }()
     
@@ -39,15 +39,15 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
             contentView.addSubview($0)
         }
         contentView.backgroundColor = .clear
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = 15
         NSLayoutConstraint.activate([
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            colorView.widthAnchor.constraint(equalToConstant: 40),
-            colorView.heightAnchor.constraint(equalToConstant: 40)
+            colorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
+            colorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -7),
+            colorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 7),
+            colorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -7)
         ])
     }
     
@@ -73,7 +73,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
                 colorView.isHidden = false
                 colorView.backgroundColor = UIColor(hex: element)
                 if isSelected {
-                    contentView.layer.borderWidth = 3
+                    contentView.layer.borderWidth = 4
                     contentView.layer.borderColor = UIColor(hex: element)?.withAlphaComponent(0.3).cgColor
                 }
             }

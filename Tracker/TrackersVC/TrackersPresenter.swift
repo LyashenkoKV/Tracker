@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import CoreData
+
 // MARK: - Protocol
 protocol TrackersPresenterProtocol {
     var view: TrackersViewControllerProtocol? { get set }
     var dateFormatter: DateFormatter { get }
-    func addTracker(_ tracker: Tracker, categotyTitle: String)
+    func addTracker(_ tracker: Tracker, categoryTitle: String)
     func trackerCompletedMark(_ trackerId: UUID, date: String)
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
@@ -20,12 +20,17 @@ protocol TrackersPresenterProtocol {
     func filterTrackers(for date: Date)
     func loadTrackers()
     func loadCompletedTrackers()
+    func deleteTracker(at indexPath: IndexPath)
+    func editTracker(at indexPath: IndexPath)
 }
+
 // MARK: - Object
-final class TrackersPresenter {
-    weak var view: TrackersViewControllerProtocol?
+final class TrackersPresenter: TrackersPresenterProtocol {
+    private let trackerStore: TrackerStore
+    private let categoryStore: TrackerCategoryStore
+    private let recordStore: TrackerRecordStore
     
-    private var context: NSManagedObjectContext
+    weak var view: TrackersViewControllerProtocol?
     
     lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -34,76 +39,82 @@ final class TrackersPresenter {
         return dateFormatter
     }()
     
-    init(
-        view: TrackersViewControllerProtocol,
-        context: NSManagedObjectContext = CoreDataStack.shared.context
-    ) {
-        self.view = view
-        self.context = context
+    init(trackerStore: TrackerStore, categoryStore: TrackerCategoryStore, recordStore: TrackerRecordStore) {
+        self.trackerStore = trackerStore
+        self.categoryStore = categoryStore
+        self.recordStore = recordStore
     }
-}
-
-extension TrackersPresenter: TrackersPresenterProtocol {
     
-    func addTracker(_ tracker: Tracker, categotyTitle: String) {
-        guard let view else { return }
-        
-        var updatedCategories = view.categories
-        
-        if let sectionIndex = view.categories.firstIndex(where: { $0.title == categotyTitle }) {
-            let category = view.categories[sectionIndex]
+    func addTracker(_ tracker: Tracker, categoryTitle: String) {
+        do {
+            let category = TrackerCategory(title: categoryTitle, trackers: [])
+            try categoryStore.addCategory(category)
+            try trackerStore.addTracker(tracker)
+            loadTrackers()
             
-            if !category.trackers.contains(where: { $0.id == tracker.id }) {
-                let updatedTrackers = category.trackers + [tracker]
-                let updatedCategory = TrackerCategory(title: category.title, trackers: updatedTrackers)
-                updatedCategories[sectionIndex] = updatedCategory
-            }
-        } else {
-            let newCategory = TrackerCategory(title: categotyTitle, trackers: [tracker])
-            updatedCategories.append(newCategory)
-        }
-        view.categories = updatedCategories
-        view.reloadData()
-        saveTrackers()
-    }
-
-    func trackerCompletedMark(_ trackerId: UUID, date: String) {
-        guard let view = view else { return }
-        if !isTrackerCompleted(trackerId, date: date) {
-            let newRecord = TrackerRecord(trackerId: trackerId, date: date)
-            var updatedCompletedTrackers = view.completedTrackers
-            updatedCompletedTrackers.insert(newRecord)
-            view.completedTrackers = updatedCompletedTrackers
-            view.reloadData()
+        } catch {
+            Logger.shared.log(
+                .error, 
+                message: "Ошибка при добавлении трекера: \(tracker.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
         }
     }
     
-    func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
-        guard let view = view else { return }
-        if let index = view.completedTrackers.firstIndex(where: { $0.trackerId == trackerId && $0.date == date }) {
-            view.completedTrackers.remove(at: index)
+    func trackerCompletedMark(_ trackerId: UUID, date: String) {
+        guard let view else { return }
+
+        if isTrackerCompleted(trackerId, date: date) {
+            return
+        }
+        
+        let newRecord = TrackerRecord(trackerId: trackerId, date: date)
+        do {
+            try recordStore.addRecord(newRecord)
+            
+            loadCompletedTrackers()
             view.reloadData()
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при добавлении записи для трекера \(trackerId) на дату \(date)",
+                metadata: ["❌": error.localizedDescription]
+            )
+        }
+    }
+
+    func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
+        do {
+            try recordStore.removeRecord(for: trackerId, on: date)
+
+            self.loadCompletedTrackers()
+            view?.reloadData()
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении записи для трекера \(trackerId) на дату \(date)",
+                metadata: ["❌": error.localizedDescription]
+            )
         }
     }
     
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool {
-        guard let view else { return false }
-        return view.completedTrackers.contains { $0.trackerId == trackerId && $0.date == date }
+        let records = recordStore.fetchRecords()
+        return records.contains { $0.trackerId == trackerId && $0.date == date }
     }
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
-        guard let view else { return }
-
         let currentDateString = dateFormatter.string(from: date)
-        
+
         if isCompleted {
             trackerCompletedUnmark(tracker.id, date: currentDateString)
         } else {
             trackerCompletedMark(tracker.id, date: currentDateString)
         }
-        
-        saveCompletedTrackersToUserDefaults()
-        view.reloadData()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.view?.reloadData()
+        }
     }
     
     func isDateValidForCompletion(date: Date) -> Bool {
@@ -111,59 +122,90 @@ extension TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func filterTrackers(for date: Date) {
-        let savedTrackers = UserDefaults.standard.loadTrackers()
+        let allTrackers = trackerStore.fetchTrackers()
         
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
-
-        let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
+        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
-        let filteredTrackers = savedTrackers.filter { tracker in
+        let filteredTrackers = allTrackers.filter { trackerCoreData in
+            let tracker = Tracker(from: trackerCoreData)
+            
             if tracker.isRegularEvent {
-                return tracker.schedule.days.contains(selectedDay)
+                return tracker.schedule.contains(selectedDayString)
             } else {
-                let creationDateString = dateFormatter.string(from: tracker.creationDate ?? Date())
-                let selectedDateString = dateFormatter.string(from: date)
-                return selectedDateString == creationDateString
+                return calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
             }
         }
-
-        view?.categories = categorizeTrackers(filteredTrackers)
-        view?.reloadData()
-    }
-    
-    private func categorizeTrackers(_ trackers: [Tracker]) -> [TrackerCategory] {
-        let uniqueTrackers = Array(Set(trackers.map { $0.id })) // тут я удаляю дубликаты по id
-            .compactMap { id in trackers.first { $0.id == id } }
-
-        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: uniqueTrackers, by: { $0.categoryTitle })
-
-        return groupedTrackers.map { (title: String, trackers: [Tracker]) in
-            TrackerCategory(title: title, trackers: trackers)
+        
+        let completedFilteredTrackers = filteredTrackers.filter { tracker in
+            let isCompleted = view?.completedTrackers.contains {
+                $0.trackerId == tracker.id && $0.date == dateFormatter.string(from: date)
+            } ?? false
+            
+            return !isCompleted || tracker.isRegularEvent
         }
-    }
-    
-    private func saveTrackers() {
-        let allTrackers = view?.categories.flatMap { $0.trackers } ?? []
-        UserDefaults.standard.saveTrackers(allTrackers)
-    }
-    
-    func saveCompletedTrackersToUserDefaults() {
-        guard let view else { return }
-        UserDefaults.standard.saveCompletedTrackers(view.completedTrackers)
+        
+        view?.categories = categorizeTrackers(completedFilteredTrackers)
+        view?.reloadData()
     }
     
     func loadTrackers() {
-        let loadedTrackers = UserDefaults.standard.loadTrackers()
-        view?.categories = categorizeTrackers(loadedTrackers)
+        let loadedTrackers = trackerStore.fetchTrackers()
+        let categorizedTrackers = categorizeTrackers(loadedTrackers)
+        view?.categories = categorizedTrackers
+        
+        DispatchQueue.main.async {
+            self.view?.reloadData()
+        }
+    }
+
+    func loadCompletedTrackers() {
+        let loadedCompletedTrackers = recordStore.fetchRecords()
+        let tempCompletedTrackers = Set(loadedCompletedTrackers.map { TrackerRecord(from: $0) })
+
+        if tempCompletedTrackers != view?.completedTrackers {
+            view?.completedTrackers = tempCompletedTrackers
+        }
         view?.reloadData()
-        view?.updatePlaceholderView()
+    }
+
+    private func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
+        let trackers = trackerCoreDataList.map { trackerCoreData -> Tracker in
+            let tracker = Tracker(from: trackerCoreData)
+            return tracker
+        }
+
+        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
+
+        groupedTrackers.forEach { (title, trackers) in
+            Logger.shared.log(.info, message: "Категория: \(title), Количество трекеров: \(trackers.count)")
+        }
+
+        let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
+            return TrackerCategory(title: title, trackers: trackers)
+        }
+        return trackerCategories
     }
     
-    func loadCompletedTrackers() {
-        let loadedCompletedTrackers = UserDefaults.standard.loadCompletedTrackers()
-        view?.completedTrackers = loadedCompletedTrackers
-        view?.reloadData()
+    func deleteTracker(at indexPath: IndexPath) {
+        guard let view = view else { return }
+        
+        let trackerToDelete = view.categories[indexPath.section].trackers[indexPath.row]
+        
+        do {
+            try trackerStore.deleteTracker(withId: trackerToDelete.id)
+
+            loadTrackers()
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении трекера \(trackerToDelete.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
+        }
     }
+    
+    func editTracker(at indexPath: IndexPath) {}
 }

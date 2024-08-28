@@ -18,6 +18,8 @@ final class CategoryViewController: BaseTrackerViewController {
     
     weak var delegate: CategorySelectionDelegate?
     
+    private let trackerCategoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+    
     // MARK: - UI Elements
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
@@ -30,7 +32,7 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var addCategoryButton = UIButton(
         title: "Добавить категорию",
         backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
+        titleColor: .ypBackground,
         cornerRadius: 20,
         font: UIFont.systemFont(
             ofSize: 16,
@@ -53,19 +55,25 @@ final class CategoryViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        //dismissKeyboard(view: self.view) Надо подумать, из за метода не правильно отрабатывает кнопка
+        loadCategories()
+        updatePlaceholder()
+        dismissKeyboard(view: view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadCategoriesFromUserDefaults()
-        tableView.reloadData()
-        updateUI()
+        
+        trackerCategoryStore.didUpdateData = { [weak self] in
+            DispatchQueue.main.async {
+                self?.loadCategories()
+                self?.updatePlaceholder()
+                self?.updateUI()
+            }
+        }
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        
         [stack, placeholder.view].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -83,10 +91,43 @@ final class CategoryViewController: BaseTrackerViewController {
             addCategoryButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
+    
+    override func deleteCategory(at indexPath: IndexPath) {
+        let deletedCategory = categories[indexPath.row]
+        categories.remove(at: indexPath.row)
+        
+        if selectedCategory?.title == deletedCategory.title {
+            selectedCategory = nil
+        }
+        
+        do {
+            try trackerCategoryStore.deleteCategory(deletedCategory)
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении категории \(deletedCategory.title)",
+                metadata: ["❌": error.localizedDescription]
+            )
+        }
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
 
     // MARK: - Actions
     @objc private func addCategoryButtonAction() {
-        if !isAddingCategory {
+        if isAddingCategory {
+            if let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text, !categoryName.isEmpty {
+                do {
+                    try trackerCategoryStore.addCategory(TrackerCategory(title: categoryName, trackers: []))
+                } catch {
+                    Logger.shared.log(
+                        .error,
+                        message: "Ошибка при добавлении категории:",
+                        metadata: ["❌": error.localizedDescription]
+                    )
+                }
+            }
+            isAddingCategory = false
+        } else {
             isAddingCategory.toggle()
         }
         updateUI()
@@ -95,8 +136,6 @@ final class CategoryViewController: BaseTrackerViewController {
     // MARK: - Overriding updateUI
     override func updateUI() {
         super.updateUI()
-        
-        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
 
         addCategoryButton.isEnabled = !isAddingCategory
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
@@ -104,15 +143,32 @@ final class CategoryViewController: BaseTrackerViewController {
 
         tableView.reloadData()
     }
-
     
+    private func updatePlaceholder() {
+        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
+    }
+
     override func textViewCellDidChange(_ cell: TextViewCell) {
         super.textViewCellDidChange(cell)
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
     }
+    
+    override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        cell.getText().resignFirstResponder()
+    }
+    
+    private func loadCategories() {
+        categories = trackerCategoryStore.fetchCategories()
+  
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.tableView.reloadData()
+        }
+    }
 }
+
 // MARK: - UITableVIewDelegate
 extension CategoryViewController {
     override func tableView(
@@ -121,7 +177,6 @@ extension CategoryViewController {
             if !isAddingCategory {
                 let selectedCategory = categories[indexPath.row]
                 self.selectedCategory = selectedCategory
-                saveCategoriesToUserDefaults()
                 delegate?.didSelectCategory(selectedCategory)
                 
                 tableView.reloadData()

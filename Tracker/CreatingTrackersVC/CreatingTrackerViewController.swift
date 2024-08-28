@@ -37,14 +37,29 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        UserDefaults.standard.clearSavedData()
     }
     
     override func textViewCellDidChange(_ cell: TextViewCell) {
         updateCreateButtonState()
     }
     
-    private func updateCreateButtonState() {
+    override func didSelectCategory(_ category: TrackerCategory) {
+        selectedCategory = category
+        tableView.reloadData()
+        updateCreateButtonState()
+    }
+    
+    override func didSelect(_ days: [DayOfTheWeek]) {
+        self.selectedDays = days
+        updateCreateButtonState()
+        tableView.reloadRows(
+            at: [IndexPath(row: 1,
+                           section: TrackerSection.buttons.rawValue)],
+            with: .automatic
+        )
+    }
+    
+    func updateCreateButtonState() {
         guard let textViewCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
@@ -53,8 +68,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
         let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
-        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true) && selectedDays != nil
-
+        let daysAreSelected = !selectedDays.isEmpty
+        
         let isValid: Bool
 
         if isRegularEvent {
@@ -84,46 +99,37 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
-        ) as? TextViewCell,
-        let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
-        let selectedColor = selectedColor,
-        let selectedEmoji = selectedEmoji else {
+        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+              let selectedColor = selectedColor,
+              let selectedEmoji = selectedEmoji else {
+            Logger.shared.log(
+                .error,
+                message: "Не все обязательные поля заполнены для создания трекера"
+            )
             return
         }
         
-        let categoryTitle: String
-        
-        if let selectedCategory = selectedCategory {
-            updateCreateButtonState()
-            categoryTitle = selectedCategory.title
-        } else {
-            categoryTitle = "Новая категория"
-        }
-        
-        if selectedDays != nil {
-            updateCreateButtonState()
-        }
+        let categoryTitle = selectedCategory?.title ?? "Новая категория"
+        let scheduleStrings = selectedDays.map { String($0.rawValue) }
 
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
-            color: selectedColor,
+            color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: selectedDays ?? Schedule(days: []),
+            schedule: scheduleStrings,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date()
         )
-
+        
         let userInfo: [String: Any] = [
             "tracker": tracker,
             "categoryTitle": categoryTitle
         ]
         
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
-        
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 
@@ -199,7 +205,6 @@ extension CreatingTrackerViewController {
                 return UITableViewCell()
             }
             let cell = UITableViewCell()
-            
             let totalRows = isRegularEvent ? 2 : 1
             
             configureButtonCell(cell, at: indexPath, isSingleCell: isRegularEvent)

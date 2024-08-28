@@ -16,7 +16,7 @@ class BaseTrackerViewController: UIViewController {
     var categories: [TrackerCategory] = []
     
     private var selectedCategories: [TrackerCategory] = []
-    var selectedDays: Schedule?
+    var selectedDays: [DayOfTheWeek] = []
     var selectedCategory: TrackerCategory?
     
     var editingCategoryIndex: IndexPath?
@@ -37,7 +37,7 @@ class BaseTrackerViewController: UIViewController {
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.reuseIdentifier)
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
-        tableView.backgroundColor = .ypWhite
+        tableView.backgroundColor = .ypBackground
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -46,8 +46,8 @@ class BaseTrackerViewController: UIViewController {
     
     // MARK: - Initializers
     init(type: TrackerViewControllerType) {
-        super.init(nibName: nil, bundle: nil)
         self.viewControllerType = type
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -64,7 +64,7 @@ class BaseTrackerViewController: UIViewController {
     
     // MARK: - Configuration Methods
     private func configureUI() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = .ypBackground
         switch viewControllerType {
         case .typeTrackers:
             self.title = "Создание трекера"
@@ -125,11 +125,9 @@ class BaseTrackerViewController: UIViewController {
         } else {
             categories.append(newCategory)
         }
-        saveCategoriesToUserDefaults()
         isAddingCategory = false
         tableView.reloadData()
     }
-    
     
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         switch viewControllerType {
@@ -140,86 +138,20 @@ class BaseTrackerViewController: UIViewController {
         }
     }
     
+    func didSelectCategory(_ category: TrackerCategory) {}
+    func didSelect(_ days: [DayOfTheWeek]) {}
+    func deleteCategory(at indexPath: IndexPath) {}
+    
     func dismissOrCancel() {
         isAddingCategory = false
         dismiss(animated: true)
     }
 }
 
-// MARK: - UserDafaults
-extension BaseTrackerViewController {
-    // Не забыть вынести в глоб экст
-    func saveCategoriesToUserDefaults() {
-        UserDefaults.standard.savedCategories(categories)
-        
-        if let selectedCategory = selectedCategory {
-            UserDefaults.standard.set(selectedCategory.title, forKey: "selectedCategory")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "selectedCategory")
-        }
-    }
-    
-    func saveSelectedDays() {
-        if let selectedDays = selectedDays?.days {
-            let encodedDays = selectedDays.map { $0.rawValue }
-            UserDefaults.standard.set(encodedDays, forKey: "selectedDays")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "selectedDays")
-        }
-    }
-    
-    func loadCategoriesFromUserDefaults() {
-        categories = UserDefaults.standard.loadCategories()
-        
-        if let savedCategoryTitle = UserDefaults.standard.string(forKey: "selectedCategory") {
-            selectedCategory = categories.first { $0.title == savedCategoryTitle }
-        } else {
-            selectedCategory = nil
-        }
-    }
-    
-    func loadSelectedDays() {
-        if let savedDays = UserDefaults.standard.array(forKey: "selectedDays") as? [String] {
-            let loadedDays = savedDays.compactMap { DayOfTheWeek(rawValue: $0) }
-            selectedDays = Schedule(days: loadedDays)
-        } else {
-            selectedDays = nil
-        }
-    }
-    
-    func deleteCategory(at indexPath: IndexPath) {
-        let deletedCategory = categories[indexPath.row]
-        categories.remove(at: indexPath.row)
-        
-        if selectedCategory?.title == deletedCategory.title {
-            selectedCategory = nil
-            UserDefaults.standard.removeObject(forKey: "selectedCategory")
-        }
-        
-        saveCategoriesToUserDefaults()
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-    }
-}
-
 // MARK: - ScheduleSelectionDelegate
-extension BaseTrackerViewController: ScheduleSelectionDelegate {
-    func didSelect(_ days: [DayOfTheWeek]) {
-        selectedDays = Schedule(days: days)
-        tableView.reloadRows(
-            at: [IndexPath(
-                row: 1,
-                section: TrackerSection.buttons.rawValue
-            )], with: .automatic)
-    }
-}
-
+extension BaseTrackerViewController: ScheduleSelectionDelegate {}
 // MARK: - CategorySelectionDelegate
-extension BaseTrackerViewController: CategorySelectionDelegate {
-    func didSelectCategory(_ category: TrackerCategory) {
-        selectedCategory = category
-        tableView.reloadData()
-    }
-}
+extension BaseTrackerViewController: CategorySelectionDelegate {}
 
 // MARK: - TextViewCellDelegate
 extension BaseTrackerViewController: TextViewCellDelegate {
@@ -301,7 +233,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 content.text = "Нерегулярное событие"
             }
             content.textProperties.alignment = .center
-            content.textProperties.color = .ypWhite
+            content.textProperties.color = .ypBackground
             content.textProperties.font = UIFont.systemFont(
                 ofSize: 16,
                 weight: .medium
@@ -318,7 +250,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 ofSize: 16,
                 weight: .medium
             )
-            cell.textLabel?.textColor = .ypWhite
+            cell.textLabel?.textColor = .ypBackground
         }
         cell.layer.cornerRadius = 16
         cell.clipsToBounds = true
@@ -387,6 +319,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                content.textProperties.adjustsFontSizeToFitWidth = true
+                content.textProperties.minimumScaleFactor = 0.8
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -400,6 +334,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                content.secondaryTextProperties.adjustsFontSizeToFitWidth = true
+                content.secondaryTextProperties.minimumScaleFactor = 0.8
+                
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
@@ -408,6 +345,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+                cell.detailTextLabel?.minimumScaleFactor = 0.8
+                cell.detailTextLabel?.lineBreakMode = .byTruncatingTail
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -459,6 +399,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
     func configureSeparator(_ cell: UITableViewCell, isLastRow: Bool) {
         cell.contentView.subviews.filter { $0.tag == 1001 }.forEach { $0.removeFromSuperview() }
         
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        
         guard !isLastRow else { return }
         
         let separator = UIView()
@@ -468,8 +410,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.contentView.addSubview(separator)
         
         NSLayoutConstraint.activate([
-            separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
-            separator.widthAnchor.constraint(equalToConstant: cell.frame.width),
+            separator.leadingAnchor.constraint(equalTo: cell.layoutMarginsGuide.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: cell.layoutMarginsGuide.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1),
             separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
         ])
@@ -516,12 +458,14 @@ extension BaseTrackerViewController: UITableViewDelegate {
             if indexPath.row == 0 {
                 let categoryVC = CategoryViewController(type: .category)
                 categoryVC.delegate = self
+                categoryVC.selectedCategory = self.selectedCategory
                 let navController = UINavigationController(rootViewController: categoryVC)
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true)
             } else if indexPath.row == 1 {
                 let scheduleVC = ScheduleViewController(type: .schedule)
                 scheduleVC.delegate = self
+                scheduleVC.selectedDays = self.selectedDays
                 let navController = UINavigationController(rootViewController: scheduleVC)
                 navController.modalPresentationStyle = .formSheet
                 self.present(navController, animated: true)
@@ -734,8 +678,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
                     return UITableView.automaticDimension
                 case TrackerSection.buttons.rawValue:
                     return 75
-                case TrackerSection.emoji.rawValue, TrackerSection.color.rawValue:
-                    return 180
+                case TrackerSection.emoji.rawValue:
+                    return calculateCellHeight(for: tableView, itemCount: emojies.count, itemsPerRow: 6)
+                case TrackerSection.color.rawValue:
+                    return calculateCellHeight(for: tableView, itemCount: colors.count, itemsPerRow: 6)
                 case TrackerSection.createButtons.rawValue:
                     return UITableView.automaticDimension
                 default:
@@ -750,12 +696,29 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return UITableView.automaticDimension
             }
         }
+    
+    private func calculateCellHeight(for tableView: UITableView, itemCount: Int, itemsPerRow: Int) -> CGFloat {
+        let collectionViewWidth = tableView.frame.width
+        let cellSpacing: CGFloat = 5
+        let leftInset: CGFloat = 10
+        let rightInset: CGFloat = 10
+
+        let totalSpacing = (CGFloat(itemsPerRow - 1) * cellSpacing)
+        let totalInsets = leftInset + rightInset
+        let availableWidth = collectionViewWidth - totalInsets - totalSpacing
+        let itemWidth = availableWidth / CGFloat(itemsPerRow)
+        
+        let numberOfRows = ceil(CGFloat(itemCount) / CGFloat(itemsPerRow))
+        let totalHeight = numberOfRows * itemWidth + (numberOfRows - 1) * cellSpacing
+        
+        return totalHeight + 20
+    }
 }
 
 // MARK: - selectedDaysString
 extension BaseTrackerViewController {
     private func selectedDaysString() -> String {
-        guard let days = selectedDays?.days else {
+        if selectedDays.isEmpty {
             return ""
         }
         
@@ -766,13 +729,13 @@ extension BaseTrackerViewController {
         ]
         
         let fullWeek = Set(daysOrder)
-        let selectedSet = Set(days)
+        let selectedSet = Set(selectedDays)
         
         if selectedSet == fullWeek {
             return "Каждый день"
         }
         
-        let sortedDays = days.sorted {
+        let sortedDays = selectedDays.sorted {
             daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
         }
         

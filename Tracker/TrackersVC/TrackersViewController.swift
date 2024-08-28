@@ -19,7 +19,6 @@ protocol TrackersViewControllerProtocol: AnyObject {
 final class TrackersViewController: UIViewController {
     
     var presenter: TrackersPresenterProtocol?
-    
     var categories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
@@ -36,7 +35,7 @@ final class TrackersViewController: UIViewController {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
-        picker.tintColor = .ypBlack
+        picker.tintColor = .systemBlue
         picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
@@ -64,6 +63,7 @@ final class TrackersViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .ypBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.alwaysBounceVertical = true
@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Трекеры"
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = .ypBackground
         setupConstraints()
         updatePlaceholderView()
         addNotification()
@@ -117,9 +117,11 @@ final class TrackersViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.hidesBarsOnSwipe = false
+        guard let navigationController else { return }
+        
+        navigationController.hidesBarsOnSwipe = false
+        navigationController.navigationBar.prefersLargeTitles = true
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.searchController = searchController
     }
@@ -130,7 +132,8 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addNotification() {
-        NotificationCenter.default.addObserver(            self,
+        NotificationCenter.default.addObserver(            
+            self,
             selector: #selector(handleTrackerCreated),
             name: .trackerCreated,
             object: nil
@@ -161,42 +164,6 @@ final class TrackersViewController: UIViewController {
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
     }
-    
-    // Надо вернуться к добавлению через .performBatchUpdates
-//
-//    func reloadDataWithBatchUpdates(
-//        insertedSections: IndexSet? = nil,
-//        insertedIndexPaths: [IndexPath]? = nil) {
-//        collectionView.performBatchUpdates {
-//            if let sections = insertedSections {
-//                collectionView.insertSections(sections)
-//            }
-//            if let indexPaths = insertedIndexPaths {
-//                collectionView.insertItems(at: indexPaths)
-//            }
-//        }
-//        updatePlaceholderView()
-//    }
-//    
-    func deleteTracker(at indexPath: IndexPath) {
-        let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
-            if index == indexPath.section {
-                var updatedTrackers = category.trackers
-                updatedTrackers.remove(at: indexPath.row)
-                return TrackerCategory(title: category.title, trackers: updatedTrackers)
-            } else {
-                return category
-            }
-        }
-        categories = updatedCategories
-        
-        collectionView.performBatchUpdates {
-            collectionView.deleteItems(at: [indexPath])
-        }
-        updatePlaceholderView()
-    }
-    
-    func editTracker(at indexPath: IndexPath) {}
 }
 
 // MARK: - NavigationController
@@ -232,14 +199,22 @@ extension TrackersViewController {
         let selectedDate = sender.date
         currentDate = selectedDate
         presenter?.filterTrackers(for: selectedDate)
+
+        let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
-        reloadData()
+        if previousCompletedTrackersCount != completedTrackers.count {
+            reloadData()
+        }
     }
     
     @objc private func handleTrackerCreated(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let tracker = userInfo["tracker"] as? Tracker,
               let categoryTitle = userInfo["categoryTitle"] as? String else {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка: не удалось извлечь трекер или название категории из уведомления"
+            )
             return
         }
 
@@ -251,18 +226,20 @@ extension TrackersViewController {
             let adjustedIndex = (dayOfTheWeek + 5) % 7
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
+            let selectedDayString = String(selectedDay.rawValue)
+
             updatedTracker = Tracker(
                 id: tracker.id,
                 name: tracker.name,
                 color: tracker.color,
                 emoji: tracker.emoji,
-                schedule: Schedule(days: [selectedDay]),
+                schedule: [selectedDayString],
                 categoryTitle: categoryTitle,
-                isRegularEvent: tracker.isRegularEvent, 
+                isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate
             )
         }
-        presenter?.addTracker(updatedTracker, categotyTitle: categoryTitle)
+        presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
         presenter?.filterTrackers(for: currentDate)
     }
 }
