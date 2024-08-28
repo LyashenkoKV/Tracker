@@ -32,7 +32,7 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var addCategoryButton = UIButton(
         title: "Добавить категорию",
         backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
+        titleColor: .ypBackground,
         cornerRadius: 20,
         font: UIFont.systemFont(
             ofSize: 16,

@@ -18,7 +18,7 @@ class ScheduleViewController: BaseTrackerViewController {
     private lazy var addDoneButton = UIButton(
         title: "Готово",
         backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
+        titleColor: .ypBackground,
         cornerRadius: 20,
         font: UIFont.systemFont(ofSize: 16, weight: .medium),
         target: self,

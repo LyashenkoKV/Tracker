@@ -32,7 +32,6 @@ final class CoreDataStack {
             do {
                 try context.save()
             } catch {
-                let nserror = error as NSError
                 Logger.shared.log(
                     .error, message: "Ошибка сохранения контекста CoreData",
                     metadata: ["❌": error.localizedDescription]

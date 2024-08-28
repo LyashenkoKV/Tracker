@@ -46,6 +46,7 @@ final class TextViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        contentView.backgroundColor = .ypBackground
         textView.delegate = self
         textView.text = placeholderText
         textView.font = UIFont.systemFont(
@@ -90,7 +91,7 @@ extension TextViewCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if isVisiblePlaceholder {
             textView.text = nil
-            textView.textColor = .black
+            textView.textColor = .ypBlack
             isVisiblePlaceholder = false
         }
         delegate?.textViewCellDidBeginEditing(self)

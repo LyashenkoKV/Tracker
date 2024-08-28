@@ -44,7 +44,7 @@ final class TrackersCardCell: UICollectionViewCell {
             ofSize: 12,
             weight: .medium
         )
-        label.textColor = .ypWhite
+        label.textColor = .white
         label.numberOfLines = 0
         return label
     }()
@@ -112,7 +112,7 @@ final class TrackersCardCell: UICollectionViewCell {
         let button = UIButton()
         button.layer.cornerRadius = 17
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.tintColor = .ypWhite
+        button.tintColor = .ypBackground
         button.widthAnchor.constraint(equalToConstant: 34).isActive = true
         button.heightAnchor.constraint(equalToConstant: 34).isActive = true
         button.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)

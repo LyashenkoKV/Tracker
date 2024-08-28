@@ -37,7 +37,7 @@ class BaseTrackerViewController: UIViewController {
         tableView.register(CreateButtonsViewCell.self, forCellReuseIdentifier: CreateButtonsViewCell.reuseIdentifier)
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.reuseIdentifier)
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
-        tableView.backgroundColor = .ypWhite
+        tableView.backgroundColor = .ypBackground
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
@@ -64,7 +64,7 @@ class BaseTrackerViewController: UIViewController {
     
     // MARK: - Configuration Methods
     private func configureUI() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = .ypBackground
         switch viewControllerType {
         case .typeTrackers:
             self.title = "Создание трекера"
@@ -233,7 +233,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 content.text = "Нерегулярное событие"
             }
             content.textProperties.alignment = .center
-            content.textProperties.color = .ypWhite
+            content.textProperties.color = .ypBackground
             content.textProperties.font = UIFont.systemFont(
                 ofSize: 16,
                 weight: .medium
@@ -250,7 +250,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 ofSize: 16,
                 weight: .medium
             )
-            cell.textLabel?.textColor = .ypWhite
+            cell.textLabel?.textColor = .ypBackground
         }
         cell.layer.cornerRadius = 16
         cell.clipsToBounds = true

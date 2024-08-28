@@ -67,7 +67,7 @@ final class MainViewController: UIViewController {
         ]
         
         tabBarController.tabBar.tintColor = .systemBlue
-        tabBarController.tabBar.layer.borderColor = UIColor.lightGray.cgColor
+        tabBarController.tabBar.layer.borderColor = UIColor.ypGrayDark.cgColor
         tabBarController.tabBar.layer.borderWidth = 1
         tabBarController.tabBar.clipsToBounds = true
         

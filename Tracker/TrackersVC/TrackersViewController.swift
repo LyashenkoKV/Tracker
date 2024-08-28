@@ -63,6 +63,7 @@ final class TrackersViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .ypBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.alwaysBounceVertical = true
@@ -104,7 +105,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Трекеры"
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = .ypBackground
         setupConstraints()
         updatePlaceholderView()
         addNotification()
