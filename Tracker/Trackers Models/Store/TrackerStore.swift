@@ -131,15 +131,13 @@ final class TrackerStore: NSObject {
     }
     
     func fetchTrackers(for dayOfTheWeek: DayOfTheWeek) -> [TrackerCoreData] {
-        let context = persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
-        
         let dayOfWeekString = String(dayOfTheWeek.rawValue)
-        fetchRequest.predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", dayOfWeekString)
+        
+        fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", dayOfWeekString)
         
         do {
-            let trackers = try context.fetch(fetchRequest)
-            return trackers
+            try fetchedResultsController.performFetch()
+            return fetchedResultsController.fetchedObjects ?? []
         } catch {
             Logger.shared.log(
                 .error,
