@@ -225,18 +225,19 @@ extension TrackersViewController {
             let adjustedIndex = (dayOfTheWeek + 5) % 7
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
+            let selectedDayString = String(selectedDay.rawValue)
+
             updatedTracker = Tracker(
                 id: tracker.id,
                 name: tracker.name,
                 color: tracker.color,
                 emoji: tracker.emoji,
-                schedule: [selectedDay],
+                schedule: [selectedDayString],
                 categoryTitle: categoryTitle,
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate
             )
         }
-        
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
         presenter?.filterTrackers(for: currentDate)
     }

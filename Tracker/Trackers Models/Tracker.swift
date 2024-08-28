@@ -12,7 +12,7 @@ struct Tracker: Codable, Hashable {
     let name: String
     let color: String
     let emoji: String
-    let schedule: [DayOfTheWeek]
+    let schedule: [String]
     let categoryTitle: String
     let isRegularEvent: Bool
     let creationDate: Date?
@@ -27,9 +27,9 @@ extension Tracker {
         self.categoryTitle = coreData.categoryTitle ?? ""
         self.isRegularEvent = coreData.isRegularEvent
         self.creationDate = coreData.creationDate ?? Date()
-        
-        if let scheduleData = coreData.schedule as? Data? {
-            if let decodedSchedule = try? JSONDecoder().decode([DayOfTheWeek].self, from: scheduleData ?? Data()) {
+
+        if let scheduleData = coreData.schedule as? Data {
+            if let decodedSchedule = try? JSONDecoder().decode([String].self, from: scheduleData) {
                 self.schedule = decodedSchedule
             } else {
                 Logger.shared.log(

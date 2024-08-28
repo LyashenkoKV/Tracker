@@ -11,7 +11,7 @@ import CoreData
 final class TrackerStore: NSObject {
     private let persistentContainer: NSPersistentContainer
     private let fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
-    
+
     init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
         
@@ -70,7 +70,7 @@ final class TrackerStore: NSObject {
             throw error
         }
         
-        // Сохранение расписания
+        // Сохранение расписания как массива строк
         if let scheduleData = try? JSONEncoder().encode(tracker.schedule) {
             trackerCoreData.schedule = scheduleData as NSData
         } else {
@@ -124,6 +124,26 @@ final class TrackerStore: NSObject {
             Logger.shared.log(
                 .error,
                 message: "Ошибка при загрузке трекеров из Core Data",
+                metadata: ["❌": error.localizedDescription]
+            )
+            return []
+        }
+    }
+    
+    func fetchTrackers(for dayOfTheWeek: DayOfTheWeek) -> [TrackerCoreData] {
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        
+        let dayOfWeekString = String(dayOfTheWeek.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", dayOfWeekString)
+        
+        do {
+            let trackers = try context.fetch(fetchRequest)
+            return trackers
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при фильтрации трекеров по дню недели",
                 metadata: ["❌": error.localizedDescription]
             )
             return []

@@ -123,34 +123,33 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     
     func filterTrackers(for date: Date) {
         let allTrackers = trackerStore.fetchTrackers()
-
+        
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
-        let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
+        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
         let filteredTrackers = allTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
-
+            
             if tracker.isRegularEvent {
-                return tracker.schedule.contains(selectedDay)
+                return tracker.schedule.contains(selectedDayString)
             } else {
                 return calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
             }
         }
-
+        
         let completedFilteredTrackers = filteredTrackers.filter { tracker in
             let isCompleted = view?.completedTrackers.contains {
                 $0.trackerId == tracker.id && $0.date == dateFormatter.string(from: date)
             } ?? false
-
+            
             return !isCompleted || tracker.isRegularEvent
         }
-
+        
         view?.categories = categorizeTrackers(completedFilteredTrackers)
         view?.reloadData()
     }
-
     
     func loadTrackers() {
         let loadedTrackers = trackerStore.fetchTrackers()

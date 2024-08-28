@@ -111,13 +111,14 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         }
         
         let categoryTitle = selectedCategory?.title ?? "Новая категория"
+        let scheduleStrings = selectedDays.map { String($0.rawValue) }
 
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
             color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: selectedDays,
+            schedule: scheduleStrings,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date()
