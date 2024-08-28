@@ -19,8 +19,6 @@ protocol TrackersViewControllerProtocol: AnyObject {
 final class TrackersViewController: UIViewController {
     
     var presenter: TrackersPresenterProtocol?
-    var trackerStore: TrackerStore?
-    var trackerCategoryStore: TrackerCategoryStore?
     var categories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
@@ -113,7 +111,6 @@ final class TrackersViewController: UIViewController {
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()
-        _ = trackerStore?.fetchTrackers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -166,26 +163,6 @@ final class TrackersViewController: UIViewController {
         collectionView.isHidden = !hasData
         placeholder.view.isHidden = hasData
     }
-
-    func deleteTracker(at indexPath: IndexPath) {
-        let updatedCategories = categories.enumerated().map { (index, category) -> TrackerCategory in
-            if index == indexPath.section {
-                var updatedTrackers = category.trackers
-                updatedTrackers.remove(at: indexPath.row)
-                return TrackerCategory(title: category.title, trackers: updatedTrackers)
-            } else {
-                return category
-            }
-        }
-        categories = updatedCategories
-        
-        collectionView.performBatchUpdates {
-            collectionView.deleteItems(at: [indexPath])
-        }
-        updatePlaceholderView()
-    }
-    
-    func editTracker(at indexPath: IndexPath) {}
 }
 
 // MARK: - NavigationController
@@ -258,10 +235,6 @@ extension TrackersViewController {
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate
             )
-        }
-        
-        trackerCategoryStore?.didUpdateData = { [weak self] in
-            self?.reloadData()
         }
         
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)

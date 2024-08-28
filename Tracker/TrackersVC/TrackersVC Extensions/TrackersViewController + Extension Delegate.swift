@@ -17,13 +17,13 @@ extension TrackersViewController: UICollectionViewDelegate {
             let deleteAction = UIAction(
                 title: "Удалить",
                 attributes: .destructive) { [weak self] _ in
-                self?.deleteTracker(at: indexPath)
+                self?.presenter?.deleteTracker(at: indexPath)
             }
             
             let editAction = UIAction(
                 title: "Редактировать"
             ) { [weak self] _ in
-                self?.editTracker(at: indexPath)
+                self?.presenter?.editTracker(at: indexPath)
             }
             
             return UIMenu(

@@ -204,7 +204,6 @@ extension CreatingTrackerViewController {
                 return UITableViewCell()
             }
             let cell = UITableViewCell()
-            
             let totalRows = isRegularEvent ? 2 : 1
             
             configureButtonCell(cell, at: indexPath, isSingleCell: isRegularEvent)

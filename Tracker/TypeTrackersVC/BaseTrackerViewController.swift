@@ -678,8 +678,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
                     return UITableView.automaticDimension
                 case TrackerSection.buttons.rawValue:
                     return 75
-                case TrackerSection.emoji.rawValue, TrackerSection.color.rawValue:
-                    return 180
+                case TrackerSection.emoji.rawValue:
+                    return calculateCellHeight(for: tableView, itemCount: emojies.count, itemsPerRow: 6)
+                case TrackerSection.color.rawValue:
+                    return calculateCellHeight(for: tableView, itemCount: colors.count, itemsPerRow: 6)
                 case TrackerSection.createButtons.rawValue:
                     return UITableView.automaticDimension
                 default:
@@ -694,6 +696,23 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return UITableView.automaticDimension
             }
         }
+    
+    private func calculateCellHeight(for tableView: UITableView, itemCount: Int, itemsPerRow: Int) -> CGFloat {
+        let collectionViewWidth = tableView.frame.width
+        let cellSpacing: CGFloat = 5
+        let leftInset: CGFloat = 10
+        let rightInset: CGFloat = 10
+
+        let totalSpacing = (CGFloat(itemsPerRow - 1) * cellSpacing)
+        let totalInsets = leftInset + rightInset
+        let availableWidth = collectionViewWidth - totalInsets - totalSpacing
+        let itemWidth = availableWidth / CGFloat(itemsPerRow)
+        
+        let numberOfRows = ceil(CGFloat(itemCount) / CGFloat(itemsPerRow))
+        let totalHeight = numberOfRows * itemWidth + (numberOfRows - 1) * cellSpacing
+        
+        return totalHeight + 20
+    }
 }
 
 // MARK: - selectedDaysString

@@ -20,6 +20,8 @@ protocol TrackersPresenterProtocol {
     func filterTrackers(for date: Date)
     func loadTrackers()
     func loadCompletedTrackers()
+    func deleteTracker(at indexPath: IndexPath)
+    func editTracker(at indexPath: IndexPath)
 }
 
 // MARK: - Object
@@ -187,4 +189,24 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         }
         return trackerCategories
     }
+    
+    func deleteTracker(at indexPath: IndexPath) {
+        guard let view = view else { return }
+        
+        let trackerToDelete = view.categories[indexPath.section].trackers[indexPath.row]
+        
+        do {
+            try trackerStore.deleteTracker(withId: trackerToDelete.id)
+
+            loadTrackers()
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении трекера \(trackerToDelete.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
+        }
+    }
+    
+    func editTracker(at indexPath: IndexPath) {}
 }

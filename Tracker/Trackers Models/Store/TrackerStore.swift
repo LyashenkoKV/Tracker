@@ -11,7 +11,7 @@ import CoreData
 final class TrackerStore: NSObject {
     private let persistentContainer: NSPersistentContainer
     private let fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
-
+    
     init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
         
@@ -46,14 +46,14 @@ final class TrackerStore: NSObject {
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.isRegularEvent = tracker.isRegularEvent
         trackerCoreData.creationDate = tracker.creationDate
-
+        
         // Поиск или создание категории
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", tracker.categoryTitle)
         
         do {
             let categories = try context.fetch(fetchRequest)
-  
+            
             if let existingCategory = categories.first {
                 trackerCoreData.categoryTitle = existingCategory.title
             } else {
@@ -89,6 +89,32 @@ final class TrackerStore: NSObject {
         }
     }
     
+    func deleteTracker(withId id: UUID) throws {
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        
+        do {
+            if let trackerToDelete = try context.fetch(fetchRequest).first {
+                context.delete(trackerToDelete)
+                try context.save()
+            } else {
+                Logger.shared.log(
+                    .error,
+                    message: "Трекер с ID \(id) не найден",
+                    metadata: ["❌": "Удаление не выполнено"]
+                )
+            }
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при удалении трекера с ID \(id)",
+                metadata: ["❌": error.localizedDescription]
+            )
+            throw error
+        }
+    }
+    
     func fetchTrackers() -> [TrackerCoreData] {
         do {
             try fetchedResultsController.performFetch()
@@ -104,4 +130,3 @@ final class TrackerStore: NSObject {
         }
     }
 }
-
