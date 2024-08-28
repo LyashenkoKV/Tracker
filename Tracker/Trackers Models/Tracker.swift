@@ -28,8 +28,8 @@ extension Tracker {
         self.isRegularEvent = coreData.isRegularEvent
         self.creationDate = coreData.creationDate ?? Date()
         
-        if let scheduleData = coreData.schedule as! Data? {
-            if let decodedSchedule = try? JSONDecoder().decode([DayOfTheWeek].self, from: scheduleData) {
+        if let scheduleData = coreData.schedule as? Data? {
+            if let decodedSchedule = try? JSONDecoder().decode([DayOfTheWeek].self, from: scheduleData ?? Data()) {
                 self.schedule = decodedSchedule
             } else {
                 Logger.shared.log(
@@ -42,11 +42,5 @@ extension Tracker {
         } else {
             self.schedule = []
         }
-    }
-}
-
-extension Tracker {
-    func containsDay(_ day: DayOfTheWeek) -> Bool {
-        return schedule.contains(day)
     }
 }

@@ -35,7 +35,7 @@ final class TrackersViewController: UIViewController {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
-        picker.tintColor = .ypBlack
+        picker.tintColor = .systemBlue
         picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)

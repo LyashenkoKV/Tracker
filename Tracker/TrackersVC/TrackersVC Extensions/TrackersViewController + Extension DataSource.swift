@@ -24,11 +24,30 @@ extension TrackersViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TrackersCardCell.reuseIdentifier,
-            for: indexPath) as? TrackersCardCell else { return UICollectionViewCell() }
+        
+        guard indexPath.section < categories.count else {
+            Logger.shared.log(
+                .error,
+                message: "Недопустимый section: \(indexPath.section), всего секций: \(categories.count)"
+            )
+            return UICollectionViewCell()
+        }
         
         let trackers = categories[indexPath.section].trackers
+        guard indexPath.row < trackers.count else {
+            Logger.shared.log(
+                .error,
+                message: "Недопустимый row: \(indexPath.row), всего элементов в секции: \(trackers.count)"
+            )
+            return UICollectionViewCell()
+        }
+        
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TrackersCardCell.reuseIdentifier,
+            for: indexPath) as? TrackersCardCell else { 
+            return UICollectionViewCell()
+        }
+        
         let tracker = trackers[indexPath.row]
         let currentDateString = presenter?.dateFormatter.string(from: currentDate) ?? ""
         let trackerId = tracker.id
