@@ -43,7 +43,6 @@
 		2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */; };
 		2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */; };
 		2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */; };
-		2476B0AD2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */; };
 		2476B0AF2C6BD4E200ADAD1B /* DayOfTheWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AE2C6BD4E200ADAD1B /* DayOfTheWeek.swift */; };
 		2476B0B12C6CB01B00ADAD1B /* LayoutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0B02C6CB01B00ADAD1B /* LayoutConfigurator.swift */; };
 		2476B0B32C6CB13000ADAD1B /* TypeTrackersLayoutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0B22C6CB13000ADAD1B /* TypeTrackersLayoutConfigurator.swift */; };
@@ -96,7 +95,6 @@
 		2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
 		2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewControllerType.swift; sourceTree = "<group>"; };
 		2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification + Extension.swift"; sourceTree = "<group>"; };
-		2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults + Extensions.swift"; sourceTree = "<group>"; };
 		2476B0AE2C6BD4E200ADAD1B /* DayOfTheWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfTheWeek.swift; sourceTree = "<group>"; };
 		2476B0B02C6CB01B00ADAD1B /* LayoutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutConfigurator.swift; sourceTree = "<group>"; };
 		2476B0B22C6CB13000ADAD1B /* TypeTrackersLayoutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeTrackersLayoutConfigurator.swift; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 				2411D69C2C63AB770031C584 /* UIButton + Extensions.swift */,
 				2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */,
 				2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */,
-				2476B0AC2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift */,
 				2485B51D2C6E9422001650D1 /* GlobalFunc.swift */,
 			);
 			path = "Global Extensions";
@@ -419,7 +416,6 @@
 				241FE2C52C7383CB00903AC8 /* CoreDataStack.swift in Sources */,
 				247E50502C58DC6400630037 /* TrackerCategory.swift in Sources */,
 				2411D6772C622E200031C584 /* CreatingTrackerViewController.swift in Sources */,
-				2476B0AD2C6BCABD00ADAD1B /* UserDefaults + Extensions.swift in Sources */,
 				2411D6962C63766B0031C584 /* Placeholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

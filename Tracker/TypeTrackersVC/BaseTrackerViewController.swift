@@ -319,6 +319,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                content.textProperties.adjustsFontSizeToFitWidth = true
+                content.textProperties.minimumScaleFactor = 0.8
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -332,6 +334,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                content.secondaryTextProperties.adjustsFontSizeToFitWidth = true
+                content.secondaryTextProperties.minimumScaleFactor = 0.8
+                
                 cell.contentConfiguration = content
             } else {
                 cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
@@ -340,6 +345,9 @@ extension BaseTrackerViewController: UITableViewDataSource {
                     ofSize: 17,
                     weight: .regular
                 )
+                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+                cell.detailTextLabel?.minimumScaleFactor = 0.8
+                cell.detailTextLabel?.lineBreakMode = .byTruncatingTail
                 
                 if indexPath.row == 0 && !isAddingCategory {
                     if let category = selectedCategory {
@@ -391,6 +399,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
     func configureSeparator(_ cell: UITableViewCell, isLastRow: Bool) {
         cell.contentView.subviews.filter { $0.tag == 1001 }.forEach { $0.removeFromSuperview() }
         
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        
         guard !isLastRow else { return }
         
         let separator = UIView()
@@ -400,8 +410,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.contentView.addSubview(separator)
         
         NSLayoutConstraint.activate([
-            separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 20),
-            separator.widthAnchor.constraint(equalToConstant: cell.frame.width),
+            separator.leadingAnchor.constraint(equalTo: cell.layoutMarginsGuide.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: cell.layoutMarginsGuide.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1),
             separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
         ])

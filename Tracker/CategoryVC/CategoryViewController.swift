@@ -57,7 +57,7 @@ final class CategoryViewController: BaseTrackerViewController {
         setupUI()
         loadCategories()
         updatePlaceholder()
-        //dismissKeyboard(view: self.view) Надо подумать, из за метода не правильно отрабатывает кнопка
+        dismissKeyboard(view: view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -153,6 +153,10 @@ final class CategoryViewController: BaseTrackerViewController {
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
+    }
+    
+    override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        cell.getText().resignFirstResponder()
     }
     
     private func loadCategories() {
