@@ -60,8 +60,8 @@ final class TrackerCategoryStore: NSObject {
         try context.save()
         try fetchedResultsController.performFetch()
         
-        DispatchQueue.main.async {
-            self.didUpdateData?()
+        DispatchQueue.main.async { [weak self] in
+            self?.didUpdateData?()
         }
     }
     
@@ -87,8 +87,8 @@ final class TrackerCategoryStore: NSObject {
             throw error
         }
         
-        DispatchQueue.main.async {
-            self.didUpdateData?()
+        DispatchQueue.main.async { [weak self] in
+            self?.didUpdateData?()
         }
     }
     

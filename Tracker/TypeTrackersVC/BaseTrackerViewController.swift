@@ -109,7 +109,7 @@ class BaseTrackerViewController: UIViewController {
     func startEditingCategory(at indexPath: IndexPath) {
         editingCategoryIndex = indexPath
         isAddingCategory = true
-        tableView.reloadData()
+        //tableView.reloadData()
     }
     
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {

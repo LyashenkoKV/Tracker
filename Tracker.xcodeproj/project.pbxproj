@@ -40,6 +40,10 @@
 		243024F52C5289B500B0F1D3 /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024F42C5289B500B0F1D3 /* StatisticViewController.swift */; };
 		243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024F62C5292AD00B0F1D3 /* Logger.swift */; };
 		243024FB2C53C4A500B0F1D3 /* TrackersCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243024FA2C53C4A500B0F1D3 /* TrackersCardCell.swift */; };
+		24573DAC2C88452B00D4D34B /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24573DAB2C88452B00D4D34B /* OnboardingPageViewController.swift */; };
+		24573DAE2C885BF200D4D34B /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24573DAD2C885BF200D4D34B /* OnboardingViewController.swift */; };
+		24573DB02C885C5600D4D34B /* OnboardingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24573DAF2C885C5600D4D34B /* OnboardingHelper.swift */; };
+		24573DB22C88674100D4D34B /* OnboardingStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24573DB12C88674100D4D34B /* OnboardingStatus.swift */; };
 		2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */; };
 		2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */; };
 		2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */; };
@@ -92,6 +96,10 @@
 		243024F42C5289B500B0F1D3 /* StatisticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewController.swift; sourceTree = "<group>"; };
 		243024F62C5292AD00B0F1D3 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		243024FA2C53C4A500B0F1D3 /* TrackersCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCardCell.swift; sourceTree = "<group>"; };
+		24573DAB2C88452B00D4D34B /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		24573DAD2C885BF200D4D34B /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		24573DAF2C885C5600D4D34B /* OnboardingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHelper.swift; sourceTree = "<group>"; };
+		24573DB12C88674100D4D34B /* OnboardingStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatus.swift; sourceTree = "<group>"; };
 		2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
 		2476B0A82C6A8F3700ADAD1B /* TrackerViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewControllerType.swift; sourceTree = "<group>"; };
 		2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification + Extension.swift"; sourceTree = "<group>"; };
@@ -243,6 +251,7 @@
 			children = (
 				2411D6922C6367470031C584 /* Global Extensions */,
 				247E504C2C58DC3200630037 /* Trackers Models */,
+				24573DAA2C88446300D4D34B /* OnboardingVC */,
 				243024EF2C52891500B0F1D3 /* MainVC */,
 				243024F02C52891C00B0F1D3 /* TrackersVC */,
 				2411D6722C621C3B0031C584 /* TypeTrackersVC */,
@@ -287,6 +296,17 @@
 				243024F42C5289B500B0F1D3 /* StatisticViewController.swift */,
 			);
 			path = StatisticVC;
+			sourceTree = "<group>";
+		};
+		24573DAA2C88446300D4D34B /* OnboardingVC */ = {
+			isa = PBXGroup;
+			children = (
+				24573DAB2C88452B00D4D34B /* OnboardingPageViewController.swift */,
+				24573DAD2C885BF200D4D34B /* OnboardingViewController.swift */,
+				24573DAF2C885C5600D4D34B /* OnboardingHelper.swift */,
+				24573DB12C88674100D4D34B /* OnboardingStatus.swift */,
+			);
+			path = OnboardingVC;
 			sourceTree = "<group>";
 		};
 		247E504C2C58DC3200630037 /* Trackers Models */ = {
@@ -376,6 +396,7 @@
 				2476B0B32C6CB13000ADAD1B /* TypeTrackersLayoutConfigurator.swift in Sources */,
 				243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */,
 				2411D6A82C674B370031C584 /* BaseTrackerViewController.swift in Sources */,
+				24573DB02C885C5600D4D34B /* OnboardingHelper.swift in Sources */,
 				247E504E2C58DC4800630037 /* Tracker.swift in Sources */,
 				243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */,
 				2411D69F2C63B6670031C584 /* CategoryCell.swift in Sources */,
@@ -399,6 +420,7 @@
 				247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */,
 				243024DE2C525B3500B0F1D3 /* SceneDelegate.swift in Sources */,
 				2411D69D2C63AB770031C584 /* UIButton + Extensions.swift in Sources */,
+				24573DAC2C88452B00D4D34B /* OnboardingPageViewController.swift in Sources */,
 				2476B0AF2C6BD4E200ADAD1B /* DayOfTheWeek.swift in Sources */,
 				241FE2D92C75FF7500903AC8 /* TrackerRecordStore.swift in Sources */,
 				247E4FFF2C577DC800630037 /* TrackersViewController + Extension DataSource.swift in Sources */,
@@ -409,6 +431,8 @@
 				2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */,
 				241FE2B62C735C3200903AC8 /* TrackerCoreData.xcdatamodeld in Sources */,
 				2411D6852C623F950031C584 /* TextViewCell.swift in Sources */,
+				24573DB22C88674100D4D34B /* OnboardingStatus.swift in Sources */,
+				24573DAE2C885BF200D4D34B /* OnboardingViewController.swift in Sources */,
 				2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */,
 				2476B0B52C6CB1AB00ADAD1B /* LayoutConfiguratorFactory.swift in Sources */,
 				2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */,

@@ -34,7 +34,7 @@ class ScheduleViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        tableView.reloadData()
+        //tableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {

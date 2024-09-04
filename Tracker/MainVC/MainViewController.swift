@@ -74,3 +74,20 @@ final class MainViewController: UIViewController {
         return tabBarController
     }
 }
+
+//
+//import SwiftUI
+//
+//struct QuestCellAdapter: UIViewControllerRepresentable {
+//    func makeUIViewController(context: Context) -> some UIViewController {
+//        return MainViewController()
+//    }
+//    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+//        
+//    }
+//}
+//struct CellProvider: PreviewProvider {
+//    static var previews: some View {
+//        QuestCellAdapter()
+//    }
+//}
