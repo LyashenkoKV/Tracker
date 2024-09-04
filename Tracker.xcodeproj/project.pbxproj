@@ -58,6 +58,7 @@
 		247E50522C58DC7700630037 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50512C58DC7700630037 /* TrackerRecord.swift */; };
 		247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50552C58EEB300630037 /* TrackersPresenter.swift */; };
 		2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485B51D2C6E9422001650D1 /* GlobalFunc.swift */; };
+		24937A5A2C88A03900EDBAB7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 24937A592C88A03900EDBAB7 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,6 +115,8 @@
 		247E50512C58DC7700630037 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		247E50552C58EEB300630037 /* TrackersPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersPresenter.swift; sourceTree = "<group>"; };
 		2485B51D2C6E9422001650D1 /* GlobalFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunc.swift; sourceTree = "<group>"; };
+		24937A592C88A03900EDBAB7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "../../../../../../Downloads/iOS-TrackerApp-Public-main/README.md"; sourceTree = "<group>"; };
+		24937A5B2C88A06F00EDBAB7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,6 +219,7 @@
 			children = (
 				241FE2C42C7383CB00903AC8 /* CoreDataStack.swift */,
 				241FE2B42C735C3200903AC8 /* TrackerCoreData.xcdatamodeld */,
+				24937A5B2C88A06F00EDBAB7 /* README.md */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -267,6 +271,7 @@
 				243024F62C5292AD00B0F1D3 /* Logger.swift */,
 				2411D6702C60CACF0031C584 /* GeometricParams.swift */,
 				2411D6952C63766B0031C584 /* Placeholder.swift */,
+				24937A592C88A03900EDBAB7 /* README.md */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -380,6 +385,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24937A5A2C88A03900EDBAB7 /* README.md in Resources */,
 				243024E52C525B3700B0F1D3 /* Assets.xcassets in Resources */,
 				243024E82C525B3700B0F1D3 /* Base in Resources */,
 			);

@@ -27,13 +27,26 @@ final class OnboardingPageViewController: UIPageViewController {
         return pageControl
     }()
     
+    
+    override init(
+        transitionStyle style: UIPageViewController.TransitionStyle,
+        navigationOrientation: UIPageViewController.NavigationOrientation,
+        options: [UIPageViewController.OptionsKey : Any]? = nil
+    ) {
+        super.init(transitionStyle: .scroll, navigationOrientation: navigationOrientation)
+        
+        dataSource = self
+        delegate = self
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addVC()
         setupPageControl()
-
-        dataSource = self
-        delegate = self
         
         onboardingViewControllers = pages.map { OnboardingViewController(with: $0) }
         
