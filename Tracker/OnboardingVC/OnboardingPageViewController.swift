@@ -33,6 +33,7 @@ final class OnboardingPageViewController: UIPageViewController {
         setupPageControl()
 
         dataSource = self
+        delegate = self
         
         onboardingViewControllers = pages.map { OnboardingViewController(with: $0) }
         
@@ -65,37 +66,43 @@ final class OnboardingPageViewController: UIPageViewController {
 
 // MARK: - UIPageViewControllerDataSource
 extension OnboardingPageViewController: UIPageViewControllerDataSource {
+
     func pageViewController(
         _ pageViewController: UIPageViewController,
         viewControllerBefore viewController: UIViewController
     ) -> UIViewController? {
         guard let onboardingVC = viewController as? OnboardingViewController,
-              let index = onboardingViewControllers.firstIndex(of: onboardingVC), 
-                index > 0 else {
+              let index = onboardingViewControllers.firstIndex(of: onboardingVC) else {
             return nil
         }
-        return onboardingViewControllers[index - 1]
+        
+        let previousIndex = (index == 0) ? onboardingViewControllers.count - 1 : index - 1
+        return onboardingViewControllers[previousIndex]
     }
-    
+
     func pageViewController(
         _ pageViewController: UIPageViewController,
         viewControllerAfter viewController: UIViewController
     ) -> UIViewController? {
         guard let onboardingVC = viewController as? OnboardingViewController,
-              let index = onboardingViewControllers.firstIndex(of: onboardingVC), 
-                index < onboardingViewControllers.count - 1 else {
+              let index = onboardingViewControllers.firstIndex(of: onboardingVC) else {
             return nil
         }
-        return onboardingViewControllers[index + 1]
+        
+        let nextIndex = (index == onboardingViewControllers.count - 1) ? 0 : index + 1
+        return onboardingViewControllers[nextIndex]
     }
-    
+}
+
+// MARK: - UIPageViewControllerDelegate
+extension OnboardingPageViewController: UIPageViewControllerDelegate {
     func pageViewController(
         _ pageViewController: UIPageViewController,
         didFinishAnimating finished: Bool,
         previousViewControllers: [UIViewController],
         transitionCompleted completed: Bool
     ) {
-        if let currentVC = viewControllers?.first,
+        if completed, let currentVC = viewControllers?.first,
            let index = onboardingViewControllers.firstIndex(of: currentVC as! OnboardingViewController) {
             pageControl.currentPage = index
         }
