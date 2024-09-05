@@ -59,6 +59,7 @@
 		247E50562C58EEB300630037 /* TrackersPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247E50552C58EEB300630037 /* TrackersPresenter.swift */; };
 		2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2485B51D2C6E9422001650D1 /* GlobalFunc.swift */; };
 		24937A5A2C88A03900EDBAB7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 24937A592C88A03900EDBAB7 /* README.md */; };
+		24937A5D2C88A86700EDBAB7 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A5C2C88A86700EDBAB7 /* CategoryViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +118,7 @@
 		2485B51D2C6E9422001650D1 /* GlobalFunc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunc.swift; sourceTree = "<group>"; };
 		24937A592C88A03900EDBAB7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "../../../../../../Downloads/iOS-TrackerApp-Public-main/README.md"; sourceTree = "<group>"; };
 		24937A5B2C88A06F00EDBAB7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		24937A5C2C88A86700EDBAB7 /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				2411D69A2C63AAD90031C584 /* CategoryViewController.swift */,
+				24937A5C2C88A86700EDBAB7 /* CategoryViewModel.swift */,
 				2411D69E2C63B6670031C584 /* CategoryCell.swift */,
 			);
 			path = CategoryVC;
@@ -440,6 +443,7 @@
 				24573DB22C88674100D4D34B /* OnboardingStatus.swift in Sources */,
 				24573DAE2C885BF200D4D34B /* OnboardingViewController.swift in Sources */,
 				2485B51E2C6E9422001650D1 /* GlobalFunc.swift in Sources */,
+				24937A5D2C88A86700EDBAB7 /* CategoryViewModel.swift in Sources */,
 				2476B0B52C6CB1AB00ADAD1B /* LayoutConfiguratorFactory.swift in Sources */,
 				2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */,
 				2411D69B2C63AAD90031C584 /* CategoryViewController.swift in Sources */,

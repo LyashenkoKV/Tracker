@@ -7,8 +7,16 @@
 
 import UIKit
 
+// MARK: - TrackerDataProvider
+protocol TrackerDataProvider {
+    var numberOfItems: Int { get }
+    func item(at index: Int) -> String
+}
+
 class BaseTrackerViewController: UIViewController {
     // MARK: - Properties
+    
+    var dataProvider: TrackerDataProvider?
     var viewControllerType: TrackerViewControllerType?
     private var isFooterVisible = false
     var emojies: [String] = []
@@ -107,24 +115,46 @@ class BaseTrackerViewController: UIViewController {
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
     func startEditingCategory(at indexPath: IndexPath) {
+        guard let dataProvider = dataProvider, indexPath.row < dataProvider.numberOfItems else {
+            print("Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
+            return
+        }
+
+        // Убедитесь, что индекс допустим для массива категорий
+        guard indexPath.row < categories.count else {
+            print("Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
+            return
+        }
+
         editingCategoryIndex = indexPath
         isAddingCategory = true
-        //tableView.reloadData()
+
+        // Отладочная информация
+        print("Начинаем редактирование категории на индексе \(indexPath.row)")
+
+        // Обновляем таблицу
+        tableView.reloadData()
     }
     
     func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
         guard isAddingCategory else { return }
-        
         guard let newText = text, !newText.isEmpty else { return }
-        
+
         let newCategory = TrackerCategory(title: newText, trackers: [])
 
         if let editingIndex = editingCategoryIndex {
+            // Проверка перед изменением массива
+            guard editingIndex.row < categories.count else {
+                print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                return
+            }
+
             categories[editingIndex.row] = newCategory
             editingCategoryIndex = nil
         } else {
             categories.append(newCategory)
         }
+
         isAddingCategory = false
         tableView.reloadData()
     }
@@ -177,9 +207,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return 2
         case .creatingTracker:
             return TrackerSection.allCases.count
-        case .category:
-            return 1
-        case .schedule:
+        case .category, .schedule:
             return 1
         case .none:
             return 0
@@ -195,7 +223,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             case .creatingTracker:
                 return 0
             case .category:
-                return isAddingCategory ? 1 : categories.count
+                return isAddingCategory ? 1 : (dataProvider?.numberOfItems ?? 0)
             case .schedule:
                 return DayOfTheWeek.allCases.count
             case .none:
@@ -221,7 +249,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
                 return UITableViewCell()
             }
         }
-    
+    // MARK: - configureTypeTrackersCell
     private func configureTypeTrackersCell(at indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         
@@ -258,8 +286,8 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cell.backgroundColor = .ypBlack
         return cell
     }
-    
-    private func configureCategoryCell(at indexPath: IndexPath) -> UITableViewCell {
+    // MARK: - configureCategoryCell
+    func configureCategoryCell(at indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CategoryCell.reuseIdentifier,
             for: indexPath
@@ -267,21 +295,26 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let category = categories[indexPath.row]
-        cell.configure(with: category.title)
+        //let category = categories[indexPath.row]
+        guard let itemTitle = dataProvider?.item(at: indexPath.row) else {
+            print("Ошибка: itemTitle отсутствует для индекса \(indexPath.row)")
+            return UITableViewCell()
+        }
+        print("Категория на индексе \(indexPath.row): \(itemTitle)")
+        cell.configure(with: itemTitle)
         
-        if let selectedCategory = selectedCategory, selectedCategory.title == category.title {
+        if let selectedCategory = selectedCategory, selectedCategory.title == itemTitle {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
         }
         
-        configureBaseCell(cell, at: indexPath, totalRows: categories.count)
-        configureSeparator(cell, isLastRow: indexPath.row == categories.count - 1)
+        configureBaseCell(cell, at: indexPath, totalRows: dataProvider?.numberOfItems ?? 0)
+        configureSeparator(cell, isLastRow: indexPath.row == (dataProvider?.numberOfItems ?? 0) - 1)
         return cell
     }
-    
-    private func configureTextViewCell(at indexPath: IndexPath) -> UITableViewCell {
+    // MARK: - configureTextViewCell
+    func configureTextViewCell(at indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TextViewCell.reuseIdentifier,
             for: indexPath
@@ -289,8 +322,14 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.delegate = self
-        
+
+        // Проверяем, что индекс находится в допустимых пределах массива категорий
         if let editingIndex = editingCategoryIndex {
+            guard editingIndex.row < categories.count else {
+                print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                return UITableViewCell()
+            }
+            
             let category = categories[editingIndex.row]
             cell.getText().text = category.title
             self.title = "Редактирование категории"
@@ -298,7 +337,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             cell.getText().text = !isAddingCategory ? "" : "Введите название категории"
             self.title = "Новая категория"
         }
-        
+
         configureBaseCell(cell, at: indexPath, totalRows: 1)
         configureSeparator(cell, isLastRow: true)
         
@@ -490,7 +529,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             
             switch viewControllerType {
             case .category:
-                guard indexPath.row < categories.count else {
+                guard ((dataProvider?.item(at: indexPath.row)) != nil) else {
                     return nil
                 }
                 
