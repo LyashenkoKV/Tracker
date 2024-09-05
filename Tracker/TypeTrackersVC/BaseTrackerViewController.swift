@@ -96,17 +96,8 @@ class BaseTrackerViewController: UIViewController {
     }
     
     private func configureData() {
-        emojies = [
-            "🙂", "😻", "🌺", "🐶", "❤️", "😱",
-            "😇", "😡", "🥶", "🤔", "🙌", "🍔",
-            "🥦", "🏓", "🥇", "🎸", "🌴", "😪"
-        ]
-        
-        colors = [
-            "#FD4C49", "#FF881E", "#007BFA", "#6E44FE", "#33CF69", "#E66DD4",
-            "#F9D4D4", "#34A7FE", "#46E69D", "#35347C", "#FF674D", "#FF99CC",
-            "#F6C48B", "#7994F5", "#832CF1", "#AD56DA", "#8D72E6", "#2FD058"
-        ]
+        emojies = EmojiDataProvider.getEmojis()
+        colors = ColorDataProvider.getColors()
     }
     
     func updateUI() {}
@@ -215,18 +206,12 @@ extension BaseTrackerViewController: UITableViewDataSource {
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
-            switch viewControllerType {
-            case .typeTrackers:
-                return 1
-            case .creatingTracker:
-                return 0
-            case .category:
-                return isAddingCategory ? 1 : (dataProvider?.numberOfItems ?? 0)
-            case .schedule:
-                return DayOfTheWeek.allCases.count
-            case .none:
-                return 0
-            }
+            return TableViewHelper.numberOfRows(
+                in: viewControllerType,
+                section: section,
+                dataProvider: dataProvider,
+                isAddingCategory: isAddingCategory
+            )
         }
     
     func tableView(
@@ -475,7 +460,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
         }
     }
     
-    private func handleTypeTrackersSelection(at indexPath: IndexPath) {
+    func handleTypeTrackersSelection(at indexPath: IndexPath) {
         if indexPath.section == 0 {
             let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: true)
             let navController = UINavigationController(rootViewController: creatingTrackerVC)
@@ -490,10 +475,10 @@ extension BaseTrackerViewController: UITableViewDelegate {
         }
     }
     
-    private func handleCreatingTrackerSelection(at indexPath: IndexPath) {
+    func handleCreatingTrackerSelection(at indexPath: IndexPath) {
         if indexPath.section == TrackerSection.buttons.rawValue {
             if indexPath.row == 0 {
-                let categoryVC = CategoryViewController(type: .category)
+                let categoryVC = CategoryViewController()
                 categoryVC.delegate = self
                 categoryVC.selectedCategory = self.selectedCategory
                 let navController = UINavigationController(rootViewController: categoryVC)
@@ -512,7 +497,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
         }
     }
     
-    private func handleCategorySelection(at indexPath: IndexPath) {
+    func handleCategorySelection(at indexPath: IndexPath) {
         if !isAddingCategory {
             let selectedCategory = categories[indexPath.row]
             selectedCategories.append(selectedCategory)

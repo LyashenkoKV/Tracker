@@ -15,7 +15,6 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
-        //CoreDataStack.shared.clearCoreData()
     }
     
     private func switchToTapBarController() {
@@ -46,7 +45,7 @@ final class MainViewController: UIViewController {
             recordStore: recordStore
         )
         
-        trackersViewController.configure(trackersPresenter as TrackersPresenterProtocol)
+        trackersViewController.configure(trackersPresenter)
         
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",
@@ -74,20 +73,3 @@ final class MainViewController: UIViewController {
         return tabBarController
     }
 }
-
-//
-//import SwiftUI
-//
-//struct QuestCellAdapter: UIViewControllerRepresentable {
-//    func makeUIViewController(context: Context) -> some UIViewController {
-//        return MainViewController()
-//    }
-//    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-//        
-//    }
-//}
-//struct CellProvider: PreviewProvider {
-//    static var previews: some View {
-//        QuestCellAdapter()
-//    }
-//}

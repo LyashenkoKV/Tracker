@@ -8,6 +8,6 @@
 import UIKit
 
 struct OnboardingHelper {
-    var greeting = String()
-    var image = UIImage()
+    var greeting: String
+    var image: UIImage
 }

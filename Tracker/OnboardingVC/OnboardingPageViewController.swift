@@ -45,7 +45,7 @@ final class OnboardingPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addVC()
+        pages = makePages()
         setupPageControl()
         
         onboardingViewControllers = pages.map { OnboardingViewController(with: $0) }
@@ -64,7 +64,7 @@ final class OnboardingPageViewController: UIPageViewController {
         ])
     }
     
-    private func addVC() {
+    private func makePages() -> [OnboardingHelper] {
         let firstPage = OnboardingHelper(
             greeting: "Отслеживайте только\n то, что хотите",
             image: UIImage(named: "1") ?? UIImage()
@@ -73,7 +73,7 @@ final class OnboardingPageViewController: UIPageViewController {
             greeting: "Даже если это\n не литры воды и йога",
             image: UIImage(named: "2") ?? UIImage()
         )
-        pages = [firstPage, secondPage]
+        return [firstPage, secondPage]
     }
 }
 

@@ -53,8 +53,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         self.selectedDays = days
         updateCreateButtonState()
         tableView.reloadRows(
-            at: [IndexPath(row: 1,
-                           section: TrackerSection.buttons.rawValue)],
+            at: [IndexPath(row: 1, section: TrackerSection.buttons.rawValue)],
             with: .automatic
         )
     }

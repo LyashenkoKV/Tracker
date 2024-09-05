@@ -11,7 +11,7 @@ protocol ScheduleSelectionDelegate: AnyObject {
     func didSelect(_ days: [DayOfTheWeek])
 }
 
-class ScheduleViewController: BaseTrackerViewController {
+final class ScheduleViewController: BaseTrackerViewController {
     
     weak var delegate: ScheduleSelectionDelegate?
     

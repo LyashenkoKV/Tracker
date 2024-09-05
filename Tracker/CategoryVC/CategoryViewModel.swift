@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CategoryViewModel: TrackerDataProvider {
+final class CategoryViewModel: TrackerDataProvider {
     private let trackerCategoryStore: TrackerCategoryStore
     
     // Свойства для обновлений через биндинги
