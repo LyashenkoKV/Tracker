@@ -114,13 +114,13 @@ class BaseTrackerViewController: UIViewController {
     // Методы выношу из расширения, потому что дочерние классы их не видят
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
+    // Пока не работает, надо думать
     func startEditingCategory(at indexPath: IndexPath) {
         guard let dataProvider = dataProvider, indexPath.row < dataProvider.numberOfItems else {
             print("Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
             return
         }
 
-        // Убедитесь, что индекс допустим для массива категорий
         guard indexPath.row < categories.count else {
             print("Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
             return
@@ -129,10 +129,8 @@ class BaseTrackerViewController: UIViewController {
         editingCategoryIndex = indexPath
         isAddingCategory = true
 
-        // Отладочная информация
         print("Начинаем редактирование категории на индексе \(indexPath.row)")
 
-        // Обновляем таблицу
         tableView.reloadData()
     }
     
