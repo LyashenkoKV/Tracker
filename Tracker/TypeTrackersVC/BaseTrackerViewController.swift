@@ -22,11 +22,9 @@ class BaseTrackerViewController: UIViewController {
     var emojies: [String] = []
     var colors: [String] = []
     var categories: [TrackerCategory] = []
-    
-    private var selectedCategories: [TrackerCategory] = []
+    var selectedCategories: [TrackerCategory] = []
     var selectedDays: [DayOfTheWeek] = []
     var selectedCategory: TrackerCategory?
-    
     var editingCategoryIndex: IndexPath?
     
     var isAddingCategory: Bool = false {
@@ -245,47 +243,15 @@ extension BaseTrackerViewController: UITableViewDelegate {
     }
     
     func handleTypeTrackersSelection(at indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            let creatingTrackerVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: true)
-            let navController = UINavigationController(rootViewController: creatingTrackerVC)
-            navController.modalPresentationStyle = .formSheet
-            self.present(navController, animated: true)
-        } else if indexPath.section == 1 {
-            let irregularEventVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: false)
-            irregularEventVC.title = "Нерегулярное событие"
-            let navController = UINavigationController(rootViewController: irregularEventVC)
-            navController.modalPresentationStyle = .formSheet
-            self.present(navController, animated: true)
-        }
+        HandleActionsHelper.handleTypeTrackersSelection(at: indexPath, viewController: self)
     }
     
     func handleCreatingTrackerSelection(at indexPath: IndexPath) {
-        if indexPath.section == TrackerSection.buttons.rawValue {
-            if indexPath.row == 0 {
-                let categoryVC = CategoryViewController()
-                categoryVC.delegate = self
-                categoryVC.selectedCategory = self.selectedCategory
-                let navController = UINavigationController(rootViewController: categoryVC)
-                navController.modalPresentationStyle = .formSheet
-                self.present(navController, animated: true)
-            } else if indexPath.row == 1 {
-                let scheduleVC = ScheduleViewController(type: .schedule)
-                scheduleVC.delegate = self
-                scheduleVC.selectedDays = self.selectedDays
-                let navController = UINavigationController(rootViewController: scheduleVC)
-                navController.modalPresentationStyle = .formSheet
-                self.present(navController, animated: true)
-            } else {
-                print("Неизвестный индекс ячейки: \(indexPath.row)")
-            }
-        }
+        HandleActionsHelper.handleCreatingTrackerSelection(at: indexPath, viewController: self)
     }
     
     func handleCategorySelection(at indexPath: IndexPath) {
-        if !isAddingCategory {
-            let selectedCategory = categories[indexPath.row]
-            selectedCategories.append(selectedCategory)
-        }
+        HandleActionsHelper.handleCategorySelection(at: indexPath, viewController: self)
     }
     
     // Контекстное меню для редактирования категории

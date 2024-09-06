@@ -10,9 +10,9 @@ import UIKit
 final class CreatingTrackerViewController: BaseTrackerViewController {
     
     private var trackerName: String?
-    private var selectedColor: UIColor?
-    private var selectedEmoji: String?
     private var isRegularEvent: Bool
+    var selectedColor: UIColor?
+    var selectedEmoji: String?
 
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
@@ -98,7 +98,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+        guard let textViewCell = tableView.cellForRow(
+            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
               let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
@@ -137,17 +138,11 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     @objc private func handleEmojiSelected(_ notification: Notification) {
-        if let emoji = notification.userInfo?["selectedEmoji"] as? String {
-            selectedEmoji = emoji
-            updateCreateButtonState()
-        }
+        HandleActionsHelper.handleEmojiSelected(notification: notification, viewController: self)
     }
     
     @objc private func handleColorSelected(_ notification: Notification) {
-        if let hexColor = notification.userInfo?["selectedColor"] as? String {
-            selectedColor = UIColor(hex: hexColor)
-            updateCreateButtonState()
-        }
+        HandleActionsHelper.handleColorSelected(notification: notification, viewController: self)
     }
 }
 
