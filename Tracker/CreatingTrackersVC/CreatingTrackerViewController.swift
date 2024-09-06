@@ -10,8 +10,8 @@ import UIKit
 final class CreatingTrackerViewController: BaseTrackerViewController {
     
     private var trackerName: String?
-    private var selectedColor: UIColor?
-    private var selectedEmoji: String?
+    var selectedColor: UIColor?
+    var selectedEmoji: String?
     private var isRegularEvent: Bool
 
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
@@ -37,14 +37,28 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-        UserDefaults.standard.clearSavedData()
     }
     
     override func textViewCellDidChange(_ cell: TextViewCell) {
         updateCreateButtonState()
     }
     
-    private func updateCreateButtonState() {
+    override func didSelectCategory(_ category: TrackerCategory) {
+        selectedCategory = category
+        tableView.reloadData()
+        updateCreateButtonState()
+    }
+    
+    override func didSelect(_ days: [DayOfTheWeek]) {
+        self.selectedDays = days
+        updateCreateButtonState()
+        tableView.reloadRows(
+            at: [IndexPath(row: 1, section: TrackerSection.buttons.rawValue)],
+            with: .automatic
+        )
+    }
+    
+    func updateCreateButtonState() {
         guard let textViewCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
         ) as? TextViewCell else { return }
@@ -53,8 +67,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let categoryIsSelected = selectedCategory != nil
         let colorIsSelected = selectedColor != nil
         let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
-        let daysAreSelected = !(selectedDays?.days.isEmpty ?? true) && selectedDays != nil
-
+        let daysAreSelected = !selectedDays.isEmpty
+        
         let isValid: Bool
 
         if isRegularEvent {
@@ -84,46 +98,37 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
-        ) as? TextViewCell,
-        let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
-        let selectedColor = selectedColor,
-        let selectedEmoji = selectedEmoji else {
+        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+              let selectedColor = selectedColor,
+              let selectedEmoji = selectedEmoji else {
+            Logger.shared.log(
+                .error,
+                message: "Не все обязательные поля заполнены для создания трекера"
+            )
             return
         }
         
-        let categoryTitle: String
-        
-        if let selectedCategory = selectedCategory {
-            updateCreateButtonState()
-            categoryTitle = selectedCategory.title
-        } else {
-            categoryTitle = "Новая категория"
-        }
-        
-        if selectedDays != nil {
-            updateCreateButtonState()
-        }
+        let categoryTitle = selectedCategory?.title ?? "Новая категория"
+        let scheduleStrings = selectedDays.map { String($0.rawValue) }
 
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
-            color: selectedColor,
+            color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: selectedDays ?? Schedule(days: []),
+            schedule: scheduleStrings,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date()
         )
-
+        
         let userInfo: [String: Any] = [
             "tracker": tracker,
             "categoryTitle": categoryTitle
         ]
         
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
-        
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
 
@@ -132,17 +137,11 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     @objc private func handleEmojiSelected(_ notification: Notification) {
-        if let emoji = notification.userInfo?["selectedEmoji"] as? String {
-            selectedEmoji = emoji
-            updateCreateButtonState()
-        }
+        HandleActionsHelper.handleEmojiSelected(notification: notification, viewController: self)
     }
     
     @objc private func handleColorSelected(_ notification: Notification) {
-        if let hexColor = notification.userInfo?["selectedColor"] as? String {
-            selectedColor = UIColor(hex: hexColor)
-            updateCreateButtonState()
-        }
+        HandleActionsHelper.handleColorSelected(notification: notification, viewController: self)
     }
 }
 
@@ -180,70 +179,92 @@ extension CreatingTrackerViewController {
 // MARK: - ConfigureCell
 extension CreatingTrackerViewController {
     private func configureCreatingTrackerCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
-            return UITableViewCell()
+           guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
+               return UITableViewCell()
+           }
+           
+           switch trackerSection {
+           case .textView:
+               return ConfigureTableViewCellsHelper.configureTextViewCell(for: tableView, at: indexPath, delegate: self)
+           case .buttons:
+               let cell = UITableViewCell()
+               let totalRows = isRegularEvent ? 2 : 1
+               ConfigureTableViewCellsHelper.configureButtonCell(
+                cell, at: indexPath,
+                isSingleCell: isRegularEvent,
+                isAddingCategory: isAddingCategory,
+                selectedCategory: selectedCategory,
+                selectedDaysString: selectedDaysString()
+               )
+               ConfigureTableViewCellsHelper.configureBaseCell(
+                cell,
+                at: indexPath,
+                totalRows: totalRows
+               )
+               ConfigureTableViewCellsHelper.configureSeparator(
+                cell,
+                isLastRow: indexPath.row == (isRegularEvent ? 1 : 0)
+               )
+               cell.selectionStyle = .none
+               return cell
+           case .emoji:
+               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+                for: tableView,
+                at: indexPath,
+                with: emojies,
+                isEmoji: true
+               )
+           case .color:
+               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+                for: tableView,
+                at: indexPath,
+                with: colors,
+                isEmoji: false
+               )
+           case .createButtons:
+               return ConfigureTableViewCellsHelper.configureCreateButtonsCell(
+                   for: tableView,
+                   at: indexPath,
+                   onCreateTapped: { [weak self] in self?.handleCreateButtonTapped() },
+                   onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }
+               )
+           }
+       }
+    
+    private func selectedDaysString() -> String {
+        if selectedDays.isEmpty {
+            return ""
         }
-        switch trackerSection {
-        case .textView:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: TextViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? TextViewCell else {
-                return UITableViewCell()
-            }
-            cell.delegate = self
-            cell.selectionStyle = .none
-            return cell
-        case .buttons:
-            if !isRegularEvent && indexPath.row == 1 {
-                return UITableViewCell()
-            }
-            let cell = UITableViewCell()
-            
-            let totalRows = isRegularEvent ? 2 : 1
-            
-            configureButtonCell(cell, at: indexPath, isSingleCell: isRegularEvent)
-            configureBaseCell(cell, at: indexPath, totalRows: totalRows)
-            configureSeparator(cell, isLastRow: indexPath.row == (isRegularEvent ? 1 : 0))
-            cell.selectionStyle = .none
-            return cell
-        case .emoji:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: emojies, isEmoji: true)
-            cell.selectionStyle = .none
-            return cell
-        case .color:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: colors, isEmoji: false)
-            cell.selectionStyle = .none
-            return cell
-        case .createButtons:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: CreateButtonsViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? CreateButtonsViewCell else {
-                return UITableViewCell()
-            }
-            
-            cell.onCreateButtonTapped = { [weak self] in
-                self?.handleCreateButtonTapped()
-            }
-            
-            cell.onCancelButtonTapped = { [weak self] in
-                self?.handleCancelButtonTapped()
-            }
-            cell.selectionStyle = .none
-            return cell
+        
+        let daysOrder: [DayOfTheWeek] = [
+            .monday, .tuesday, .wednesday,
+            .thursday, .friday, .saturday,
+            .sunday
+        ]
+        
+        let fullWeek = Set(daysOrder)
+        let selectedSet = Set(selectedDays)
+        
+        if selectedSet == fullWeek {
+            return "Каждый день"
         }
+        
+        let sortedDays = selectedDays.sorted {
+            daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
+        }
+        
+        let dayShortcuts = sortedDays.map { day in
+            switch day {
+            case .monday: return "Пн"
+            case .tuesday: return "Вт"
+            case .wednesday: return "Ср"
+            case .thursday: return "Чт"
+            case .friday: return "Пт"
+            case .saturday: return "Сб"
+            case .sunday: return "Вс"
+            }
+        }
+        
+        return dayShortcuts.joined(separator: ", ")
     }
 }

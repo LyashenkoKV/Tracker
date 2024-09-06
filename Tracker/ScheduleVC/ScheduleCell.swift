@@ -10,7 +10,7 @@ import UIKit
 final class ScheduleCell: CategoryBaseCell {
     static let reuseIdentifier = "ScheduleCell"
     
-    override func configure(with text: String, showSwitch: Bool = true) {
-        super.configure(with: text, showSwitch: true)
+    override func configure(with text: String, showSwitch: Bool = true, isSwitchOn: Bool = false) {
+        super.configure(with: text, showSwitch: showSwitch, isSwitchOn: isSwitchOn)
     }
 }

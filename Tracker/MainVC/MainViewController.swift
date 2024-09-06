@@ -15,7 +15,6 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         switchToTapBarController()
-        UserDefaults.standard.clearSavedData()
     }
     
     private func switchToTapBarController() {
@@ -37,7 +36,16 @@ final class MainViewController: UIViewController {
     private func createTabBarController() -> UITabBarController {
         let navigationController = trackersViewController.setupNavigationBar()
         
-        trackersViewController.configure(TrackersPresenter(view: trackersViewController))
+        let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let trackersPresenter = TrackersPresenter(
+            trackerStore: trackerStore,
+            categoryStore: categoryStore,
+            recordStore: recordStore
+        )
+        
+        trackersViewController.configure(trackersPresenter)
         
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",
@@ -58,7 +66,7 @@ final class MainViewController: UIViewController {
         ]
         
         tabBarController.tabBar.tintColor = .systemBlue
-        tabBarController.tabBar.layer.borderColor = UIColor.lightGray.cgColor
+        tabBarController.tabBar.layer.borderColor = UIColor.ypGrayDark.cgColor
         tabBarController.tabBar.layer.borderWidth = 1
         tabBarController.tabBar.clipsToBounds = true
         

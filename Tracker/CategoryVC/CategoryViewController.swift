@@ -17,6 +17,7 @@ protocol CategorySelectionDelegate: AnyObject {
 final class CategoryViewController: BaseTrackerViewController {
     
     weak var delegate: CategorySelectionDelegate?
+    private var viewModel: CategoryViewModel
     
     // MARK: - UI Elements
     private lazy var placeholder: Placeholder = {
@@ -30,7 +31,7 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var addCategoryButton = UIButton(
         title: "Добавить категорию",
         backgroundColor: .ypBlack,
-        titleColor: .ypWhite,
+        titleColor: .ypBackground,
         cornerRadius: 20,
         font: UIFont.systemFont(
             ofSize: 16,
@@ -49,23 +50,53 @@ final class CategoryViewController: BaseTrackerViewController {
         return stack
     }()
     
+    // MARK: - Initializer
+    init() {
+        // Инициализация ViewModel
+        self.viewModel = CategoryViewModel(
+            trackerCategoryStore: TrackerCategoryStore(
+                persistentContainer: CoreDataStack.shared.persistentContainer
+            )
+        )
+        super.init(type: .category)
+        dataProvider = viewModel
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life Cycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupBindings()
         setupUI()
-        //dismissKeyboard(view: self.view) Надо подумать, из за метода не правильно отрабатывает кнопка
+        viewModel.loadCategories()
+        dismissKeyboard(view: view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadCategoriesFromUserDefaults()
-        tableView.reloadData()
-        updateUI()
+        viewModel.loadCategories()
+    }
+    
+    private func setupBindings() {
+        viewModel.onCategoriesUpdated = { [weak self] categories in
+            self?.tableView.reloadData()
+        }
+        
+        viewModel.onAddCategoryButtonStateUpdated = { [weak self] isEnabled in
+            self?.addCategoryButton.isEnabled = isEnabled
+            self?.addCategoryButton.backgroundColor = isEnabled ? .ypBlack : .ypGray
+        }
+        
+        viewModel.onPlaceholderStateUpdated = { [weak self] isVisible in
+            self?.placeholder.view.isHidden = !isVisible
+        }
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        
         [stack, placeholder.view].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -83,20 +114,27 @@ final class CategoryViewController: BaseTrackerViewController {
             addCategoryButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
+    
+    override func deleteCategory(at indexPath: IndexPath) {
+        viewModel.deleteCategory(at: indexPath.row)
+    }
 
     // MARK: - Actions
     @objc private func addCategoryButtonAction() {
-        if !isAddingCategory {
+        if isAddingCategory {
+            let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text ?? ""
+            viewModel.addCategory(named: categoryName)
+            isAddingCategory = false
+        } else {
             isAddingCategory.toggle()
         }
+        viewModel.updateAddCategoryButtonState(isEnabled: !isAddingCategory)
         updateUI()
     }
     
     // MARK: - Overriding updateUI
     override func updateUI() {
         super.updateUI()
-        
-        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
 
         addCategoryButton.isEnabled = !isAddingCategory
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
@@ -104,28 +142,44 @@ final class CategoryViewController: BaseTrackerViewController {
 
         tableView.reloadData()
     }
-
     
+    private func updatePlaceholder() {
+        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
+    }
+
     override func textViewCellDidChange(_ cell: TextViewCell) {
         super.textViewCellDidChange(cell)
         guard let text = cell.getText().text else { return }
         addCategoryButton.isEnabled = !text.isEmpty
         addCategoryButton.backgroundColor = text.isEmpty ? .ypGray : .ypBlack
     }
+    
+    override func textViewCellDidEndEditing(_ cell: TextViewCell, text: String?) {
+        cell.getText().resignFirstResponder()
+    }
+    
+    private func loadCategories() {
+        viewModel.loadCategories()
+        tableView.reloadData()
+    }
 }
+
 // MARK: - UITableVIewDelegate
 extension CategoryViewController {
     override func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath) {
             if !isAddingCategory {
-                let selectedCategory = categories[indexPath.row]
-                self.selectedCategory = selectedCategory
-                saveCategoriesToUserDefaults()
-                delegate?.didSelectCategory(selectedCategory)
+                guard let selectedCategoryTitle = dataProvider?.item(at: indexPath.row) else { return }
+                
+                if let selectedCategory = viewModel.categories.first(where: { $0.title == selectedCategoryTitle }) {
+                    self.selectedCategory = selectedCategory
+                    delegate?.didSelectCategory(selectedCategory)
+                }
                 
                 tableView.reloadData()
                 dismissOrCancel()
             }
         }
 }
+

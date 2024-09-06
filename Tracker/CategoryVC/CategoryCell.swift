@@ -10,7 +10,7 @@ import UIKit
 final class CategoryCell: CategoryBaseCell {
     static let reuseIdentifier = "CategoryCell"
     
-    override func configure(with text: String, showSwitch: Bool = false) {
-        super.configure(with: text, showSwitch: false)
+    override func configure(with text: String, showSwitch: Bool = false, isSwitchOn: Bool = false) {
+        super.configure(with: text, showSwitch: showSwitch, isSwitchOn: isSwitchOn)
     }
 }
