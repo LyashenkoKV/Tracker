@@ -10,9 +10,9 @@ import UIKit
 final class CreatingTrackerViewController: BaseTrackerViewController {
     
     private var trackerName: String?
-    private var isRegularEvent: Bool
     var selectedColor: UIColor?
     var selectedEmoji: String?
+    private var isRegularEvent: Bool
 
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
@@ -98,8 +98,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
+        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
               let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {

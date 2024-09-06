@@ -179,10 +179,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
 
         let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
 
-        groupedTrackers.forEach { (title, trackers) in
-            Logger.shared.log(.info, message: "Категория: \(title), Количество трекеров: \(trackers.count)")
-        }
-
         let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
             return TrackerCategory(title: title, trackers: trackers)
         }
