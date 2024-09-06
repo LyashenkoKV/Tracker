@@ -63,6 +63,8 @@
 		24937A622C89F6D100EDBAB7 /* ContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A612C89F6D100EDBAB7 /* ContextMenuHelper.swift */; };
 		24937A642C89F70F00EDBAB7 /* EmojiDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A632C89F70F00EDBAB7 /* EmojiDataProvider.swift */; };
 		24937A662C89F74900EDBAB7 /* ColorDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A652C89F74900EDBAB7 /* ColorDataProvider.swift */; };
+		24937A682C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A672C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift */; };
+		24937A6A2C8B042A00EDBAB7 /* HandleActionsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A692C8B042A00EDBAB7 /* HandleActionsHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +127,8 @@
 		24937A612C89F6D100EDBAB7 /* ContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuHelper.swift; sourceTree = "<group>"; };
 		24937A632C89F70F00EDBAB7 /* EmojiDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiDataProvider.swift; sourceTree = "<group>"; };
 		24937A652C89F74900EDBAB7 /* ColorDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDataProvider.swift; sourceTree = "<group>"; };
+		24937A672C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureTableViewCellsHelper.swift; sourceTree = "<group>"; };
+		24937A692C8B042A00EDBAB7 /* HandleActionsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleActionsHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,9 +344,11 @@
 			isa = PBXGroup;
 			children = (
 				24937A5F2C89F64900EDBAB7 /* TableViewHelper.swift */,
+				24937A672C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift */,
 				24937A612C89F6D100EDBAB7 /* ContextMenuHelper.swift */,
 				24937A632C89F70F00EDBAB7 /* EmojiDataProvider.swift */,
 				24937A652C89F74900EDBAB7 /* ColorDataProvider.swift */,
+				24937A692C8B042A00EDBAB7 /* HandleActionsHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -434,6 +440,7 @@
 				2411D66A2C5BCDE80031C584 /* SectionHeaderView.swift in Sources */,
 				2411D68B2C626AF60031C584 /* TrackerSection.swift in Sources */,
 				2476B0B12C6CB01B00ADAD1B /* LayoutConfigurator.swift in Sources */,
+				24937A6A2C8B042A00EDBAB7 /* HandleActionsHelper.swift in Sources */,
 				243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */,
 				2411D67E2C6233F50031C584 /* EmojiesAndColorsTableViewCell.swift in Sources */,
 				243024F52C5289B500B0F1D3 /* StatisticViewController.swift in Sources */,
@@ -456,6 +463,7 @@
 				24937A662C89F74900EDBAB7 /* ColorDataProvider.swift in Sources */,
 				2411D66E2C5CD39A0031C584 /* TrackersViewController + Extension DelegateFlowLayout.swift in Sources */,
 				241FE2D72C75FF6600903AC8 /* TrackerCategoryStore.swift in Sources */,
+				24937A682C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift in Sources */,
 				2476B0AB2C6B3ACB00ADAD1B /* Notification + Extension.swift in Sources */,
 				241FE2B62C735C3200903AC8 /* TrackerCoreData.xcdatamodeld in Sources */,
 				2411D6852C623F950031C584 /* TextViewCell.swift in Sources */,

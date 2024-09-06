@@ -217,227 +217,18 @@ extension BaseTrackerViewController: UITableViewDataSource {
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            switch viewControllerType {
-            case .typeTrackers:
-                return configureTypeTrackersCell(at: indexPath)
-            case .creatingTracker, .schedule:
-                return UITableViewCell()
-            case .category:
-                if isAddingCategory {
-                    return configureTextViewCell(at: indexPath)
-                } else {
-                    return configureCategoryCell(at: indexPath)
-                }
-            case .none:
-                return UITableViewCell()
-            }
-        }
-    // MARK: - configureTypeTrackersCell
-    private func configureTypeTrackersCell(at indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        
-        if #available(iOS 14.0, *) {
-            var content = cell.defaultContentConfiguration()
-            if indexPath.section == 0 {
-                content.text = "Привычка"
-            } else if indexPath.section == 1 {
-                content.text = "Нерегулярное событие"
-            }
-            content.textProperties.alignment = .center
-            content.textProperties.color = .ypBackground
-            content.textProperties.font = UIFont.systemFont(
-                ofSize: 16,
-                weight: .medium
+            return TableViewHelper.cellForRow(
+                at: indexPath,
+                viewControllerType: viewControllerType,
+                tableView: tableView,
+                dataProvider: dataProvider,
+                isAddingCategory: isAddingCategory,
+                selectedCategory: selectedCategory,
+                categories: categories,
+                editingCategoryIndex: editingCategoryIndex, 
+                viewController: self
             )
-            cell.contentConfiguration = content
-        } else {
-            if indexPath.section == 0 {
-                cell.textLabel?.text = "Привычка"
-            } else if indexPath.section == 1 {
-                cell.textLabel?.text = "Нерегулярное событие"
-            }
-            cell.textLabel?.textAlignment = .center
-            cell.textLabel?.font = UIFont.systemFont(
-                ofSize: 16,
-                weight: .medium
-            )
-            cell.textLabel?.textColor = .ypBackground
         }
-        cell.layer.cornerRadius = 16
-        cell.clipsToBounds = true
-        cell.selectionStyle = .none
-        cell.backgroundColor = .ypBlack
-        return cell
-    }
-    // MARK: - configureCategoryCell
-    func configureCategoryCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CategoryCell.reuseIdentifier,
-            for: indexPath
-        ) as? CategoryCell else {
-            return UITableViewCell()
-        }
-        
-        //let category = categories[indexPath.row]
-        guard let itemTitle = dataProvider?.item(at: indexPath.row) else {
-            print("Ошибка: itemTitle отсутствует для индекса \(indexPath.row)")
-            return UITableViewCell()
-        }
-        print("Категория на индексе \(indexPath.row): \(itemTitle)")
-        cell.configure(with: itemTitle)
-        
-        if let selectedCategory = selectedCategory, selectedCategory.title == itemTitle {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
-        
-        configureBaseCell(cell, at: indexPath, totalRows: dataProvider?.numberOfItems ?? 0)
-        configureSeparator(cell, isLastRow: indexPath.row == (dataProvider?.numberOfItems ?? 0) - 1)
-        return cell
-    }
-    // MARK: - configureTextViewCell
-    func configureTextViewCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: TextViewCell.reuseIdentifier,
-            for: indexPath
-        ) as? TextViewCell else {
-            return UITableViewCell()
-        }
-        cell.delegate = self
-
-        // Проверяем, что индекс находится в допустимых пределах массива категорий
-        if let editingIndex = editingCategoryIndex {
-            guard editingIndex.row < categories.count else {
-                print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
-                return UITableViewCell()
-            }
-            
-            let category = categories[editingIndex.row]
-            cell.getText().text = category.title
-            self.title = "Редактирование категории"
-        } else {
-            cell.getText().text = !isAddingCategory ? "" : "Введите название категории"
-            self.title = "Новая категория"
-        }
-
-        configureBaseCell(cell, at: indexPath, totalRows: 1)
-        configureSeparator(cell, isLastRow: true)
-        
-        return cell
-    }
-
-    // Конфигурация ячеек ButtonCell, с настройкой скругления Top первой ячейки и Bottom второй
-    func configureButtonCell(
-        _ cell: UITableViewCell,
-        at indexPath: IndexPath,
-        isSingleCell: Bool) {
-            cell.accessoryType = .disclosureIndicator
-            
-            if #available(iOS 14.0, *) {
-                var content = cell.defaultContentConfiguration()
-                content.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                content.textProperties.font = UIFont.systemFont(
-                    ofSize: 17,
-                    weight: .regular
-                )
-                content.textProperties.adjustsFontSizeToFitWidth = true
-                content.textProperties.minimumScaleFactor = 0.8
-                
-                if indexPath.row == 0 && !isAddingCategory {
-                    if let category = selectedCategory {
-                        content.secondaryText = category.title
-                    }
-                } else {
-                    content.secondaryText = selectedDaysString()
-                }
-                content.secondaryTextProperties.color = .ypGray
-                content.secondaryTextProperties.font = UIFont.systemFont(
-                    ofSize: 17,
-                    weight: .regular
-                )
-                content.secondaryTextProperties.adjustsFontSizeToFitWidth = true
-                content.secondaryTextProperties.minimumScaleFactor = 0.8
-                
-                cell.contentConfiguration = content
-            } else {
-                cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
-                cell.detailTextLabel?.textColor = .ypGray
-                cell.detailTextLabel?.font = UIFont.systemFont(
-                    ofSize: 17,
-                    weight: .regular
-                )
-                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
-                cell.detailTextLabel?.minimumScaleFactor = 0.8
-                cell.detailTextLabel?.lineBreakMode = .byTruncatingTail
-                
-                if indexPath.row == 0 && !isAddingCategory {
-                    if let category = selectedCategory {
-                        cell.detailTextLabel?.text = category.title
-                    }
-                } else {
-                    cell.detailTextLabel?.text = selectedDaysString()
-                }
-            }
-        }
-    
-    // Конфигурация ячеек наследуемых от BaseCell, с настройкой скругления Top первой ячейки и Bottom последней
-    func configureBaseCell(
-        _ cell: UITableViewCell,
-        at indexPath: IndexPath,
-        totalRows: Int) {
-            
-            cell.layer.masksToBounds = true
-            cell.backgroundColor = .ypWhiteGray
-            cell.selectionStyle = .none
-            cell.tintColor = .systemBlue
-            
-            if totalRows == 1 {
-                cell.layer.cornerRadius = 15
-                cell.layer.maskedCorners = [
-                    .layerMinXMinYCorner,
-                    .layerMaxXMinYCorner,
-                    .layerMinXMaxYCorner,
-                    .layerMaxXMaxYCorner
-                ]
-            } else if indexPath.row == 0 {
-                cell.layer.cornerRadius = 15
-                cell.layer.maskedCorners = [
-                    .layerMinXMinYCorner,
-                    .layerMaxXMinYCorner
-                ]
-            } else if indexPath.row == totalRows - 1 {
-                cell.layer.cornerRadius = 15
-                cell.layer.maskedCorners = [
-                    .layerMinXMaxYCorner,
-                    .layerMaxXMaxYCorner
-                ]
-            } else {
-                cell.layer.cornerRadius = 0
-            }
-        }
-    
-    // Настройка сепаратора (для визуального разделения ячеек)
-    func configureSeparator(_ cell: UITableViewCell, isLastRow: Bool) {
-        cell.contentView.subviews.filter { $0.tag == 1001 }.forEach { $0.removeFromSuperview() }
-        
-        cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        
-        guard !isLastRow else { return }
-        
-        let separator = UIView()
-        separator.tag = 1001
-        separator.backgroundColor = .lightGray
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(separator)
-        
-        NSLayoutConstraint.activate([
-            separator.leadingAnchor.constraint(equalTo: cell.layoutMarginsGuide.leadingAnchor),
-            separator.trailingAnchor.constraint(equalTo: cell.layoutMarginsGuide.trailingAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1),
-            separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
-        ])
-    }
 }
 
 // MARK: - UITableViewDelegate
@@ -446,18 +237,11 @@ extension BaseTrackerViewController: UITableViewDelegate {
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
-        switch viewControllerType {
-        case .typeTrackers:
-            handleTypeTrackersSelection(at: indexPath)
-        case .creatingTracker:
-            handleCreatingTrackerSelection(at: indexPath)
-        case .category:
-            handleCategorySelection(at: indexPath)
-        case .schedule:
-            break
-        case .none:
-            break
-        }
+        return TableViewHelper.didSelectRow(
+            at: indexPath,
+            viewControllerType: viewControllerType,
+            viewController: self
+        )
     }
     
     func handleTypeTrackersSelection(at indexPath: IndexPath) {
@@ -510,28 +294,13 @@ extension BaseTrackerViewController: UITableViewDelegate {
         contextMenuConfigurationForRowAt indexPath: IndexPath,
         point: CGPoint) -> UIContextMenuConfiguration? {
             
-            switch viewControllerType {
-            case .category:
-                guard ((dataProvider?.item(at: indexPath.row)) != nil) else {
-                    return nil
-                }
-                
-                return UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
-                    let editAction = UIAction(title: "Редактировать") { _ in
-                        self?.startEditingCategory(at: indexPath)
-                        tableView.reloadData()
-                    }
-                    
-                    let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
-                        self?.deleteCategory(at: indexPath)
-                        tableView.reloadData()
-                    }
-                    return UIMenu(title: "", children: [editAction, deleteAction])
-                })
-                
-            default:
-                return nil
-            }
+            return ContextMenuHelper.contextMenuConfiguration(
+                at: indexPath,
+                viewControllerType: viewControllerType,
+                dataProvider: dataProvider,
+                tableView: tableView,
+                viewController: self
+            )
         }
     
     // MARK: - Header
@@ -701,9 +470,17 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 case TrackerSection.buttons.rawValue:
                     return 75
                 case TrackerSection.emoji.rawValue:
-                    return calculateCellHeight(for: tableView, itemCount: emojies.count, itemsPerRow: 6)
+                    return TableViewHelper.calculateCellHeight(
+                        for: tableView,
+                        itemCount: emojies.count,
+                        itemsPerRow: 6
+                    )
                 case TrackerSection.color.rawValue:
-                    return calculateCellHeight(for: tableView, itemCount: colors.count, itemsPerRow: 6)
+                    return TableViewHelper.calculateCellHeight(
+                        for: tableView,
+                        itemCount: colors.count,
+                        itemsPerRow: 6
+                    )
                 case TrackerSection.createButtons.rawValue:
                     return UITableView.automaticDimension
                 default:
@@ -718,61 +495,4 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return UITableView.automaticDimension
             }
         }
-    
-    private func calculateCellHeight(for tableView: UITableView, itemCount: Int, itemsPerRow: Int) -> CGFloat {
-        let collectionViewWidth = tableView.frame.width
-        let cellSpacing: CGFloat = 5
-        let leftInset: CGFloat = 10
-        let rightInset: CGFloat = 10
-
-        let totalSpacing = (CGFloat(itemsPerRow - 1) * cellSpacing)
-        let totalInsets = leftInset + rightInset
-        let availableWidth = collectionViewWidth - totalInsets - totalSpacing
-        let itemWidth = availableWidth / CGFloat(itemsPerRow)
-        
-        let numberOfRows = ceil(CGFloat(itemCount) / CGFloat(itemsPerRow))
-        let totalHeight = numberOfRows * itemWidth + (numberOfRows - 1) * cellSpacing
-        
-        return totalHeight + 20
-    }
-}
-
-// MARK: - selectedDaysString
-extension BaseTrackerViewController {
-    private func selectedDaysString() -> String {
-        if selectedDays.isEmpty {
-            return ""
-        }
-        
-        let daysOrder: [DayOfTheWeek] = [
-            .monday, .tuesday, .wednesday,
-            .thursday, .friday, .saturday,
-            .sunday
-        ]
-        
-        let fullWeek = Set(daysOrder)
-        let selectedSet = Set(selectedDays)
-        
-        if selectedSet == fullWeek {
-            return "Каждый день"
-        }
-        
-        let sortedDays = selectedDays.sorted {
-            daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
-        }
-        
-        let dayShortcuts = sortedDays.map { day in
-            switch day {
-            case .monday: return "Пн"
-            case .tuesday: return "Вт"
-            case .wednesday: return "Ср"
-            case .thursday: return "Чт"
-            case .friday: return "Пт"
-            case .saturday: return "Сб"
-            case .sunday: return "Вс"
-            }
-        }
-        
-        return dayShortcuts.joined(separator: ", ")
-    }
 }

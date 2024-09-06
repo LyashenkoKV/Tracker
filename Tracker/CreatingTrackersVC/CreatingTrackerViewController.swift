@@ -185,69 +185,92 @@ extension CreatingTrackerViewController {
 // MARK: - ConfigureCell
 extension CreatingTrackerViewController {
     private func configureCreatingTrackerCell(at indexPath: IndexPath) -> UITableViewCell {
-        guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
-            return UITableViewCell()
+           guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
+               return UITableViewCell()
+           }
+           
+           switch trackerSection {
+           case .textView:
+               return ConfigureTableViewCellsHelper.configureTextViewCell(for: tableView, at: indexPath, delegate: self)
+           case .buttons:
+               let cell = UITableViewCell()
+               let totalRows = isRegularEvent ? 2 : 1
+               ConfigureTableViewCellsHelper.configureButtonCell(
+                cell, at: indexPath,
+                isSingleCell: isRegularEvent,
+                isAddingCategory: isAddingCategory,
+                selectedCategory: selectedCategory,
+                selectedDaysString: selectedDaysString()
+               )
+               ConfigureTableViewCellsHelper.configureBaseCell(
+                cell,
+                at: indexPath,
+                totalRows: totalRows
+               )
+               ConfigureTableViewCellsHelper.configureSeparator(
+                cell,
+                isLastRow: indexPath.row == (isRegularEvent ? 1 : 0)
+               )
+               cell.selectionStyle = .none
+               return cell
+           case .emoji:
+               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+                for: tableView,
+                at: indexPath,
+                with: emojies,
+                isEmoji: true
+               )
+           case .color:
+               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+                for: tableView,
+                at: indexPath,
+                with: colors,
+                isEmoji: false
+               )
+           case .createButtons:
+               return ConfigureTableViewCellsHelper.configureCreateButtonsCell(
+                   for: tableView,
+                   at: indexPath,
+                   onCreateTapped: { [weak self] in self?.handleCreateButtonTapped() },
+                   onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }
+               )
+           }
+       }
+    
+    private func selectedDaysString() -> String {
+        if selectedDays.isEmpty {
+            return ""
         }
-        switch trackerSection {
-        case .textView:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: TextViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? TextViewCell else {
-                return UITableViewCell()
-            }
-            cell.delegate = self
-            cell.selectionStyle = .none
-            return cell
-        case .buttons:
-            if !isRegularEvent && indexPath.row == 1 {
-                return UITableViewCell()
-            }
-            let cell = UITableViewCell()
-            let totalRows = isRegularEvent ? 2 : 1
-            
-            configureButtonCell(cell, at: indexPath, isSingleCell: isRegularEvent)
-            configureBaseCell(cell, at: indexPath, totalRows: totalRows)
-            configureSeparator(cell, isLastRow: indexPath.row == (isRegularEvent ? 1 : 0))
-            cell.selectionStyle = .none
-            return cell
-        case .emoji:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: emojies, isEmoji: true)
-            cell.selectionStyle = .none
-            return cell
-        case .color:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? EmojiesAndColorsTableViewCell else {
-                return UITableViewCell()
-            }
-            cell.configure(with: colors, isEmoji: false)
-            cell.selectionStyle = .none
-            return cell
-        case .createButtons:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: CreateButtonsViewCell.reuseIdentifier,
-                for: indexPath
-            ) as? CreateButtonsViewCell else {
-                return UITableViewCell()
-            }
-            
-            cell.onCreateButtonTapped = { [weak self] in
-                self?.handleCreateButtonTapped()
-            }
-            
-            cell.onCancelButtonTapped = { [weak self] in
-                self?.handleCancelButtonTapped()
-            }
-            cell.selectionStyle = .none
-            return cell
+        
+        let daysOrder: [DayOfTheWeek] = [
+            .monday, .tuesday, .wednesday,
+            .thursday, .friday, .saturday,
+            .sunday
+        ]
+        
+        let fullWeek = Set(daysOrder)
+        let selectedSet = Set(selectedDays)
+        
+        if selectedSet == fullWeek {
+            return "Каждый день"
         }
+        
+        let sortedDays = selectedDays.sorted {
+            daysOrder.firstIndex(of: $0) ?? 0 < daysOrder.firstIndex(of: $1) ?? 0
+        }
+        
+        let dayShortcuts = sortedDays.map { day in
+            switch day {
+            case .monday: return "Пн"
+            case .tuesday: return "Вт"
+            case .wednesday: return "Ср"
+            case .thursday: return "Чт"
+            case .friday: return "Пт"
+            case .saturday: return "Сб"
+            case .sunday: return "Вс"
+            }
+        }
+        
+        return dayShortcuts.joined(separator: ", ")
     }
 }
