@@ -171,18 +171,18 @@ final class TrackersCardCell: UICollectionViewCell {
             return record.trackerId == tracker.id
         }.count
         
-        let day = declensionDay(for: countDays)
-        counterLabel.text = "\(countDays) \(day)"
+        let day = getLocalizedDayString(for: countDays)
+        counterLabel.text = day
     }
     
-    private func declensionDay(for countDays: Int) -> String {
+    private func getLocalizedDayString(for countDays: Int) -> String {
         switch countDays {
         case 1:
-            return "День"
+            return String(format: NSLocalizedString("day_one", comment: ""), countDays)
         case 2...4:
-            return "Дня"
+            return String(format: NSLocalizedString("day_few", comment: ""), countDays)
         default:
-            return "Дней"
+            return String(format: NSLocalizedString("day_many", comment: ""), countDays)
         }
     }
 }

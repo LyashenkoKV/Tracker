@@ -77,8 +77,6 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
                     contentView.layer.borderColor = UIColor(hex: element)?.withAlphaComponent(0.3).cgColor
                 }
             }
-            //contentView.alpha = hasSelectedItem ? (isSelected ? 1.0 : 0.2) : 1.0
         }
     }
-
 }

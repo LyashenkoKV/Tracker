@@ -22,7 +22,7 @@ final class CategoryViewController: BaseTrackerViewController {
     // MARK: - UI Elements
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
-            image: UIImage(named: "Error"),
+            image: UIImage(named: PHName.trackersPH.rawValue),
             text: "Привычки и события можно\nобъединить по смыслу"
         )
         return placeholder

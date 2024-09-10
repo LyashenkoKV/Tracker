@@ -35,7 +35,8 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd.MM.yy"
-        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateStyle = .medium
+        dateFormatter.locale = Locale.current
         return dateFormatter
     }()
     

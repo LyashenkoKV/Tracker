@@ -34,7 +34,7 @@ final class TrackersViewController: UIViewController {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
-        picker.locale = Locale(identifier: "ru_RU")
+        picker.locale = Locale.current
         picker.tintColor = .systemBlue
         picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         picker.translatesAutoresizingMaskIntoConstraints = false
@@ -56,7 +56,10 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var placeholder: Placeholder = {
-        let placeholder = Placeholder(image: UIImage(named: "Error"), text: "Что будем отслеживать?")
+        let placeholder = Placeholder(
+            image: UIImage(named: PHName.trackersPH.rawValue),
+            text: "Что будем отслеживать?"
+        )
         return placeholder
     }()
     
@@ -112,18 +115,6 @@ final class TrackersViewController: UIViewController {
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        guard let navigationController else { return }
-        
-        navigationController.hidesBarsOnSwipe = false
-        navigationController.navigationBar.prefersLargeTitles = true
-        navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.largeTitleDisplayMode = .always
-        navigationItem.searchController = searchController
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {

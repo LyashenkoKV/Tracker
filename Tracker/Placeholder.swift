@@ -46,3 +46,9 @@ struct Placeholder {
         ])
     }
 }
+
+enum PHName: String, CaseIterable {
+    case trackersPH = "TrackersPH"
+    case statisticPH = "StatisticPH"
+    case searchPH = "SearchPH"
+}

@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Konstantin Lyashenko on 09.09.2024.
+  
+*/
+
+"day_one" = "%d day";
+"day_few" = "%d days";
+"day_many" = "%d days";

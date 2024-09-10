@@ -26,7 +26,7 @@ final class CategoryViewModel: TrackerDataProvider {
         
         // Подписываемся на изменения данных в хранилище
         self.trackerCategoryStore.didUpdateData = { [weak self] in
-            self?.loadCategories()  // обновляем категории при изменении данных
+            self?.loadCategories()
         }
     }
     
