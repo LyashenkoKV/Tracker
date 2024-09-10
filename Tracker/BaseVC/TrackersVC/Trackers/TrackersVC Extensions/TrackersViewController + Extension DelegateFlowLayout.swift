@@ -8,9 +8,9 @@
 import UIKit
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension TrackersViewController: UICollectionViewDelegateFlowLayout {
+extension TrackersViewController {
    
-    func collectionView(
+    override func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath

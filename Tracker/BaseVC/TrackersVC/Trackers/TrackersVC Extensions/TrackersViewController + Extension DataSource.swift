@@ -8,19 +8,19 @@
 import UIKit
 
 // MARK: - UICollectionViewDataSource
-extension TrackersViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+extension TrackersViewController {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return categories.count
     }
     
-    func collectionView(
+    override func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
         return categories[section].trackers.count
     }
     
-    func collectionView(
+    override func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {

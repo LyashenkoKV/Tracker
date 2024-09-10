@@ -69,6 +69,7 @@
 		24937A892C902E1600EDBAB7 /* StatisticsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A882C902E1600EDBAB7 /* StatisticsData.swift */; };
 		24937A8B2C902E3200EDBAB7 /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A8A2C902E3200EDBAB7 /* StatisticsViewModel.swift */; };
 		24937A8D2C90381000EDBAB7 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A8C2C90381000EDBAB7 /* StatisticCell.swift */; };
+		24937A912C9044C400EDBAB7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A902C9044C400EDBAB7 /* BaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -139,6 +140,7 @@
 		24937A882C902E1600EDBAB7 /* StatisticsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsData.swift; sourceTree = "<group>"; };
 		24937A8A2C902E3200EDBAB7 /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
 		24937A8C2C90381000EDBAB7 /* StatisticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
+		24937A902C9044C400EDBAB7 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,7 +200,7 @@
 			path = "CreatingTrackersVC Cells";
 			sourceTree = "<group>";
 		};
-		2411D6922C6367470031C584 /* Global Extensions */ = {
+		2411D6922C6367470031C584 /* Global Extensions + Struct */ = {
 			isa = PBXGroup;
 			children = (
 				2411D6932C63676E0031C584 /* UIColor + Extensions.swift */,
@@ -206,8 +208,11 @@
 				2476B0A62C6A87C800ADAD1B /* UIView + Extension.swift */,
 				2476B0AA2C6B3ACB00ADAD1B /* Notification + Extension.swift */,
 				2485B51D2C6E9422001650D1 /* GlobalFunc.swift */,
+				243024F62C5292AD00B0F1D3 /* Logger.swift */,
+				2411D6702C60CACF0031C584 /* GeometricParams.swift */,
+				2411D6952C63766B0031C584 /* Placeholder.swift */,
 			);
-			path = "Global Extensions";
+			path = "Global Extensions + Struct";
 			sourceTree = "<group>";
 		};
 		2411D6972C637B9F0031C584 /* TrackersVC Cells */ = {
@@ -278,19 +283,9 @@
 			isa = PBXGroup;
 			children = (
 				24937A802C8F1B6800EDBAB7 /* Resources */,
-				2411D6922C6367470031C584 /* Global Extensions */,
+				2411D6922C6367470031C584 /* Global Extensions + Struct */,
 				24573DAA2C88446300D4D34B /* OnboardingVC */,
-				243024EF2C52891500B0F1D3 /* MainVC */,
-				243024F02C52891C00B0F1D3 /* TrackersVC */,
-				243024F12C52892600B0F1D3 /* StatisticVC */,
-				243024DB2C525B3500B0F1D3 /* AppDelegate.swift */,
-				243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */,
-				243024E42C525B3700B0F1D3 /* Assets.xcassets */,
-				243024E62C525B3700B0F1D3 /* LaunchScreen.storyboard */,
-				243024E92C525B3700B0F1D3 /* Info.plist */,
-				243024F62C5292AD00B0F1D3 /* Logger.swift */,
-				2411D6702C60CACF0031C584 /* GeometricParams.swift */,
-				2411D6952C63766B0031C584 /* Placeholder.swift */,
+				24937A8F2C90445300EDBAB7 /* BaseVC */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -367,6 +362,11 @@
 		24937A802C8F1B6800EDBAB7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				243024E92C525B3700B0F1D3 /* Info.plist */,
+				243024E42C525B3700B0F1D3 /* Assets.xcassets */,
+				243024E62C525B3700B0F1D3 /* LaunchScreen.storyboard */,
+				243024DD2C525B3500B0F1D3 /* SceneDelegate.swift */,
+				243024DB2C525B3500B0F1D3 /* AppDelegate.swift */,
 				24937A832C8F1C7200EDBAB7 /* Localizable.strings */,
 			);
 			path = Resources;
@@ -381,6 +381,17 @@
 				2411D6972C637B9F0031C584 /* TrackersVC Cells */,
 			);
 			path = Trackers;
+			sourceTree = "<group>";
+		};
+		24937A8F2C90445300EDBAB7 /* BaseVC */ = {
+			isa = PBXGroup;
+			children = (
+				24937A902C9044C400EDBAB7 /* BaseViewController.swift */,
+				243024EF2C52891500B0F1D3 /* MainVC */,
+				243024F02C52891C00B0F1D3 /* TrackersVC */,
+				243024F12C52892600B0F1D3 /* StatisticVC */,
+			);
+			path = BaseVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -460,6 +471,7 @@
 				243024E02C525B3500B0F1D3 /* MainViewController.swift in Sources */,
 				2411D6A82C674B370031C584 /* BaseTrackerViewController.swift in Sources */,
 				24573DB02C885C5600D4D34B /* OnboardingHelper.swift in Sources */,
+				24937A912C9044C400EDBAB7 /* BaseViewController.swift in Sources */,
 				247E504E2C58DC4800630037 /* Tracker.swift in Sources */,
 				243024F72C5292AD00B0F1D3 /* Logger.swift in Sources */,
 				2411D69F2C63B6670031C584 /* CategoryCell.swift in Sources */,
@@ -671,7 +683,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B497B3XW8R;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Tracker/Info.plist;
+				INFOPLIST_FILE = Tracker/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -702,7 +714,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B497B3XW8R;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Tracker/Info.plist;
+				INFOPLIST_FILE = Tracker/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

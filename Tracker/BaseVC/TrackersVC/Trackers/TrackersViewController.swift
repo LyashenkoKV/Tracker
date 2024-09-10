@@ -16,7 +16,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
 }
 
 // MARK: - Object
-final class TrackersViewController: UIViewController {
+final class TrackersViewController: BaseViewController {
     
     var presenter: TrackersPresenterProtocol?
     var categories: [TrackerCategory] = []
@@ -55,35 +55,6 @@ final class TrackersViewController: UIViewController {
         return searchController
     }()
     
-    private lazy var placeholder: Placeholder = {
-        let placeholder = Placeholder(
-            image: UIImage(named: PHName.trackersPH.rawValue),
-            text: "Что будем отслеживать?"
-        )
-        return placeholder
-    }()
-    
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .ypBackground
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.alwaysBounceVertical = true
-        collectionView.accessibilityIdentifier = "TrackersCollectionView"
-        
-        collectionView.register(
-            SectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: SectionHeaderView.reuseIdentifier
-        )
-        collectionView.register(
-            TrackersCardCell.self,
-            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
-        )
-        return collectionView
-    }()
-    
     // MARK: - BarButtonItems
     private lazy var addNewTrackerButtonItem: UIBarButtonItem = {
         let button = UIButton()
@@ -100,6 +71,14 @@ final class TrackersViewController: UIViewController {
         return barButtonItem
     }()
     
+    init() {
+        super.init(placeholderImageName: PHName.trackersPH.rawValue, placeholderText: "Что будем отслеживать?")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .trackerCreated, object: nil)
     }
@@ -109,9 +88,18 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         self.title = "Трекеры"
         view.backgroundColor = .ypBackground
-        setupConstraints()
         updatePlaceholderView()
         addNotification()
+        
+        collectionView.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionHeaderView.reuseIdentifier
+        )
+        collectionView.register(
+            TrackersCardCell.self,
+            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
+        )
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()
@@ -130,30 +118,12 @@ final class TrackersViewController: UIViewController {
             object: nil
         )
     }
-
-    private func setupConstraints() {
-        [collectionView, placeholder.view].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-
-            placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
     
     func updatePlaceholderView() {
         let hasData = categories.contains { category in
             return !category.trackers.isEmpty
         }
-        collectionView.isHidden = !hasData
-        placeholder.view.isHidden = hasData
+        updatePlaceholderView(hasData: hasData)
     }
 }
 
