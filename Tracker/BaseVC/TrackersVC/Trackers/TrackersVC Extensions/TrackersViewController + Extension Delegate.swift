@@ -15,13 +15,19 @@ extension TrackersViewController {
         point: CGPoint) -> UIContextMenuConfiguration? {
         let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let deleteAction = UIAction(
-                title: "Удалить",
+                title: NSLocalizedString(
+                    "delete",
+                    comment: "Удалить трекер"
+                ),
                 attributes: .destructive) { [weak self] _ in
                 self?.presenter?.deleteTracker(at: indexPath)
             }
             
             let editAction = UIAction(
-                title: "Редактировать"
+                title: NSLocalizedString(
+                    "edit",
+                    comment: "Редактировать трекер"
+                )
             ) { [weak self] _ in
                 self?.presenter?.editTracker(at: indexPath)
             }

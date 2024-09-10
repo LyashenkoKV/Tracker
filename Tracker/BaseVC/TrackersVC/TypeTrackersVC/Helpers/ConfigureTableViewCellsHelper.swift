@@ -20,9 +20,15 @@ final class ConfigureTableViewCellsHelper {
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
             if indexPath.section == 0 {
-                content.text = "Привычка"
+                content.text = NSLocalizedString(
+                    "habit",
+                    comment: "Привычка"
+                )
             } else if indexPath.section == 1 {
-                content.text = "Нерегулярное событие"
+                content.text = NSLocalizedString(
+                    "irregular_event",
+                    comment: "Нерегулярное событие"
+                )
             }
             content.textProperties.alignment = .center
             content.textProperties.color = .ypBackground
@@ -30,9 +36,15 @@ final class ConfigureTableViewCellsHelper {
             cell.contentConfiguration = content
         } else {
             if indexPath.section == 0 {
-                cell.textLabel?.text = "Привычка"
+                cell.textLabel?.text = NSLocalizedString(
+                    "habit",
+                    comment: "Привычка"
+                )
             } else if indexPath.section == 1 {
-                cell.textLabel?.text = "Нерегулярное событие"
+                cell.textLabel?.text = NSLocalizedString(
+                    "irregular_event",
+                    comment: "Нерегулярное событие"
+                )
             }
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -104,10 +116,19 @@ final class ConfigureTableViewCellsHelper {
             
             let category = categories[editingIndex.row]
             cell.getText().text = category.title
-            viewController.title = "Редактирование категории"
+            viewController.title = NSLocalizedString(
+                "edit_category",
+                comment: "Редактирование категории"
+            )
         } else {
-            cell.getText().text = !isAddingCategory ? "" : "Введите название категории"
-            viewController.title = "Новая категория"
+            cell.getText().text = !isAddingCategory ? "" : NSLocalizedString(
+                "enter_cat_name",
+                comment: "Введите название категории"
+            )
+            viewController.title = NSLocalizedString(
+                "new_category",
+                comment: "Новая категория"
+            )
         }
 
         configureBaseCell(cell, at: indexPath, totalRows: 1)
@@ -171,7 +192,7 @@ final class ConfigureTableViewCellsHelper {
         
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
-            content.text = indexPath.row == 0 ? "Категория" : "Расписание"
+            content.text = indexPath.row == 0 ? NSLocalizedString("category", comment: "Категория") : NSLocalizedString("schedule", comment: "Расписание")
             content.textProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             content.textProperties.adjustsFontSizeToFitWidth = true
             content.textProperties.minimumScaleFactor = 0.8
@@ -191,7 +212,7 @@ final class ConfigureTableViewCellsHelper {
             
             cell.contentConfiguration = content
         } else {
-            cell.textLabel?.text = indexPath.row == 0 ? "Категория" : "Расписание"
+            cell.textLabel?.text = indexPath.row == 0 ? NSLocalizedString("category", comment: "Категория") : NSLocalizedString("schedule", comment: "Расписание")
             cell.detailTextLabel?.textColor = .ypGray
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             cell.detailTextLabel?.adjustsFontSizeToFitWidth = true

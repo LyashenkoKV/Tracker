@@ -66,11 +66,17 @@ final class OnboardingPageViewController: UIPageViewController {
     
     private func makePages() -> [OnboardingHelper] {
         let firstPage = OnboardingHelper(
-            greeting: "Отслеживайте только\n то, что хотите",
+            greeting: NSLocalizedString(
+                "onboarding_fir_page",
+                comment: "Заголовок первой страницы"
+            ),
             image: UIImage(named: "1") ?? UIImage()
         )
         let secondPage = OnboardingHelper(
-            greeting: "Даже если это\n не литры воды и йога",
+            greeting: NSLocalizedString(
+                "onboarding_sec_page",
+                comment: "Заголовок второй страницы"
+            ),
             image: UIImage(named: "2") ?? UIImage()
         )
         return [firstPage, secondPage]

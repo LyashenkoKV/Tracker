@@ -140,15 +140,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             }
         }
         
-        let completedFilteredTrackers = filteredTrackers.filter { tracker in
-            let isCompleted = view?.completedTrackers.contains {
-                $0.trackerId == tracker.id && $0.date == dateFormatter.string(from: date)
-            } ?? false
-            
-            return !isCompleted || tracker.isRegularEvent
-        }
-        
-        view?.categories = categorizeTrackers(completedFilteredTrackers)
+        view?.categories = categorizeTrackers(filteredTrackers)
         view?.reloadData()
     }
     

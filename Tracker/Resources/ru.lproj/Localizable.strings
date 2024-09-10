@@ -5,3 +5,44 @@
   Created by Konstantin Lyashenko on 09.09.2024.
   
 */
+
+// Onboarding
+"onboarding_fir_page" = "Отслеживайте только\n то, что хотите";
+"onboarding_sec_page" = "Даже если это\n не литры воды и йога";
+"onboarding_button" = "Вот это технологии!";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "Трекеры";
+"statistics_tab_title" = "Статистика";
+
+// DayOfTheWeek
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
+
+// TrackersVC
+"search_placeholder" = "Поиск";
+"trackers_placeholder" = "Что будем отслеживать?";
+"search_cancel" = "Отменить";
+
+// TrackerVCDelegate & ContextMenuHelper
+"delete" = "Удалить";
+"edit" = "Редактировать";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "Привычка";
+"irregular_event" = "Нерегулярное событие";
+"edit_category" = "Редактирование категории";
+"enter_cat_name" = "Введите название категории";
+"new_category" = "Новая категория";
+"category" = "Категория";
+"schedule" = "Расписание";
+
+
+
+"add_category" = "Добавить категорию";
+"create_tracker_button" = "Создать трекер";

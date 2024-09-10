@@ -34,7 +34,6 @@ final class ScheduleViewController: BaseTrackerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        //tableView.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,7 +64,7 @@ final class ScheduleViewController: BaseTrackerViewController {
         let day = DayOfTheWeek.allCases[indexPath.row]
         let isDaySelected = selectedDays.contains(day)
         
-        cell.configure(with: day.rawValue, showSwitch: true, isSwitchOn: isDaySelected)
+        cell.configure(with: day.localized(), showSwitch: true, isSwitchOn: isDaySelected)
         
         cell.toggleSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         

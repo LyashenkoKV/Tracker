@@ -131,7 +131,7 @@ final class TrackerStore: NSObject {
     }
     
     func fetchTrackers(for dayOfTheWeek: DayOfTheWeek) -> [TrackerCoreData] {
-        let dayOfWeekString = String(dayOfTheWeek.rawValue)
+        let dayOfWeekString = dayOfTheWeek.rawValue
         
         fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", dayOfWeekString)
         

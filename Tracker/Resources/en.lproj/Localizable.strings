@@ -6,3 +6,25 @@
   
 */
 
+// Onboarding
+"onboarding_fir_page" = "Track only\n what you want";
+"onboarding_sec_page" = "Even if it's not\n liters of water or yoga";
+"onboarding_button" = "What a technology!";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "Trackers";
+"statistics_tab_title" = "Statistics";
+
+// DayOfTheWeek
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";
+
+// TrackersVC
+"search_placeholder" = "Search";
+"add_category" = "Add category";
+"create_tracker_button" = "Create tracker";

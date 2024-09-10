@@ -25,7 +25,10 @@ final class OnboardingViewController: UIViewController {
     
     private lazy var button: UIButton = {
         return UIButton(
-            title: "Вот это технологии!",
+            title: NSLocalizedString(
+                "onboarding_button",
+                comment: "Тайтл кнопки"
+            ),
             backgroundColor: .ypBlack,
             titleColor: .ypBackground,
             cornerRadius: 20,

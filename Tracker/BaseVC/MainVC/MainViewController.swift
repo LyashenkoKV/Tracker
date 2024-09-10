@@ -49,12 +49,18 @@ final class MainViewController: UIViewController {
         trackersViewController.configure(trackersPresenter)
         
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: NSLocalizedString(
+                "trackers_tab_title",
+                comment: "Заголовок"
+            ),
             image: UIImage(systemName: "smallcircle.filled.circle.fill"),
             tag: 0
         )
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: NSLocalizedString(
+                "statistics_tab_title",
+                comment: "Заголовок"
+            ),
             image: UIImage(systemName: "hare.fill"),
             tag: 1
         )

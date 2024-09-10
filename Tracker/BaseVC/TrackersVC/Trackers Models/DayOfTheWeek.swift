@@ -8,12 +8,32 @@
 import Foundation
 
 enum DayOfTheWeek: String, Codable, CaseIterable {
-    case monday = "Понедельник"
-    case tuesday = "Вторник"
-    case wednesday = "Среда"
-    case thursday = "Четверг"
-    case friday = "Пятница"
-    case saturday = "Суббота"
-    case sunday = "Воскресенье"
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+    
+    func localized() -> String {
+        switch self {
+        case .monday:
+            return NSLocalizedString("monday", comment: "Понедельник")
+        case .tuesday:
+            return NSLocalizedString("tuesday", comment: "Вторник")
+        case .wednesday:
+            return NSLocalizedString("wednesday", comment: "Среда")
+        case .thursday:
+            return NSLocalizedString("thursday", comment: "Четверг")
+        case .friday:
+            return NSLocalizedString("friday", comment: "Пятница")
+        case .saturday:
+            return NSLocalizedString("saturday", comment: "Суббота")
+        case .sunday:
+            return NSLocalizedString("sunday", comment: "Воскресенье")
+        }
+    }
 }
+
 

@@ -78,9 +78,15 @@ class BaseViewController: UIViewController {
         
         switch viewControllerType {
         case .trackers:
-            self.title = "Трекеры"
+            self.title = NSLocalizedString(
+                "trackers_tab_title",
+                comment: "Заголовок"
+            )
         case .statistics:
-            self.title = "Статистика"
+            self.title = NSLocalizedString(
+                "statistics_tab_title",
+                comment: "Заголовок"
+            )
         case .none:
             break
         }

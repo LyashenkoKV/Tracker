@@ -47,7 +47,10 @@ final class TrackersViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.placeholder = "Поиск"
+        searchController.searchBar.placeholder = NSLocalizedString(
+            "search_placeholder",
+            comment: "Плейсхолдер"
+        )
         searchController.searchBar.delegate = self
         searchController.delegate = self
         searchController.searchBar.barTintColor = .systemBlue
@@ -75,7 +78,10 @@ final class TrackersViewController: BaseViewController {
         super.init(
             type: .trackers,
             placeholderImageName: PHName.trackersPH.rawValue,
-            placeholderText: "Что будем отслеживать?"
+            placeholderText: NSLocalizedString(
+                "trackers_placeholder",
+                comment: "Плейсхолдер"
+            )
         )
     }
     
@@ -128,7 +134,6 @@ extension TrackersViewController {
         navigationController.hidesBarsOnSwipe = false
 
         navigationItem.searchController = searchController
-        navigationItem.searchController?.searchBar.placeholder = "Поиск"
         navigationItem.leftBarButtonItem = addNewTrackerButtonItem
         navigationItem.rightBarButtonItem = calendarButtonItem
         navigationItem.largeTitleDisplayMode = .always
@@ -136,7 +141,6 @@ extension TrackersViewController {
         return navigationController
     }
     
-    // Обработка нажатия на кнопку добавления трекера
     @objc private func leftBarButtonTapped() {
         let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackerVC)
@@ -147,7 +151,6 @@ extension TrackersViewController {
         updatePlaceholderView()
     }
 
-    // Обработка изменения даты в пикере
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
@@ -214,9 +217,15 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
     }
     
     private func updateCancelButtonTitle() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { // Тут есть проблема с обновлением тайтла кнопки
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             if let cancelButton = self.searchController.searchBar.value(forKey: "cancelButton") as? UIButton {
-                cancelButton.setTitle("Отменить", for: .normal)
+                cancelButton.setTitle(
+                    NSLocalizedString(
+                        "search_cancel",
+                        comment: "Кнопка отменить"
+                    ),
+                    for: .normal
+                )
             }
         }
     }
