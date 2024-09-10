@@ -107,7 +107,7 @@ extension ScheduleViewController {
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .schedule:
                 return configureScheduleCell(at: indexPath)
             default:

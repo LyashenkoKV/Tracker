@@ -72,7 +72,11 @@ final class TrackersViewController: BaseViewController {
     }()
     
     init() {
-        super.init(placeholderImageName: PHName.trackersPH.rawValue, placeholderText: "Что будем отслеживать?")
+        super.init(
+            type: .trackers,
+            placeholderImageName: PHName.trackersPH.rawValue,
+            placeholderText: "Что будем отслеживать?"
+        )
     }
     
     required init?(coder: NSCoder) {
@@ -86,20 +90,8 @@ final class TrackersViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Трекеры"
-        view.backgroundColor = .ypBackground
         updatePlaceholderView()
         addNotification()
-        
-        collectionView.register(
-            SectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: SectionHeaderView.reuseIdentifier
-        )
-        collectionView.register(
-            TrackersCardCell.self,
-            forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
-        )
         
         presenter?.filterTrackers(for: currentDate)
         presenter?.loadCompletedTrackers()

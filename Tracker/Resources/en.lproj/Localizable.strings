@@ -6,6 +6,3 @@
   
 */
 
-"day_one" = "%d day";
-"day_few" = "%d days";
-"day_many" = "%d days";

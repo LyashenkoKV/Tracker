@@ -17,7 +17,7 @@ class BaseTrackerViewController: UIViewController {
     // MARK: - Properties
     
     var dataProvider: TrackerDataProvider?
-    var viewControllerType: TrackerViewControllerType?
+    var trackerViewControllerType: TrackerViewControllerType?
     private var isFooterVisible = false
     var emojies: [String] = []
     var colors: [String] = []
@@ -52,7 +52,7 @@ class BaseTrackerViewController: UIViewController {
     
     // MARK: - Initializers
     init(type: TrackerViewControllerType) {
-        self.viewControllerType = type
+        self.trackerViewControllerType = type
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,7 +71,7 @@ class BaseTrackerViewController: UIViewController {
     // MARK: - Configuration Methods
     private func configureUI() {
         view.backgroundColor = .ypBackground
-        switch viewControllerType {
+        switch trackerViewControllerType {
         case .typeTrackers:
             self.title = "Создание трекера"
         case .category:
@@ -89,7 +89,7 @@ class BaseTrackerViewController: UIViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        let layoutConfigurator = LayoutConfiguratorFactory.create(for: viewControllerType)
+        let layoutConfigurator = LayoutConfiguratorFactory.create(for: trackerViewControllerType)
         layoutConfigurator.setupLayout(in: view, with: tableView)
     }
     
@@ -147,7 +147,7 @@ class BaseTrackerViewController: UIViewController {
     }
     
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
-        switch viewControllerType {
+        switch trackerViewControllerType {
         case .creatingTracker:
             self.title = "Создание привычки"
         default:
@@ -189,7 +189,7 @@ extension BaseTrackerViewController: TextViewCellDelegate {
 extension BaseTrackerViewController: UITableViewDataSource {
     // Устанавливаю количесво секций в каждом VC
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch viewControllerType {
+        switch trackerViewControllerType {
         case .typeTrackers:
             return 2
         case .creatingTracker:
@@ -205,7 +205,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
             return TableViewHelper.numberOfRows(
-                in: viewControllerType,
+                in: trackerViewControllerType,
                 section: section,
                 dataProvider: dataProvider,
                 isAddingCategory: isAddingCategory
@@ -217,7 +217,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             return TableViewHelper.cellForRow(
                 at: indexPath,
-                viewControllerType: viewControllerType,
+                viewControllerType: trackerViewControllerType,
                 tableView: tableView,
                 dataProvider: dataProvider,
                 isAddingCategory: isAddingCategory,
@@ -237,7 +237,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     ) {
         return TableViewHelper.didSelectRow(
             at: indexPath,
-            viewControllerType: viewControllerType,
+            viewControllerType: trackerViewControllerType,
             viewController: self
         )
     }
@@ -262,7 +262,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
             
             return ContextMenuHelper.contextMenuConfiguration(
                 at: indexPath,
-                viewControllerType: viewControllerType,
+                viewControllerType: trackerViewControllerType,
                 dataProvider: dataProvider,
                 tableView: tableView,
                 viewController: self
@@ -278,7 +278,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return nil
             }
             
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .creatingTracker:
                 return trackerSection.headerTitle
             default:
@@ -316,7 +316,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
                     equalTo: headerView.bottomAnchor)
             ])
             
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .creatingTracker:
                 headerLabel.text = trackerSection.headerTitle
             default:
@@ -332,7 +332,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 return 0
             }
             
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .creatingTracker:
                 switch trackerSection {
                 case .textView, .color, .emoji:
@@ -389,7 +389,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
                     equalTo: footerView.bottomAnchor)
             ])
             
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .creatingTracker:
                 footerLabel.text = trackerSection.footerTitle
             case .typeTrackers, .category, .schedule:
@@ -406,7 +406,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     ) -> CGFloat {
         guard let trackerSection = TrackerSection(rawValue: section) else { return 0 }
         
-        switch viewControllerType {
+        switch trackerViewControllerType {
         case .typeTrackers:
             return 16
         case .creatingTracker:
@@ -428,7 +428,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath) -> CGFloat {
-            switch viewControllerType {
+            switch trackerViewControllerType {
             case .creatingTracker:
                 switch indexPath.section {
                 case TrackerSection.textView.rawValue:

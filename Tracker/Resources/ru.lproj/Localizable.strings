@@ -5,7 +5,3 @@
   Created by Konstantin Lyashenko on 09.09.2024.
   
 */
-
-"day_one" = "%d день";
-"day_few" = "%d дня";
-"day_many" = "%d дней";

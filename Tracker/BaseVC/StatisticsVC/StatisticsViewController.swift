@@ -13,6 +13,7 @@ final class StatisticsViewController: BaseViewController {
     
     init() {
         super.init(
+            type: .statistics,
             placeholderImageName: PHName.statisticPH.rawValue,
             placeholderText: "Анализировать пока нечего"
         )
@@ -24,14 +25,7 @@ final class StatisticsViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypBackground
-        self.title = "Статистика"
         updatePlaceholderView()
-        
-        collectionView.register(
-            StatisticCell.self,
-            forCellWithReuseIdentifier: StatisticCell.reuseIdentifier
-        )
     }
     
     func updatePlaceholderView() {

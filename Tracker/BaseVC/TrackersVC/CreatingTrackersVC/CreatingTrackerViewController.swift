@@ -167,7 +167,7 @@ extension CreatingTrackerViewController {
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch viewControllerType {
+        switch trackerViewControllerType {
         case .creatingTracker:
             return configureCreatingTrackerCell(at: indexPath)
         default:

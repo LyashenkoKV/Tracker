@@ -12,6 +12,7 @@ class BaseViewController: UIViewController {
     // MARK: - Properties
     let placeholderImageName: String
     let placeholderText: String
+    var viewControllerType: ViewControllerType?
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -32,7 +33,11 @@ class BaseViewController: UIViewController {
     }()
     
     // MARK: - Initializer
-    init(placeholderImageName: String, placeholderText: String) {
+    init(type: ViewControllerType,
+        placeholderImageName: String,
+        placeholderText: String
+    ) {
+        self.viewControllerType = type
         self.placeholderImageName = placeholderImageName
         self.placeholderText = placeholderText
         super.init(nibName: nil, bundle: nil)
@@ -46,6 +51,8 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         updatePlaceholderView(hasData: false)
+        configureUI()
+        configureCell()
     }
     
     // MARK: - Setup UI
@@ -64,6 +71,41 @@ class BaseViewController: UIViewController {
             placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func configureUI() {
+        view.backgroundColor = .ypBackground
+        
+        switch viewControllerType {
+        case .trackers:
+            self.title = "Трекеры"
+        case .statistics:
+            self.title = "Статистика"
+        case .none:
+            break
+        }
+    }
+    
+    private func configureCell() {
+        switch viewControllerType {
+        case .trackers:
+            collectionView.register(
+                SectionHeaderView.self,
+                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                withReuseIdentifier: SectionHeaderView.reuseIdentifier
+            )
+            collectionView.register(
+                TrackersCardCell.self,
+                forCellWithReuseIdentifier: TrackersCardCell.reuseIdentifier
+            )
+        case .statistics:
+            collectionView.register(
+                StatisticCell.self,
+                forCellWithReuseIdentifier: StatisticCell.reuseIdentifier
+            )
+        case .none:
+            break
+        }
     }
     
     // MARK: - Update Placeholder
