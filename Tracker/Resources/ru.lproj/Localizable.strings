@@ -39,10 +39,42 @@
 "edit_category" = "Редактирование категории";
 "enter_cat_name" = "Введите название категории";
 "new_category" = "Новая категория";
+
 "category" = "Категория";
 "schedule" = "Расписание";
 
+// BaseTrackerViewController
+"creating_tracker" = "Создание трекера";
+"new_habit" = "Новая привычка";
+"creating_habit" = "Создание привычки";
 
+// CreatingTrackerViewController
+"every_day" = "Каждый день";
 
+"monday_short" = "Пн";
+"tuesday_short" = "Вт";
+"wednesday_short" = "Ср";
+"thursday_short" = "Чт";
+"friday_short" = "Пт";
+"saturday_short" = "Сб";
+"sunday_short" = "Вс";
+
+// TrackerSection
+"emoji_header" = "emoji";
+"color_header" = "Цвет";
+"limit_char" = "Ограничение 38 символов";
+
+// TextViewCell
+"textView_placeholder" = "Введите название трекера";
+
+// CreateButtonsViewCell
+"create_new_tracker" = "Создать";
+"cancel_create_new_tracker" = "Отменить";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "Привычки и события можно\nобъединить по смыслу";
 "add_category" = "Добавить категорию";
-"create_tracker_button" = "Создать трекер";
+"done_category_button" = "Готово";
+
+// StatisticsViewController
+"statistics_placeholder" = "Анализировать пока нечего";

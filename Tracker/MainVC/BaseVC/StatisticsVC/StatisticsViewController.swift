@@ -15,7 +15,10 @@ final class StatisticsViewController: BaseViewController {
         super.init(
             type: .statistics,
             placeholderImageName: PHName.statisticPH.rawValue,
-            placeholderText: "Анализировать пока нечего"
+            placeholderText: NSLocalizedString(
+                "statistics_placeholder",
+                comment: "Анализировать пока нечего"
+            )
         )
     }
     

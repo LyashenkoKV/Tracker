@@ -22,7 +22,10 @@ final class TextViewCell: UITableViewCell {
     
     weak var delegate: TextViewCellDelegate?
     
-    private let placeholderText = "Введите название трекера"
+    private let placeholderText = NSLocalizedString(
+        "textView_placeholder",
+        comment: "Введите название трекера"
+    )
     private var isVisiblePlaceholder = true
     
     private let textView: UITextView = {

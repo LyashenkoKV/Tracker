@@ -73,13 +73,25 @@ class BaseTrackerViewController: UIViewController {
         view.backgroundColor = .ypBackground
         switch trackerViewControllerType {
         case .typeTrackers:
-            self.title = "Создание трекера"
+            self.title = NSLocalizedString(
+                "creating_tracker",
+                comment: "Создание трекера"
+            )
         case .category:
-            self.title = "Категория"
+            self.title = NSLocalizedString(
+                "category",
+                comment: "Категория"
+            )
         case .creatingTracker:
-            self.title = "Новая привычка"
+            self.title = NSLocalizedString(
+                "new_habit",
+                comment: "Новая привычка"
+            )
         case .schedule:
-            self.title = "Расписание"
+            self.title = NSLocalizedString(
+                "schedule",
+                comment: "Расписание"
+            )
         case .none:
             break
         }
@@ -149,7 +161,10 @@ class BaseTrackerViewController: UIViewController {
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         switch trackerViewControllerType {
         case .creatingTracker:
-            self.title = "Создание привычки"
+            self.title = NSLocalizedString(
+                "creating_habit",
+                comment: "Создание привычки"
+            )
         default:
             break
         }

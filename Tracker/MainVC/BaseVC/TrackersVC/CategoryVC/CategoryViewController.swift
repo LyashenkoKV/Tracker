@@ -23,13 +23,19 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
             image: UIImage(named: PHName.trackersPH.rawValue),
-            text: "Привычки и события можно\nобъединить по смыслу"
+            text: NSLocalizedString(
+                "category_placeholder",
+                comment: "Плейсхолдер"
+            )
         )
         return placeholder
     }()
     
     private lazy var addCategoryButton = UIButton(
-        title: "Добавить категорию",
+        title: NSLocalizedString(
+            "add_category",
+            comment: "Добавить категорию"
+        ),
         backgroundColor: .ypBlack,
         titleColor: .ypBackground,
         cornerRadius: 20,
@@ -135,11 +141,17 @@ final class CategoryViewController: BaseTrackerViewController {
     // MARK: - Overriding updateUI
     override func updateUI() {
         super.updateUI()
-
+        
         addCategoryButton.isEnabled = !isAddingCategory
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
-        addCategoryButton.setTitle(isAddingCategory ? "Готово" : "Добавить категорию", for: .normal)
-
+        addCategoryButton.setTitle(isAddingCategory ? NSLocalizedString(
+            "done_category_button",
+            comment: "Готово"
+        ) : NSLocalizedString(
+            "add_category",
+            comment: "Добавить категорию"
+        ), for: .normal)
+        
         tableView.reloadData()
     }
     

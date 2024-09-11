@@ -145,6 +145,7 @@
 		24937A902C9044C400EDBAB7 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		24937A942C9068B500EDBAB7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		24937A962C906BDD00EDBAB7 /* ViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerType.swift; sourceTree = "<group>"; };
+		24937AA52C918CA400EDBAB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,7 +290,7 @@
 				24937A802C8F1B6800EDBAB7 /* Resources */,
 				2411D6922C6367470031C584 /* Global Extensions + Struct */,
 				24573DAA2C88446300D4D34B /* OnboardingVC */,
-				24937A8F2C90445300EDBAB7 /* BaseVC */,
+				243024EF2C52891500B0F1D3 /* MainVC */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -298,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				243024DF2C525B3500B0F1D3 /* MainViewController.swift */,
+				24937A8F2C90445300EDBAB7 /* BaseVC */,
 			);
 			path = MainVC;
 			sourceTree = "<group>";
@@ -393,7 +395,6 @@
 			children = (
 				24937A902C9044C400EDBAB7 /* BaseViewController.swift */,
 				24937A962C906BDD00EDBAB7 /* ViewControllerType.swift */,
-				243024EF2C52891500B0F1D3 /* MainVC */,
 				243024F02C52891C00B0F1D3 /* TrackersVC */,
 				243024F12C52892600B0F1D3 /* StatisticsVC */,
 			);
@@ -570,6 +571,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				24937A942C9068B500EDBAB7 /* ru */,
+				24937AA52C918CA400EDBAB7 /* en */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";

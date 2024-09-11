@@ -54,7 +54,23 @@ final class StatisticCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
+        gradientLayer.frame = containerView.bounds
+        borderLayer.frame = containerView.bounds
+        borderLayer.borderWidth = 2
+        borderLayer.cornerRadius = 8
+    }
+    
+    private func setupUI() {
         contentView.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -77,19 +93,6 @@ final class StatisticCell: UICollectionViewCell {
         
         containerView.layer.insertSublayer(gradientLayer, at: 0)
         containerView.layer.addSublayer(borderLayer)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        gradientLayer.frame = containerView.bounds
-        borderLayer.frame = containerView.bounds
-        borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 8
     }
     
     func configure(with value: String, title: String, colors: [UIColor]) {

@@ -8,8 +8,8 @@
 
 // Onboarding
 "onboarding_fir_page" = "Track only\n what you want";
-"onboarding_sec_page" = "Even if it's not\n liters of water or yoga";
-"onboarding_button" = "What a technology!";
+"onboarding_sec_page" = "Even if it's\n not liters of water and yoga";
+"onboarding_button" = "Now that's technology!";
 
 // BaseVC & MainVC (TabBar)
 "trackers_tab_title" = "Trackers";
@@ -26,5 +26,56 @@
 
 // TrackersVC
 "search_placeholder" = "Search";
-"add_category" = "Add category";
-"create_tracker_button" = "Create tracker";
+"trackers_placeholder" = "What shall we track?";
+"search_cancel" = "Cancel";
+
+// TrackerVCDelegate & ContextMenuHelper
+"delete" = "Delete";
+"edit" = "Edit";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "Habit";
+"irregular_event" = "Irregular Event";
+"edit_category" = "Edit Category";
+"enter_cat_name" = "Enter Category Name";
+"new_category" = "New Category";
+
+"category" = "Category";
+"schedule" = "Schedule";
+
+// BaseTrackerViewController
+"creating_tracker" = "Creating Tracker";
+"new_habit" = "New Habit";
+"creating_habit" = "Creating Habit";
+
+// CreatingTrackerViewController
+"every_day" = "Every Day";
+
+// DayOfTheWeek (Shortened)
+"monday_short" = "Mon";
+"tuesday_short" = "Tue";
+"wednesday_short" = "Wed";
+"thursday_short" = "Thu";
+"friday_short" = "Fri";
+"saturday_short" = "Sat";
+"sunday_short" = "Sun";
+
+// TrackerSection
+"emoji_header" = "Emoji";
+"color_header" = "Color";
+"limit_char" = "Limit of 38 characters";
+
+// TextViewCell
+"textView_placeholder" = "Enter tracker name";
+
+// CreateButtonsViewCell
+"create_new_tracker" = "Create";
+"cancel_create_new_tracker" = "Cancel";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "Habits and events can be\n grouped together by meaning";
+"add_category" = "Add Category";
+"done_category_button" = "Done";
+
+// StatisticsViewController
+"statistics_placeholder" = "Nothing to analyze yet";

@@ -109,7 +109,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             return
         }
         
-        let categoryTitle = selectedCategory?.title ?? "Новая категория"
+        let categoryTitle = selectedCategory?.title ?? ""
         let scheduleStrings = selectedDays.map { String($0.rawValue) }
 
         let tracker = Tracker(
@@ -246,7 +246,10 @@ extension CreatingTrackerViewController {
         let selectedSet = Set(selectedDays)
         
         if selectedSet == fullWeek {
-            return "Каждый день"
+            return NSLocalizedString(
+                "every_day",
+                comment: "Каждый день"
+            )
         }
         
         let sortedDays = selectedDays.sorted {
@@ -255,13 +258,20 @@ extension CreatingTrackerViewController {
         
         let dayShortcuts = sortedDays.map { day in
             switch day {
-            case .monday: return "Пн"
-            case .tuesday: return "Вт"
-            case .wednesday: return "Ср"
-            case .thursday: return "Чт"
-            case .friday: return "Пт"
-            case .saturday: return "Сб"
-            case .sunday: return "Вс"
+            case .monday:
+                return NSLocalizedString("monday_short", comment: "Понедельник сокращённо")
+            case .tuesday:
+                return NSLocalizedString("tuesday_short", comment: "Вторник сокращённо")
+            case .wednesday:
+                return NSLocalizedString("wednesday_short", comment: "Среда сокращённо")
+            case .thursday:
+                return NSLocalizedString("thursday_short", comment: "Четверг сокращённо")
+            case .friday:
+                return NSLocalizedString("friday_short", comment: "Пятница сокращённо")
+            case .saturday:
+                return NSLocalizedString("saturday_short", comment: "Суббота сокращённо")
+            case .sunday:
+                return NSLocalizedString("sunday_short", comment: "Воскресенье сокращённо")
             }
         }
         

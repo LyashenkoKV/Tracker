@@ -5,7 +5,7 @@
 //  Created by Konstantin Lyashenko on 30.07.2024.
 //
 
-import UIKit
+import Foundation
 
 // MARK: - Protocol
 protocol TrackersPresenterProtocol {

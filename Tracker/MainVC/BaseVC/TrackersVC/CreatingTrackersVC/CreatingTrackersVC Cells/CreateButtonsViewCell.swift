@@ -16,7 +16,10 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     private lazy var createButton: UIButton = {
         let button = addButton(
-            with: "Создать",
+            with: NSLocalizedString(
+                "create_new_tracker",
+                comment: "Создать"
+            ),
             backgroundColor: .ypGray,
             titleColor: .white,
             action: #selector(createButtonAction)
@@ -26,7 +29,10 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     private lazy var cancelButton: UIButton = {
         let button = addButton(
-            with: "Отменить",
+            with: NSLocalizedString(
+                "cancel_create_new_tracker",
+                comment: "Отменить"
+            ),
             backgroundColor: .clear,
             titleColor: .ypRed,
             action: #selector(cancelButtonAction)
