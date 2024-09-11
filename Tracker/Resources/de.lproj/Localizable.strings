@@ -1,0 +1,81 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Konstantin Lyashenko on 09.09.2024.
+  
+*/
+
+// Onboarding
+"onboarding_fir_page" = "Verfolgen Sie nur\n was Sie wollen";
+"onboarding_sec_page" = "Auch wenn es keine\n Liter Wasser und Yoga sind";
+"onboarding_button" = "Das ist Technologie!";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "Tracker";
+"statistics_tab_title" = "Statistiken";
+
+// DayOfTheWeek
+"monday" = "Montag";
+"tuesday" = "Dienstag";
+"wednesday" = "Mittwoch";
+"thursday" = "Donnerstag";
+"friday" = "Freitag";
+"saturday" = "Samstag";
+"sunday" = "Sonntag";
+
+// TrackersVC
+"search_placeholder" = "Suchen";
+"trackers_placeholder" = "Was sollen wir verfolgen?";
+"search_cancel" = "Abbrechen";
+
+// TrackerVCDelegate & ContextMenuHelper
+"delete" = "Löschen";
+"edit" = "Bearbeiten";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "Gewohnheit";
+"irregular_event" = "Unregelmäßiges Ereignis";
+"edit_category" = "Kategorie bearbeiten";
+"enter_cat_name" = "Kategorienamen eingeben";
+"new_category" = "Neue Kategorie";
+
+"category" = "Kategorie";
+"schedule" = "Zeitplan";
+
+// BaseTrackerViewController
+"creating_tracker" = "Tracker erstellen";
+"new_habit" = "Neue Gewohnheit";
+"creating_habit" = "Gewohnheit erstellen";
+
+// CreatingTrackerViewController
+"every_day" = "Jeden Tag";
+
+// DayOfTheWeek (Shortened)
+"monday_short" = "Mo";
+"tuesday_short" = "Di";
+"wednesday_short" = "Mi";
+"thursday_short" = "Do";
+"friday_short" = "Fr";
+"saturday_short" = "Sa";
+"sunday_short" = "So";
+
+// TrackerSection
+"emoji_header" = "Emoji";
+"color_header" = "Farbe";
+"limit_char" = "Begrenzung auf 38 Zeichen";
+
+// TextViewCell
+"textView_placeholder" = "Geben Sie den Tracker-Namen ein";
+
+// CreateButtonsViewCell
+"create_new_tracker" = "Erstellen";
+"cancel_create_new_tracker" = "Abbrechen";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "Gewohnheiten und Ereignisse können\n nach Bedeutung gruppiert werden";
+"add_category" = "Kategorie hinzufügen";
+"done_category_button" = "Fertig";
+
+// StatisticsViewController
+"statistics_placeholder" = "Noch nichts zu analysieren";

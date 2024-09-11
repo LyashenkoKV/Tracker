@@ -1,0 +1,81 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Konstantin Lyashenko on 09.09.2024.
+  
+*/
+
+// Onboarding
+"onboarding_fir_page" = "追跡したいことだけ\nを記録";
+"onboarding_sec_page" = "水のリットルやヨガで\nなくても";
+"onboarding_button" = "これが技術だ！";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "トラッカー";
+"statistics_tab_title" = "統計";
+
+// DayOfTheWeek
+"monday" = "月曜日";
+"tuesday" = "火曜日";
+"wednesday" = "水曜日";
+"thursday" = "木曜日";
+"friday" = "金曜日";
+"saturday" = "土曜日";
+"sunday" = "日曜日";
+
+// TrackersVC
+"search_placeholder" = "検索";
+"trackers_placeholder" = "何を追跡しますか？";
+"search_cancel" = "キャンセル";
+
+// TrackerVCDelegate & ContextMenuHelper
+"delete" = "削除";
+"edit" = "編集";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "習慣";
+"irregular_event" = "不規則なイベント";
+"edit_category" = "カテゴリーを編集";
+"enter_cat_name" = "カテゴリー名を入力";
+"new_category" = "新しいカテゴリー";
+
+"category" = "カテゴリー";
+"schedule" = "スケジュール";
+
+// BaseTrackerViewController
+"creating_tracker" = "トラッカーを作成";
+"new_habit" = "新しい習慣";
+"creating_habit" = "習慣を作成";
+
+// CreatingTrackerViewController
+"every_day" = "毎日";
+
+// DayOfTheWeek (Shortened)
+"monday_short" = "月";
+"tuesday_short" = "火";
+"wednesday_short" = "水";
+"thursday_short" = "木";
+"friday_short" = "金";
+"saturday_short" = "土";
+"sunday_short" = "日";
+
+// TrackerSection
+"emoji_header" = "絵文字";
+"color_header" = "色";
+"limit_char" = "38文字の制限";
+
+// TextViewCell
+"textView_placeholder" = "トラッカーの名前を入力";
+
+// CreateButtonsViewCell
+"create_new_tracker" = "作成";
+"cancel_create_new_tracker" = "キャンセル";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "習慣やイベントは\n意味ごとにグループ化できます";
+"add_category" = "カテゴリーを追加";
+"done_category_button" = "完了";
+
+// StatisticsViewController
+"statistics_placeholder" = "まだ分析するものがありません";

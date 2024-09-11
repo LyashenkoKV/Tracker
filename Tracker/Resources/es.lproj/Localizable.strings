@@ -1,0 +1,81 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Konstantin Lyashenko on 09.09.2024.
+  
+*/
+
+// Onboarding
+"onboarding_fir_page" = "Sigue solo\n lo que quieras";
+"onboarding_sec_page" = "Aunque no sean\n litros de agua y yoga";
+"onboarding_button" = "¡Eso es tecnología!";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "Rastreadores";
+"statistics_tab_title" = "Estadísticas";
+
+// DayOfTheWeek
+"monday" = "Lunes";
+"tuesday" = "Martes";
+"wednesday" = "Miércoles";
+"thursday" = "Jueves";
+"friday" = "Viernes";
+"saturday" = "Sábado";
+"sunday" = "Domingo";
+
+// TrackersVC
+"search_placeholder" = "Buscar";
+"trackers_placeholder" = "¿Qué vamos a rastrear?";
+"search_cancel" = "Cancelar";
+
+// TrackerVCDelegate & ContextMenuHelper
+"delete" = "Eliminar";
+"edit" = "Editar";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "Hábito";
+"irregular_event" = "Evento irregular";
+"edit_category" = "Editar categoría";
+"enter_cat_name" = "Introduce el nombre de la categoría";
+"new_category" = "Nueva categoría";
+
+"category" = "Categoría";
+"schedule" = "Horario";
+
+// BaseTrackerViewController
+"creating_tracker" = "Creando rastreador";
+"new_habit" = "Nuevo hábito";
+"creating_habit" = "Creando hábito";
+
+// CreatingTrackerViewController
+"every_day" = "Todos los días";
+
+// DayOfTheWeek (Shortened)
+"monday_short" = "Lun";
+"tuesday_short" = "Mar";
+"wednesday_short" = "Mié";
+"thursday_short" = "Jue";
+"friday_short" = "Vie";
+"saturday_short" = "Sáb";
+"sunday_short" = "Dom";
+
+// TrackerSection
+"emoji_header" = "Emoji";
+"color_header" = "Color";
+"limit_char" = "Límite de 38 caracteres";
+
+// TextViewCell
+"textView_placeholder" = "Introduce el nombre del rastreador";
+
+// CreateButtonsViewCell
+"create_new_tracker" = "Crear";
+"cancel_create_new_tracker" = "Cancelar";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "Los hábitos y eventos se pueden\n agrupar por significado";
+"add_category" = "Agregar categoría";
+"done_category_button" = "Hecho";
+
+// StatisticsViewController
+"statistics_placeholder" = "Aún no hay nada que analizar";
