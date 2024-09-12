@@ -176,7 +176,10 @@ final class TrackersCardCell: UICollectionViewCell {
     }
     
     private func getLocalizedDayString(for countDays: Int) -> String {
-        let localizedFormat = NSLocalizedString("day_count", comment: "")
+        let localizedFormat = NSLocalizedString(
+            "day_count",
+            comment: ""
+        )
         return String.localizedStringWithFormat(localizedFormat, countDays)
     }
 }

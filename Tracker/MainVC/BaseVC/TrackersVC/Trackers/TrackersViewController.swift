@@ -35,10 +35,18 @@ final class TrackersViewController: BaseViewController {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale.current
+        picker.backgroundColor = .ypLightGray
+        picker.overrideUserInterfaceStyle = .light
+        picker.layer.cornerRadius = 10
+        picker.layer.masksToBounds = true
         picker.tintColor = .systemBlue
         picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        picker.addTarget(
+            self,
+            action: #selector(datePickerValueChanged),
+            for: .valueChanged
+        )
         return picker
     }()
     
@@ -49,7 +57,7 @@ final class TrackersViewController: BaseViewController {
         searchController.searchBar.sizeToFit()
         searchController.searchBar.placeholder = NSLocalizedString(
             "search_placeholder",
-            comment: "Плейсхолдер"
+            comment: "Плейсхолдер поиска"
         )
         searchController.searchBar.delegate = self
         searchController.delegate = self
@@ -63,7 +71,11 @@ final class TrackersViewController: BaseViewController {
         let button = UIButton()
         button.tintColor = .ypBlack
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.addTarget(self, action: #selector(leftBarButtonTapped), for: .touchUpInside)
+        button.addTarget(
+            self,
+            action: #selector(leftBarButtonTapped),
+            for: .touchUpInside
+        )
         let barButtonItem = UIBarButtonItem(customView: button)
         
         return barButtonItem
@@ -90,7 +102,11 @@ final class TrackersViewController: BaseViewController {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .trackerCreated, object: nil)
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .trackerCreated,
+            object: nil
+        )
     }
     
     // MARK: - ViewDidLoad
@@ -132,7 +148,8 @@ extension TrackersViewController {
         let navigationController = UINavigationController(rootViewController: self)
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.hidesBarsOnSwipe = false
-
+        
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
         navigationItem.leftBarButtonItem = addNewTrackerButtonItem
         navigationItem.rightBarButtonItem = calendarButtonItem

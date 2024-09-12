@@ -11,6 +11,7 @@ final class MainViewController: UIViewController {
     
     private let trackersViewController = TrackersViewController()
     private let statisticViewController = StatisticsViewController()
+    private var borderView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +37,7 @@ final class MainViewController: UIViewController {
     private func createTabBarController() -> UITabBarController {
         let trackersNavigationController = trackersViewController.setupNavigationBar()
         let statisticsNavigationController = statisticViewController.setupNavigationBar()
-        
+
         let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
@@ -45,9 +46,9 @@ final class MainViewController: UIViewController {
             categoryStore: categoryStore,
             recordStore: recordStore
         )
-        
+
         trackersViewController.configure(trackersPresenter)
-        
+
         trackersViewController.tabBarItem = UITabBarItem(
             title: NSLocalizedString(
                 "trackers_tab_title",
@@ -64,19 +65,43 @@ final class MainViewController: UIViewController {
             image: UIImage(systemName: "hare.fill"),
             tag: 1
         )
-        
+
         let tabBarController = UITabBarController()
-        
         tabBarController.viewControllers = [
             trackersNavigationController,
             statisticsNavigationController,
         ]
-        
+
+        setupBorderView(for: tabBarController)
         tabBarController.tabBar.tintColor = .systemBlue
-        tabBarController.tabBar.layer.borderColor = UIColor.ypGrayDark.cgColor
-        tabBarController.tabBar.layer.borderWidth = 1
-        tabBarController.tabBar.clipsToBounds = true
         
         return tabBarController
+    }
+    
+    private func setupBorderView(for tabBarController: UITabBarController) {
+        borderView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: tabBarController.tabBar.frame.width,
+            height: 1
+        )
+        borderView.backgroundColor = UIColor(named: "YPGrayDark")
+        tabBarController.tabBar.addSubview(borderView)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            borderView.backgroundColor = UIColor(named: "YPGrayDark")
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let tabBar = tabBarController?.tabBar {
+            borderView.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 1)
+        }
     }
 }
