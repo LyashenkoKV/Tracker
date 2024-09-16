@@ -7,15 +7,9 @@
 
 import UIKit
 
-// MARK: - TrackerDataProvider
-protocol TrackerDataProvider {
-    var numberOfItems: Int { get }
-    func item(at index: Int) -> String
-}
-
 class BaseTrackerViewController: UIViewController {
-    // MARK: - Properties
     
+    // MARK: - Properties
     var dataProvider: TrackerDataProvider?
     var trackerViewControllerType: TrackerViewControllerType?
     private var isFooterVisible = false
@@ -178,6 +172,8 @@ class BaseTrackerViewController: UIViewController {
         dismiss(animated: true)
     }
 }
+
+// MARK: - Extensions
 
 // MARK: - ScheduleSelectionDelegate
 extension BaseTrackerViewController: ScheduleSelectionDelegate {}

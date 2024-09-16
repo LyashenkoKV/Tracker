@@ -72,6 +72,7 @@
 		24937A912C9044C400EDBAB7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A902C9044C400EDBAB7 /* BaseViewController.swift */; };
 		24937A952C9068B500EDBAB7 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 24937A932C9068B500EDBAB7 /* Localizable.stringsdict */; };
 		24937A972C906BDD00EDBAB7 /* ViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A962C906BDD00EDBAB7 /* ViewControllerType.swift */; };
+		24937B072C981EEA00EDBAB7 /* TrackerDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -164,6 +165,7 @@
 		24937AB52C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		24937AB62C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		24937AB72C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -376,6 +378,7 @@
 				24937A5F2C89F64900EDBAB7 /* TableViewHelper.swift */,
 				24937A672C8AEA7F00EDBAB7 /* ConfigureTableViewCellsHelper.swift */,
 				24937A612C89F6D100EDBAB7 /* ContextMenuHelper.swift */,
+				24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */,
 				24937A632C89F70F00EDBAB7 /* EmojiDataProvider.swift */,
 				24937A652C89F74900EDBAB7 /* ColorDataProvider.swift */,
 				24937A692C8B042A00EDBAB7 /* HandleActionsHelper.swift */,
@@ -531,6 +534,7 @@
 				2411D6942C63676E0031C584 /* UIColor + Extensions.swift in Sources */,
 				2411D6AC2C69456B0031C584 /* CategoryBaseCell.swift in Sources */,
 				2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */,
+				24937B072C981EEA00EDBAB7 /* TrackerDataProvider.swift in Sources */,
 				24937A642C89F70F00EDBAB7 /* EmojiDataProvider.swift in Sources */,
 				2411D6AA2C6943300031C584 /* ScheduleViewController.swift in Sources */,
 				2411D6712C60CAD00031C584 /* GeometricParams.swift in Sources */,

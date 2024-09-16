@@ -9,6 +9,7 @@ import UIKit
 // MARK: - Protocol
 protocol TrackersViewControllerProtocol: AnyObject {
     var categories: [TrackerCategory] { get set }
+    var visibleCategories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
     var currentDate: Date { get set }
     func updatePlaceholderView()
@@ -20,6 +21,7 @@ final class TrackersViewController: BaseViewController {
     
     var presenter: TrackersPresenterProtocol?
     var categories: [TrackerCategory] = []
+    var visibleCategories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
     
@@ -115,7 +117,7 @@ final class TrackersViewController: BaseViewController {
         updatePlaceholderView()
         addNotification()
         
-        presenter?.filterTrackers(for: currentDate)
+        presenter?.filterTrackers(for: currentDate, searchText: nil)
         presenter?.loadCompletedTrackers()
     }
     
@@ -171,7 +173,7 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
-        presenter?.filterTrackers(for: selectedDate)
+        presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "")
 
         let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
@@ -213,7 +215,7 @@ extension TrackersViewController {
             )
         }
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
-        presenter?.filterTrackers(for: currentDate)
+        presenter?.filterTrackers(for: currentDate, searchText: nil)
     }
 }
 
@@ -227,6 +229,14 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 
 // MARK: - UISearchControllerDelegate, UISearchBarDelegate
 extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter?.filterTrackers(for: currentDate, searchText: searchText)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        presenter?.filterTrackers(for: currentDate, searchText: nil)
+    }
+    
     func willPresentSearchController(_ searchController: UISearchController) {
         DispatchQueue.main.async {
             self.updateCancelButtonTitle()

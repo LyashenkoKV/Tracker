@@ -17,7 +17,7 @@ protocol TrackersPresenterProtocol {
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date)
     func isDateValidForCompletion(date: Date) -> Bool
-    func filterTrackers(for date: Date)
+    func filterTrackers(for date: Date, searchText: String?)
     func loadTrackers()
     func loadCompletedTrackers()
     func deleteTracker(at indexPath: IndexPath)
@@ -122,7 +122,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         return date <= Date()
     }
     
-    func filterTrackers(for date: Date) {
+    func filterTrackers(for date: Date, searchText: String? = nil) {
         let allTrackers = trackerStore.fetchTrackers()
         
         let calendar = Calendar.current
@@ -130,7 +130,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         let adjustedIndex = (weekdayIndex + 5) % 7
         let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
-        let filteredTrackers = allTrackers.filter { trackerCoreData in
+        var filteredTrackers = allTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
             
             if tracker.isRegularEvent {
@@ -140,14 +140,25 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             }
         }
         
-        view?.categories = categorizeTrackers(filteredTrackers)
+        if let searchText = searchText?.lowercased(), !searchText.isEmpty {
+            filteredTrackers = filteredTrackers.filter { tracker in
+                return tracker.name?.lowercased().contains(searchText) ?? false
+            }
+        }
+        
+        let categorizedTrackers = categorizeTrackers(filteredTrackers)
+        view?.categories = categorizedTrackers
+        view?.visibleCategories = categorizedTrackers
+        
         view?.reloadData()
     }
     
     func loadTrackers() {
         let loadedTrackers = trackerStore.fetchTrackers()
         let categorizedTrackers = categorizeTrackers(loadedTrackers)
+        
         view?.categories = categorizedTrackers
+        view?.visibleCategories = categorizedTrackers
         
         DispatchQueue.main.async {
             self.view?.reloadData()

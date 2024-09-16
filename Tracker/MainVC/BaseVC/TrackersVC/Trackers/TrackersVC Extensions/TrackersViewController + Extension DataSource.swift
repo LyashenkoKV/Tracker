@@ -10,14 +10,14 @@ import UIKit
 // MARK: - UICollectionViewDataSource
 extension TrackersViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return visibleCategories.count
     }
     
     override func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return categories[section].trackers.count
+        return visibleCategories[section].trackers.count
     }
     
     override func collectionView(
@@ -33,7 +33,7 @@ extension TrackersViewController {
             return UICollectionViewCell()
         }
         
-        let trackers = categories[indexPath.section].trackers
+        let trackers = visibleCategories[indexPath.section].trackers
         guard indexPath.row < trackers.count else {
             Logger.shared.log(
                 .error,
@@ -93,7 +93,7 @@ extension TrackersViewController {
             withReuseIdentifier: SectionHeaderView.reuseIdentifier,
             for: indexPath) as? SectionHeaderView else { return UICollectionReusableView() }
         
-        let title = categories[indexPath.section].title
+        let title = visibleCategories[indexPath.section].title
         header.addTitle(title)
         
         return header
