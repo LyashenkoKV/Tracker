@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Protocol
-protocol TrackersPresenterProtocol {
+protocol TrackersPresenterProtocol: AnyObject {
     var view: TrackersViewControllerProtocol? { get set }
     var dateFormatter: DateFormatter { get }
     func addTracker(_ tracker: Tracker, categoryTitle: String)
@@ -22,6 +22,7 @@ protocol TrackersPresenterProtocol {
     func loadCompletedTrackers()
     func deleteTracker(at indexPath: IndexPath)
     func editTracker(at indexPath: IndexPath)
+    func togglePin(for tracker: Tracker)
 }
 
 // MARK: - Object
@@ -64,7 +65,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     
     func trackerCompletedMark(_ trackerId: UUID, date: String) {
         guard let view else { return }
-
+        
         if isTrackerCompleted(trackerId, date: date) {
             return
         }
@@ -83,11 +84,11 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             )
         }
     }
-
+    
     func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
         do {
             try recordStore.removeRecord(for: trackerId, on: date)
-
+            
             self.loadCompletedTrackers()
             view?.reloadData()
         } catch {
@@ -106,13 +107,13 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date) {
         let currentDateString = dateFormatter.string(from: date)
-
+        
         if isCompleted {
             trackerCompletedUnmark(tracker.id, date: currentDateString)
         } else {
             trackerCompletedMark(tracker.id, date: currentDateString)
         }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.view?.reloadData()
         }
@@ -134,23 +135,45 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             let tracker = Tracker(from: trackerCoreData)
             
             if tracker.isRegularEvent {
-                return tracker.schedule.contains(selectedDayString)
+                let matchesSchedule = tracker.schedule.contains(selectedDayString)
+                if let searchText = searchText?.lowercased(), !searchText.isEmpty {
+                    return matchesSchedule && (tracker.name.lowercased().contains(searchText))
+                } else {
+                    return matchesSchedule
+                }
             } else {
-                return calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
+                let isToday = calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
+                if let searchText = searchText?.lowercased(), !searchText.isEmpty {
+                    return isToday && (tracker.name.lowercased().contains(searchText))
+                } else {
+                    return isToday
+                }
             }
         }
         
-        if let searchText = searchText?.lowercased(), !searchText.isEmpty {
-            filteredTrackers = filteredTrackers.filter { tracker in
-                return tracker.name?.lowercased().contains(searchText) ?? false
-            }
-        }
+        filteredTrackers.sort { $0.isPinned && !$1.isPinned }
         
         let categorizedTrackers = categorizeTrackers(filteredTrackers)
         view?.categories = categorizedTrackers
         view?.visibleCategories = categorizedTrackers
-        
         view?.reloadData()
+    }
+    
+    func togglePin(for tracker: Tracker) {
+        guard let view else { return }
+        var updatedTracker = tracker
+        updatedTracker.isPinned.toggle()
+        
+        do {
+            try trackerStore.updateTracker(updatedTracker)
+            filterTrackers(for: view.currentDate, searchText: nil)
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при обновлении трекера \(tracker.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
+        }
     }
     
     func loadTrackers() {

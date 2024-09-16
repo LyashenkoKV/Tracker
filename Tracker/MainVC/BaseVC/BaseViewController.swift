@@ -80,12 +80,12 @@ class BaseViewController: UIViewController {
         case .trackers:
             self.title = NSLocalizedString(
                 "trackers_tab_title",
-                comment: "Заголовок"
+                comment: "Заголовок трекера"
             )
         case .statistics:
             self.title = NSLocalizedString(
                 "statistics_tab_title",
-                comment: "Заголовок"
+                comment: "Заголовок статистики"
             )
         case .none:
             break

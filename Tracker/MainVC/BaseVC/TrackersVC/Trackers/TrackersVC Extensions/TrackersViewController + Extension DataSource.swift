@@ -67,8 +67,13 @@ extension TrackersViewController {
             isRegularEvent: isRegularEvent
         )
         
+        cell.longPressHandler = { [weak self] in
+            Logger.shared.log(.info, message: "Long press handler invoked for tracker: \(tracker.name)")
+            self?.showContextMenu(for: tracker, at: indexPath)
+        }
+        
         cell.selectButtonTappedHandler = { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
 
             if isDateValidForCompletion {
                 self.presenter?.handleTrackerSelection(

@@ -73,6 +73,7 @@
 		24937A952C9068B500EDBAB7 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 24937A932C9068B500EDBAB7 /* Localizable.stringsdict */; };
 		24937A972C906BDD00EDBAB7 /* ViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A962C906BDD00EDBAB7 /* ViewControllerType.swift */; };
 		24937B072C981EEA00EDBAB7 /* TrackerDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */; };
+		24937B0C2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937B0B2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -166,6 +167,7 @@
 		24937AB62C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		24937AB72C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataProvider.swift; sourceTree = "<group>"; };
+		24937B0B2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersContextMenuHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -403,6 +405,7 @@
 		24937A8E2C903AE400EDBAB7 /* Trackers */ = {
 			isa = PBXGroup;
 			children = (
+				24937B0A2C98715800EDBAB7 /* Helpers */,
 				243024F22C52894900B0F1D3 /* TrackersViewController.swift */,
 				247E50552C58EEB300630037 /* TrackersPresenter.swift */,
 				2411D66F2C5CD3A30031C584 /* TrackersVC Extensions */,
@@ -428,6 +431,14 @@
 				24937A882C902E1600EDBAB7 /* StatisticsData.swift */,
 			);
 			path = "Statistics Models";
+			sourceTree = "<group>";
+		};
+		24937B0A2C98715800EDBAB7 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				24937B0B2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -533,6 +544,7 @@
 				243024F52C5289B500B0F1D3 /* StatisticsViewController.swift in Sources */,
 				2411D6942C63676E0031C584 /* UIColor + Extensions.swift in Sources */,
 				2411D6AC2C69456B0031C584 /* CategoryBaseCell.swift in Sources */,
+				24937B0C2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift in Sources */,
 				2476B0A72C6A87C800ADAD1B /* UIView + Extension.swift in Sources */,
 				24937B072C981EEA00EDBAB7 /* TrackerDataProvider.swift in Sources */,
 				24937A642C89F70F00EDBAB7 /* EmojiDataProvider.swift in Sources */,

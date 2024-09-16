@@ -10,7 +10,6 @@ import Foundation
 final class CategoryViewModel: TrackerDataProvider {
     private let trackerCategoryStore: TrackerCategoryStore
     
-    // Свойства для обновлений через биндинги
     var categories: [TrackerCategory] = [] {
         didSet {
             onCategoriesUpdated?(categories)
@@ -24,19 +23,16 @@ final class CategoryViewModel: TrackerDataProvider {
     init(trackerCategoryStore: TrackerCategoryStore) {
         self.trackerCategoryStore = trackerCategoryStore
         
-        // Подписываемся на изменения данных в хранилище
         self.trackerCategoryStore.didUpdateData = { [weak self] in
             self?.loadCategories()
         }
     }
     
-    // Метод для загрузки категорий
     func loadCategories() {
         categories = trackerCategoryStore.fetchCategories()
         updatePlaceholder()
     }
     
-    // Добавление новой категории
     func addCategory(named name: String) {
         guard !name.isEmpty else {
             return
@@ -53,7 +49,6 @@ final class CategoryViewModel: TrackerDataProvider {
         }
     }
     
-    // Удаление категории
     func deleteCategory(at index: Int) {
         guard categories.indices.contains(index) else {
             return
@@ -75,12 +70,10 @@ final class CategoryViewModel: TrackerDataProvider {
         }
     }
     
-    // Обновление состояния кнопки добавления категории
     func updateAddCategoryButtonState(isEnabled: Bool) {
         onAddCategoryButtonStateUpdated?(isEnabled)
     }
     
-    // Обновление состояния плейсхолдера
     func updatePlaceholder() {
         let isPlaceholderVisible = categories.isEmpty
         onPlaceholderStateUpdated?(isPlaceholderVisible)

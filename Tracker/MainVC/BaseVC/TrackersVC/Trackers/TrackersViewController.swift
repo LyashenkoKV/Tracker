@@ -222,7 +222,8 @@ extension TrackersViewController {
                 schedule: [selectedDayString],
                 categoryTitle: categoryTitle,
                 isRegularEvent: tracker.isRegularEvent,
-                creationDate: creationDate
+                creationDate: creationDate, 
+                isPinned: false
             )
         }
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
@@ -270,5 +271,17 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
                 )
             }
         }
+    }
+}
+
+extension TrackersViewController {
+    func showContextMenu(for tracker: Tracker, at indexPath: IndexPath) {
+        let contextMenuHelper = TrackersContextMenuHelper(
+            tracker: tracker,
+            indexPath: indexPath,
+            presenter: presenter,
+            viewController: self
+        )
+        _ = contextMenuHelper.createContextMenu()
     }
 }

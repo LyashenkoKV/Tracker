@@ -120,7 +120,8 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             schedule: scheduleStrings,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
-            creationDate: Date()
+            creationDate: Date(), 
+            isPinned: false
         )
         
         let userInfo: [String: Any] = [

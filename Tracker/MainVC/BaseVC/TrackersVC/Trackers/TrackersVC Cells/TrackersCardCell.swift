@@ -8,9 +8,11 @@
 import UIKit
 
 final class TrackersCardCell: UICollectionViewCell {
+    
     static let reuseIdentifier = "TrackersCell"
     
     var selectButtonTappedHandler: (() -> Void)?
+    var longPressHandler: (() -> Void)?
     
     private lazy var mainVerticalStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
@@ -35,6 +37,13 @@ final class TrackersCardCell: UICollectionViewCell {
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = UIEdgeInsets(top: 12, left: 12, bottom: 10, right: 12)
         stack.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        
+        let longPressGesture = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(handleLongPress)
+        )
+        stack.addGestureRecognizer(longPressGesture)
+        
         return stack
     }()
     
@@ -142,6 +151,10 @@ final class TrackersCardCell: UICollectionViewCell {
     
     @objc private func completeButtonTapped() {
         selectButtonTappedHandler?()
+    }
+    
+    @objc private func handleLongPress() {
+        longPressHandler?()
     }
     
     func configure(with tracker: Tracker,

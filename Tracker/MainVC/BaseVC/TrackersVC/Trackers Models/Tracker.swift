@@ -16,6 +16,7 @@ struct Tracker: Codable, Hashable {
     let categoryTitle: String
     let isRegularEvent: Bool
     let creationDate: Date?
+    var isPinned: Bool
 }
 
 extension Tracker {
@@ -27,8 +28,8 @@ extension Tracker {
         self.categoryTitle = coreData.categoryTitle ?? ""
         self.isRegularEvent = coreData.isRegularEvent
         self.creationDate = coreData.creationDate ?? Date()
+        self.isPinned = coreData.isPinned
 
-        // Десериализация расписания из строки JSON
         if let scheduleString = coreData.schedule,
            let scheduleData = scheduleString.data(using: .utf8),
            let decodedSchedule = try? JSONDecoder().decode([String].self, from: scheduleData) {

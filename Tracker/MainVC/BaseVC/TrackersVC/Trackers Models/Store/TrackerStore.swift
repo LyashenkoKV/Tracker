@@ -46,8 +46,8 @@ final class TrackerStore: NSObject {
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.isRegularEvent = tracker.isRegularEvent
         trackerCoreData.creationDate = tracker.creationDate
+        trackerCoreData.isPinned = false
         
-        // Поиск или создание категории
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", tracker.categoryTitle)
         
@@ -70,7 +70,6 @@ final class TrackerStore: NSObject {
             throw error
         }
         
-        // Сохранение расписания как массива строк
         if let scheduleData = try? JSONEncoder().encode(tracker.schedule),
            let scheduleString = String(data: scheduleData, encoding: .utf8) {
             trackerCoreData.schedule = scheduleString
@@ -82,7 +81,6 @@ final class TrackerStore: NSObject {
             )
         }
         
-        // Сохранение трекера и категории
         do {
             try context.save()
         } catch {
@@ -110,6 +108,26 @@ final class TrackerStore: NSObject {
             Logger.shared.log(
                 .error,
                 message: "Ошибка при удалении трекера с ID \(id)",
+                metadata: ["❌": error.localizedDescription]
+            )
+            throw error
+        }
+    }
+    
+    func updateTracker(_ tracker: Tracker) throws {
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+
+        do {
+            if let trackerCoreData = try context.fetch(fetchRequest).first {
+                trackerCoreData.isPinned = tracker.isPinned 
+                try context.save()
+            }
+        } catch {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка при обновлении трекера \(tracker.name)",
                 metadata: ["❌": error.localizedDescription]
             )
             throw error

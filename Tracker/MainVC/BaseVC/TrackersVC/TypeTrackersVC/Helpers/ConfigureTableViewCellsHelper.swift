@@ -10,7 +10,6 @@ import UIKit
 // MARK: - ConfigureTableViewCellsHelper
 final class ConfigureTableViewCellsHelper {
     
-    // Конфигурация ячейки типа трекера
     static func configureTypeTrackersCell(
         at indexPath: IndexPath,
         tableView: UITableView
@@ -58,7 +57,6 @@ final class ConfigureTableViewCellsHelper {
         return cell
     }
     
-    // Конфигурация ячейки категории
     static func configureCategoryCell(
         at indexPath: IndexPath,
         tableView: UITableView,
@@ -92,7 +90,6 @@ final class ConfigureTableViewCellsHelper {
         return cell
     }
     
-    // Конфигурация TextView ячейки
     static func configureTextViewCell(at indexPath: IndexPath,
                                tableView: UITableView,
                                categories: [TrackerCategory],
@@ -137,7 +134,6 @@ final class ConfigureTableViewCellsHelper {
         return cell
     }
     
-    // Конфигурация ячейки TextView
     static func configureTextViewCell(
         for tableView: UITableView,
         at indexPath: IndexPath,
@@ -154,7 +150,6 @@ final class ConfigureTableViewCellsHelper {
         return cell
     }
     
-    // Базовая конфигурация ячейки (BaseCell)
     static func configureBaseCell(
         _ cell: UITableViewCell,
         at indexPath: IndexPath,
@@ -179,7 +174,6 @@ final class ConfigureTableViewCellsHelper {
         }
     }
     
-    // Конфигурация ячеек ButtonCell
     static func configureButtonCell(
         _ cell: UITableViewCell,
         at indexPath: IndexPath,
@@ -229,7 +223,6 @@ final class ConfigureTableViewCellsHelper {
         }
     }
     
-    // Конфигурация сепаратора
     static func configureSeparator(
         _ cell: UITableViewCell,
         isLastRow: Bool
@@ -252,7 +245,6 @@ final class ConfigureTableViewCellsHelper {
         ])
     }
     
-    // Конфигурация ячеек для Emoji и Colors
     static func configureEmojiAndColorCell(
         for tableView: UITableView,
         at indexPath: IndexPath,
@@ -270,7 +262,6 @@ final class ConfigureTableViewCellsHelper {
         return cell
     }
     
-    // Конфигурация ячейки с кнопками "Создать" и "Отменить"
     static func configureCreateButtonsCell(
         for tableView: UITableView,
         at indexPath: IndexPath,
