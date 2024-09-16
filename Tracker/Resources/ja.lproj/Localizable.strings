@@ -27,6 +27,7 @@
 // TrackersVC
 "search_placeholder" = "検索";
 "trackers_placeholder" = "何を追跡しますか？";
+"notfound_search_placholder" = "何も見つかりませんでした";
 "search_cancel" = "キャンセル";
 
 // TrackerVCDelegate & ContextMenuHelper

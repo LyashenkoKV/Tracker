@@ -27,6 +27,7 @@
 // TrackersVC
 "search_placeholder" = "Buscar";
 "trackers_placeholder" = "¿Qué vamos a rastrear?";
+"notfound_search_placholder" = "No se encontró nada";
 "search_cancel" = "Cancelar";
 
 // TrackerVCDelegate & ContextMenuHelper

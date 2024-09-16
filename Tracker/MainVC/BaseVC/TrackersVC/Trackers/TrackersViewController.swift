@@ -12,7 +12,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var visibleCategories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
     var currentDate: Date { get set }
-    func updatePlaceholderView()
+    func updatePlaceholder(isSearchActive: Bool)
     func reloadData()
 }
 
@@ -114,11 +114,12 @@ final class TrackersViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePlaceholderView()
         addNotification()
         
         presenter?.filterTrackers(for: currentDate, searchText: nil)
         presenter?.loadCompletedTrackers()
+        
+        updatePlaceholder(isSearchActive: false)
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -135,10 +136,17 @@ final class TrackersViewController: BaseViewController {
         )
     }
     
-    func updatePlaceholderView() {
-        let hasData = categories.contains { category in
-            return !category.trackers.isEmpty
-        }
+    func updatePlaceholder(isSearchActive: Bool) {
+        let categoriesToCheck = isSearchActive ? visibleCategories : categories
+        let hasData = categoriesToCheck.contains { !$0.trackers.isEmpty }
+        
+        self.placeholderImageName = hasData ? PHName.trackersPH.rawValue : (isSearchActive ? PHName.searchPH.rawValue : PHName.trackersPH.rawValue)
+        self.placeholderText = NSLocalizedString(
+            hasData ? "trackers_placeholder" : (isSearchActive ? "notfound_search_placholder" : "trackers_placeholder"),
+            comment: "Обновление плейсхолдера в зависимости от состояния"
+        )
+
+        placeholder.update(image: UIImage(named: placeholderImageName) ?? UIImage(), text: placeholderText)
         updatePlaceholderView(hasData: hasData)
     }
 }
@@ -167,13 +175,16 @@ extension TrackersViewController {
         self.present(navController, animated: true)
         
         collectionView.reloadData()
-        updatePlaceholderView()
+        updatePlaceholder(isSearchActive: false)
     }
 
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
         presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "")
+        
+        let isSearchActive = searchController.isActive
+        updatePlaceholder(isSearchActive: isSearchActive)
 
         let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
@@ -223,7 +234,7 @@ extension TrackersViewController {
 extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
         collectionView.reloadData()
-        updatePlaceholderView()
+        updatePlaceholder(isSearchActive: false)
     }
 }
 
@@ -231,10 +242,14 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter?.filterTrackers(for: currentDate, searchText: searchText)
+        
+        updatePlaceholder(isSearchActive: true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         presenter?.filterTrackers(for: currentDate, searchText: nil)
+        
+        updatePlaceholder(isSearchActive: false)
     }
     
     func willPresentSearchController(_ searchController: UISearchController) {

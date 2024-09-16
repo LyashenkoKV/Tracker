@@ -27,6 +27,7 @@
 // TrackersVC
 "search_placeholder" = "搜索";
 "trackers_placeholder" = "我们要跟踪什么？";
+"notfound_search_placholder" = "没有找到任何内容";
 "search_cancel" = "取消";
 
 // TrackerVCDelegate & ContextMenuHelper

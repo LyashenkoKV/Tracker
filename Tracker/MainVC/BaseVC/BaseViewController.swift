@@ -10,8 +10,8 @@ import UIKit
 class BaseViewController: UIViewController {
     
     // MARK: - Properties
-    let placeholderImageName: String
-    let placeholderText: String
+    var placeholderImageName: String
+    var placeholderText: String
     var viewControllerType: ViewControllerType?
     
     lazy var collectionView: UICollectionView = {

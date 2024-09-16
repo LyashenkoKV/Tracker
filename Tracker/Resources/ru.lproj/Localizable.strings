@@ -27,6 +27,7 @@
 // TrackersVC
 "search_placeholder" = "Поиск";
 "trackers_placeholder" = "Что будем отслеживать?";
+"notfound_search_placholder" = "Ничего не найдено";
 "search_cancel" = "Отменить";
 
 // TrackerVCDelegate & ContextMenuHelper

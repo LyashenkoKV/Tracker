@@ -45,6 +45,11 @@ struct Placeholder {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
+    
+    func update(image: UIImage, text: String) {
+        label.text = text
+        imageView.image = image
+    }
 }
 
 enum PHName: String, CaseIterable {
