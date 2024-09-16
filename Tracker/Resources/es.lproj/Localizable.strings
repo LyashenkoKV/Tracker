@@ -31,8 +31,12 @@
 "search_cancel" = "Cancelar";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "Fijar";
+"unpin" = "Desfijar";
 "delete" = "Eliminar";
 "edit" = "Editar";
+"alert_cancel" = "Cancelar";
+"delete_confirmation_message" = "¿Estás seguro de que quieres eliminar el rastreador?";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "Hábito";

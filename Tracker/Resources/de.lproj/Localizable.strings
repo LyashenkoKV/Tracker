@@ -25,14 +25,18 @@
 "sunday" = "Sonntag";
 
 // TrackersVC
-"search_placeholder" = "Suchen";
-"trackers_placeholder" = "Was sollen wir verfolgen?";
+"search_placeholder" = "Suche";
+"trackers_placeholder" = "Was möchten wir verfolgen?";
 "notfound_search_placholder" = "Nichts gefunden";
 "search_cancel" = "Abbrechen";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "Anheften";
+"unpin" = "Lösen";
 "delete" = "Löschen";
 "edit" = "Bearbeiten";
+"alert_cancel" = "Abbrechen";
+"delete_confirmation_message" = "Sind Sie sicher, dass Sie den Tracker löschen möchten?";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "Gewohnheit";

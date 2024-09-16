@@ -27,12 +27,16 @@
 // TrackersVC
 "search_placeholder" = "搜索";
 "trackers_placeholder" = "我们要跟踪什么？";
-"notfound_search_placholder" = "没有找到任何内容";
+"notfound_search_placholder" = "未找到内容";
 "search_cancel" = "取消";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "固定";
+"unpin" = "取消固定";
 "delete" = "删除";
 "edit" = "编辑";
+"alert_cancel" = "取消";
+"delete_confirmation_message" = "确定要删除追踪器吗？";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "习惯";

@@ -31,8 +31,12 @@
 "search_cancel" = "Отменить";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "Закрепить";
+"unpin" = "Открепить";
 "delete" = "Удалить";
 "edit" = "Редактировать";
+"alert_cancel" = "Отменить";
+"delete_confirmation_message" = "Уверены что хотите удалить трекер?";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "Привычка";

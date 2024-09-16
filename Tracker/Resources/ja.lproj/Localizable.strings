@@ -27,12 +27,16 @@
 // TrackersVC
 "search_placeholder" = "検索";
 "trackers_placeholder" = "何を追跡しますか？";
-"notfound_search_placholder" = "何も見つかりませんでした";
+"notfound_search_placholder" = "結果が見つかりません";
 "search_cancel" = "キャンセル";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "ピン留め";
+"unpin" = "ピン留め解除";
 "delete" = "削除";
 "edit" = "編集";
+"alert_cancel" = "キャンセル";
+"delete_confirmation_message" = "トラッカーを削除してもよろしいですか？";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "習慣";

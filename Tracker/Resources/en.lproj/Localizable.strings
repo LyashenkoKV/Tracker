@@ -26,13 +26,17 @@
 
 // TrackersVC
 "search_placeholder" = "Search";
-"trackers_placeholder" = "What shall we track?";
+"trackers_placeholder" = "What are we tracking?";
 "notfound_search_placholder" = "Nothing found";
 "search_cancel" = "Cancel";
 
 // TrackerVCDelegate & ContextMenuHelper
+"pin" = "Pin";
+"unpin" = "Unpin";
 "delete" = "Delete";
 "edit" = "Edit";
+"alert_cancel" = "Cancel";
+"delete_confirmation_message" = "Are you sure you want to delete the tracker?";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "Habit";

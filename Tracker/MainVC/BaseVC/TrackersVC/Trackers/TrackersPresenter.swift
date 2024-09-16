@@ -190,14 +190,14 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func deleteTracker(at indexPath: IndexPath) {
-        guard let view = view else { return }
+        guard let view else { return }
         
         let trackerToDelete = view.categories[indexPath.section].trackers[indexPath.row]
         
         do {
             try trackerStore.deleteTracker(withId: trackerToDelete.id)
 
-            loadTrackers()
+            filterTrackers(for: view.currentDate, searchText: nil)
         } catch {
             Logger.shared.log(
                 .error,
