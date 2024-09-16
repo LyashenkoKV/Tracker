@@ -115,7 +115,6 @@ class BaseTrackerViewController: UIViewController {
     // Методы выношу из расширения, потому что дочерние классы их не видят
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
-    // Пока не работает, надо думать
     func startEditingCategory(at indexPath: IndexPath) {
         guard let dataProvider = dataProvider, indexPath.row < dataProvider.numberOfItems else {
             print("Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")

@@ -71,8 +71,9 @@ final class TrackerStore: NSObject {
         }
         
         // Сохранение расписания как массива строк
-        if let scheduleData = try? JSONEncoder().encode(tracker.schedule) {
-            trackerCoreData.schedule = scheduleData as NSData
+        if let scheduleData = try? JSONEncoder().encode(tracker.schedule),
+           let scheduleString = String(data: scheduleData, encoding: .utf8) {
+            trackerCoreData.schedule = scheduleString
         } else {
             Logger.shared.log(
                 .error,

@@ -28,18 +28,17 @@ extension Tracker {
         self.isRegularEvent = coreData.isRegularEvent
         self.creationDate = coreData.creationDate ?? Date()
 
-        if let scheduleData = coreData.schedule as? Data {
-            if let decodedSchedule = try? JSONDecoder().decode([String].self, from: scheduleData) {
-                self.schedule = decodedSchedule
-            } else {
-                Logger.shared.log(
-                    .error,
-                    message: "Ошибка десериализации расписания для трекера",
-                    metadata: ["❌": "\(self.name)"]
-                )
-                self.schedule = []
-            }
+        // Десериализация расписания из строки JSON
+        if let scheduleString = coreData.schedule,
+           let scheduleData = scheduleString.data(using: .utf8),
+           let decodedSchedule = try? JSONDecoder().decode([String].self, from: scheduleData) {
+            self.schedule = decodedSchedule
         } else {
+            Logger.shared.log(
+                .error,
+                message: "Ошибка десериализации расписания для трекера",
+                metadata: ["❌": "\(self.name)"]
+            )
             self.schedule = []
         }
     }
