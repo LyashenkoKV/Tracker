@@ -13,7 +13,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     var selectedColor: UIColor?
     var selectedEmoji: String?
     private var isRegularEvent: Bool
-
+    
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
         super.init(type: type)
@@ -70,7 +70,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         let daysAreSelected = !selectedDays.isEmpty
         
         let isValid: Bool
-
+        
         if isRegularEvent {
             isValid = textIsValid && daysAreSelected && categoryIsSelected && colorIsSelected && emojiIsSelected
         } else {
@@ -83,7 +83,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             createButtonCell.updateCreateButtonState(isEnabled: isValid)
         }
     }
-
+    
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
             self,
@@ -111,7 +111,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         
         let categoryTitle = selectedCategory?.title ?? ""
         let scheduleStrings = selectedDays.map { String($0.rawValue) }
-
+        
         let tracker = Tracker(
             id: UUID(),
             name: trackerName,
@@ -120,7 +120,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             schedule: scheduleStrings,
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
-            creationDate: Date(), 
+            creationDate: Date(),
             isPinned: false
         )
         
@@ -132,7 +132,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
-
+    
     private func handleCancelButtonTapped() {
         presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
@@ -151,7 +151,7 @@ extension CreatingTrackerViewController {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        guard let trackerSection = TrackerSection(rawValue: section) else { return 0 }
+        let trackerSection = sections[section]
         switch trackerSection {
         case .textView:
             return 1
@@ -168,69 +168,67 @@ extension CreatingTrackerViewController {
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch trackerViewControllerType {
-        case .creatingTracker:
-            return configureCreatingTrackerCell(at: indexPath)
-        default:
-            return UITableViewCell()
+            switch trackerViewControllerType {
+            case .creatingTracker:
+                return configureCreatingTrackerCell(at: indexPath)
+            default:
+                return UITableViewCell()
+            }
         }
-    }
 }
 
 // MARK: - ConfigureCell
 extension CreatingTrackerViewController {
     private func configureCreatingTrackerCell(at indexPath: IndexPath) -> UITableViewCell {
-           guard let trackerSection = TrackerSection(rawValue: indexPath.section) else {
-               return UITableViewCell()
-           }
-           
-           switch trackerSection {
-           case .textView:
-               return ConfigureTableViewCellsHelper.configureTextViewCell(for: tableView, at: indexPath, delegate: self)
-           case .buttons:
-               let cell = UITableViewCell()
-               let totalRows = isRegularEvent ? 2 : 1
-               ConfigureTableViewCellsHelper.configureButtonCell(
+        let trackerSection = sections[indexPath.section]
+        
+        switch trackerSection {
+        case .textView:
+            return ConfigureTableViewCellsHelper.configureTextViewCell(for: tableView, at: indexPath, delegate: self)
+        case .buttons:
+            let cell = UITableViewCell()
+            let totalRows = isRegularEvent ? 2 : 1
+            ConfigureTableViewCellsHelper.configureButtonCell(
                 cell, at: indexPath,
                 isSingleCell: isRegularEvent,
                 isAddingCategory: isAddingCategory,
                 selectedCategory: selectedCategory,
                 selectedDaysString: selectedDaysString()
-               )
-               ConfigureTableViewCellsHelper.configureBaseCell(
+            )
+            ConfigureTableViewCellsHelper.configureBaseCell(
                 cell,
                 at: indexPath,
                 totalRows: totalRows
-               )
-               ConfigureTableViewCellsHelper.configureSeparator(
+            )
+            ConfigureTableViewCellsHelper.configureSeparator(
                 cell,
                 isLastRow: indexPath.row == (isRegularEvent ? 1 : 0)
-               )
-               cell.selectionStyle = .none
-               return cell
-           case .emoji:
-               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+            )
+            cell.selectionStyle = .none
+            return cell
+        case .emoji:
+            return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
                 for: tableView,
                 at: indexPath,
                 with: emojies,
                 isEmoji: true
-               )
-           case .color:
-               return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
+            )
+        case .color:
+            return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
                 for: tableView,
                 at: indexPath,
                 with: colors,
                 isEmoji: false
-               )
-           case .createButtons:
-               return ConfigureTableViewCellsHelper.configureCreateButtonsCell(
-                   for: tableView,
-                   at: indexPath,
-                   onCreateTapped: { [weak self] in self?.handleCreateButtonTapped() },
-                   onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }
-               )
-           }
-       }
+            )
+        case .createButtons:
+            return ConfigureTableViewCellsHelper.configureCreateButtonsCell(
+                for: tableView,
+                at: indexPath,
+                onCreateTapped: { [weak self] in self?.handleCreateButtonTapped() },
+                onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }
+            )
+        }
+    }
     
     private func selectedDaysString() -> String {
         if selectedDays.isEmpty {

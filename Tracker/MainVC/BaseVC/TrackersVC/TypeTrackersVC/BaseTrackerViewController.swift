@@ -20,6 +20,15 @@ class BaseTrackerViewController: UIViewController {
     var selectedDays: [DayOfTheWeek] = []
     var selectedCategory: TrackerCategory?
     var editingCategoryIndex: IndexPath?
+    var trackerToEdit: Tracker?
+    
+    var sections: [TrackerSection] {
+        if trackerToEdit != nil {
+            return [.textView, .buttons, .emoji, .color, .createButtons]
+        } else {
+            return [.textView, .buttons, .emoji, .color, .createButtons]
+        }
+    }
     
     var isAddingCategory: Bool = false {
         didSet {
@@ -203,7 +212,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
         case .typeTrackers:
             return 2
         case .creatingTracker:
-            return TrackerSection.allCases.count
+            return sections.count
         case .category, .schedule:
             return 1
         case .none:
@@ -284,9 +293,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView,
         titleForHeaderInSection section: Int) -> String? {
-            guard let trackerSection = TrackerSection(rawValue: section) else {
-                return nil
-            }
+            let trackerSection = sections[section]
             
             switch trackerViewControllerType {
             case .creatingTracker:
@@ -300,9 +307,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView,
         viewForHeaderInSection section: Int) -> UIView? {
-            guard let trackerSection = TrackerSection(rawValue: section) else {
-                return nil
-            }
+            let trackerSection = sections[section]
             
             let headerView = UIView()
             headerView.backgroundColor = .clear
@@ -338,9 +343,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
     func tableView(
         _ tableView: UITableView,
         heightForHeaderInSection section: Int) -> CGFloat {
-            guard let trackerSection = TrackerSection(rawValue: section) else {
-                return 0
-            }
+            let trackerSection = sections[section]
             
             switch trackerViewControllerType {
             case .creatingTracker:
@@ -366,8 +369,8 @@ extension BaseTrackerViewController: UITableViewDelegate {
         _ tableView: UITableView,
         viewForFooterInSection section: Int) -> UIView? {
             
-            guard let trackerSection = TrackerSection(rawValue: section),
-                  let footerTitle = trackerSection.footerTitle else {
+            let trackerSection = sections[section]
+            guard let footerTitle = trackerSection.footerTitle else {
                 return nil
             }
             
@@ -414,7 +417,7 @@ extension BaseTrackerViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForFooterInSection section: Int
     ) -> CGFloat {
-        guard let trackerSection = TrackerSection(rawValue: section) else { return 0 }
+        let trackerSection = sections[section]
         
         switch trackerViewControllerType {
         case .typeTrackers:
