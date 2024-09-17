@@ -6,6 +6,9 @@
   
 */
 
+// TrackerStore
+"pinned_category" = "Закрепленные";
+
 // Onboarding
 "onboarding_fir_page" = "Отслеживайте только\n то, что хотите";
 "onboarding_sec_page" = "Даже если это\n не литры воды и йога";

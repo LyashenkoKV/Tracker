@@ -48,6 +48,12 @@ final class TrackerStore: NSObject {
         trackerCoreData.creationDate = tracker.creationDate
         trackerCoreData.isPinned = false
         
+        trackerCoreData.categoryTitle = tracker.isPinned
+        ? NSLocalizedString("pinned_category", comment: "Закрепленные")
+        : tracker.categoryTitle
+        
+        trackerCoreData.originalCategoryTitle = tracker.originalCategoryTitle ?? tracker.categoryTitle
+        
         let fetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "title == %@", tracker.categoryTitle)
         

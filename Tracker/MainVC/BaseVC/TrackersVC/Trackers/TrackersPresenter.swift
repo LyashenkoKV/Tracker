@@ -30,6 +30,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     private let trackerStore: TrackerStore
     private let categoryStore: TrackerCategoryStore
     private let recordStore: TrackerRecordStore
+    private let pinnedCategoryKey = "pinned_category_key"
     
     weak var view: TrackersViewControllerProtocol?
     
@@ -160,19 +161,19 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func togglePin(for tracker: Tracker) {
-        guard let view else { return }
         var updatedTracker = tracker
         updatedTracker.isPinned.toggle()
-        
+
         do {
+            if updatedTracker.isPinned {
+                updatedTracker.originalCategoryTitle = tracker.categoryTitle
+            }
+
             try trackerStore.updateTracker(updatedTracker)
-            filterTrackers(for: view.currentDate, searchText: nil)
+
+            filterTrackers(for: view?.currentDate ?? Date(), searchText: nil)
         } catch {
-            Logger.shared.log(
-                .error,
-                message: "Ошибка при обновлении трекера \(tracker.name)",
-                metadata: ["❌": error.localizedDescription]
-            )
+            Logger.shared.log(.error, message: "Не удалось закрепить трекер: \(tracker.name)")
         }
     }
     
@@ -182,10 +183,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         
         view?.categories = categorizedTrackers
         view?.visibleCategories = categorizedTrackers
-        
-        DispatchQueue.main.async {
-            self.view?.reloadData()
-        }
+        view?.reloadData()
     }
 
     func loadCompletedTrackers() {
@@ -198,18 +196,28 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         view?.reloadData()
     }
 
-    private func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
-        let trackers = trackerCoreDataList.map { trackerCoreData -> Tracker in
-            let tracker = Tracker(from: trackerCoreData)
-            return tracker
+    func categorizeTrackers(_ trackerCoreDataList: [TrackerCoreData]) -> [TrackerCategory] {
+        var groupedTrackers: [String: [Tracker]] = Dictionary(
+            grouping: trackerCoreDataList.map { Tracker(from: $0) },
+            by: { $0.isPinned ? pinnedCategoryKey : $0.categoryTitle }
+        )
+
+        var categories: [TrackerCategory] = []
+        if let pinnedTrackers = groupedTrackers.removeValue(forKey: pinnedCategoryKey) {
+            let pinnedCategory = TrackerCategory(
+                title: NSLocalizedString("pinned_category", comment: "Закрепленные"),
+                trackers: pinnedTrackers
+            )
+            categories.append(pinnedCategory)
         }
 
-        let groupedTrackers: [String: [Tracker]] = Dictionary(grouping: trackers, by: { $0.categoryTitle })
-
-        let trackerCategories = groupedTrackers.map { (title, trackers) -> TrackerCategory in
-            return TrackerCategory(title: title, trackers: trackers)
+        let sortedCategories = groupedTrackers.map { (title, trackers) in
+            TrackerCategory(title: title, trackers: trackers)
         }
-        return trackerCategories
+
+        categories.append(contentsOf: sortedCategories)
+
+        return categories
     }
     
     func deleteTracker(at indexPath: IndexPath) {
