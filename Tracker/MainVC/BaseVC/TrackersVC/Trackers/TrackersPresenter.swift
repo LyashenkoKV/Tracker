@@ -205,7 +205,10 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         var categories: [TrackerCategory] = []
         if let pinnedTrackers = groupedTrackers.removeValue(forKey: pinnedCategoryKey) {
             let pinnedCategory = TrackerCategory(
-                title: NSLocalizedString("pinned_category", comment: "Закрепленные"),
+                title: NSLocalizedString(
+                    "pinned_category",
+                    comment: "Закрепленные"
+                ),
                 trackers: pinnedTrackers
             )
             categories.append(pinnedCategory)

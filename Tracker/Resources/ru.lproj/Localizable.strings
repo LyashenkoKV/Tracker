@@ -54,6 +54,7 @@
 // BaseTrackerViewController
 "creating_tracker" = "Создание трекера";
 "new_habit" = "Новая привычка";
+"edit_habit" = "Редактирование привычки";
 "creating_habit" = "Создание привычки";
 
 // CreatingTrackerViewController

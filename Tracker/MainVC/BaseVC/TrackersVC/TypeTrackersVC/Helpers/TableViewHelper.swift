@@ -93,7 +93,11 @@ final class TableViewHelper {
         }
     }
     
-    static func calculateCellHeight(for tableView: UITableView, itemCount: Int, itemsPerRow: Int) -> CGFloat {
+    static func calculateCellHeight(
+        for tableView: UITableView,
+        itemCount: Int,
+        itemsPerRow: Int
+    ) -> CGFloat {
         let collectionViewWidth = tableView.frame.width
         let cellSpacing: CGFloat = 5
         let leftInset: CGFloat = 10

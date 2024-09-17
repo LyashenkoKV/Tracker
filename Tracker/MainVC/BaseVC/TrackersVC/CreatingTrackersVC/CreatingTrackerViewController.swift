@@ -26,8 +26,13 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTrackerForEditing()
         setupNotificationObservers()
         dismissKeyboard(view: self.view)
+        
+        if let trackerToEdit = trackerToEdit {
+            updateUIForEditing(tracker: trackerToEdit)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,6 +61,17 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             at: [IndexPath(row: 1, section: TrackerSection.buttons.rawValue)],
             with: .automatic
         )
+    }
+    
+    private func setupTrackerForEditing() {
+        if let tracker = trackerToEdit {
+            trackerName = tracker.name
+            selectedColor = UIColor(hex: tracker.color)
+            selectedEmoji = tracker.emoji
+            selectedDays = tracker.schedule.compactMap { DayOfTheWeek(rawValue: $0) }
+            
+            tableView.reloadData()
+        }
     }
     
     func updateCreateButtonState() {
@@ -97,40 +113,88 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             object: nil)
     }
     
+    private func updateUIForEditing(tracker: Tracker) {
+        selectedCategory = TrackerCategory(title: tracker.categoryTitle, trackers: [])
+        selectedColor = UIColor(hex: tracker.color)
+        selectedEmoji = tracker.emoji
+        selectedDays = tracker.schedule.compactMap { DayOfTheWeek(rawValue: $0) }
+        
+        guard let textViewCell = tableView.cellForRow(
+            at: IndexPath(
+                row: 0,
+                section: TrackerSection.textView.rawValue
+            )
+        ) as? TextViewCell else {
+            return
+        }
+        textViewCell.getText().text = tracker.name
+        
+        tableView.reloadData()
+        updateCreateButtonState()
+    }
+    
     func handleCreateButtonTapped() {
-        guard let textViewCell = tableView.cellForRow(at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)) as? TextViewCell,
-              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+        if let trackerToEdit = trackerToEdit {
+            updateExistingTracker(trackerToEdit)
+        } else {
+            createNewTracker()
+        }
+    }
+    
+    private func updateExistingTracker(_ tracker: Tracker) {
+        guard let trackerName = trackerName,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
-            Logger.shared.log(
-                .error,
-                message: "Не все обязательные поля заполнены для создания трекера"
-            )
             return
         }
         
-        let categoryTitle = selectedCategory?.title ?? ""
-        let scheduleStrings = selectedDays.map { String($0.rawValue) }
+        let updatedTracker = Tracker(
+            id: tracker.id,
+            name: trackerName,
+            color: selectedColor.toHexString(),
+            emoji: selectedEmoji,
+            schedule: selectedDays.map { $0.rawValue },
+            categoryTitle: tracker.categoryTitle,
+            isRegularEvent: tracker.isRegularEvent,
+            creationDate: tracker.creationDate,
+            isPinned: tracker.isPinned
+        )
         
-        let tracker = Tracker(
+        NotificationCenter.default.post(
+            name: .trackerUpdated,
+            object: nil,
+            userInfo: ["tracker": updatedTracker]
+        )
+        
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    private func createNewTracker() {
+        guard let trackerName = trackerName,
+              let selectedColor = selectedColor,
+              let selectedEmoji = selectedEmoji else {
+            return
+        }
+        
+        let newTracker = Tracker(
             id: UUID(),
             name: trackerName,
             color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: scheduleStrings,
-            categoryTitle: categoryTitle,
+            schedule: selectedDays.map { $0.rawValue },
+            categoryTitle: selectedCategory?.title ?? "",
             isRegularEvent: isRegularEvent,
             creationDate: Date(),
             isPinned: false
         )
         
-        let userInfo: [String: Any] = [
-            "tracker": tracker,
-            "categoryTitle": categoryTitle
-        ]
+        NotificationCenter.default.post(
+            name: .trackerCreated,
+            object: nil,
+            userInfo: ["tracker": newTracker]
+        )
         
-        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
-        presentingViewController?.presentingViewController?.dismiss(animated: true)
+        presentingViewController?.dismiss(animated: true)
     }
     
     private func handleCancelButtonTapped() {

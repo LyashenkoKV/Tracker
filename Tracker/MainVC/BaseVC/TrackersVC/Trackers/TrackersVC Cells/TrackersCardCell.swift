@@ -174,8 +174,6 @@ final class TrackersCardCell: UICollectionViewCell {
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool,
                    isRegularEvent: Bool) {
-        
-        Logger.shared.log(.info, message: "Configuring cell with tracker: \(tracker.name), emoji: \(tracker.emoji)")
 
         nameLabel.text = tracker.name
         self.emoji.text = tracker.emoji

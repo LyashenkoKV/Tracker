@@ -91,11 +91,11 @@ final class ConfigureTableViewCellsHelper {
     }
     
     static func configureTextViewCell(at indexPath: IndexPath,
-                               tableView: UITableView,
-                               categories: [TrackerCategory],
-                               viewController: BaseTrackerViewController,
-                               editingCategoryIndex: IndexPath?,
-                               isAddingCategory: Bool
+                                      tableView: UITableView,
+                                      categories: [TrackerCategory],
+                                      viewController: BaseTrackerViewController,
+                                      editingCategoryIndex: IndexPath?,
+                                      isAddingCategory: Bool
     ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TextViewCell.reuseIdentifier,
@@ -104,7 +104,7 @@ final class ConfigureTableViewCellsHelper {
             return UITableViewCell()
         }
         cell.delegate = viewController
-
+        
         if let editingIndex = editingCategoryIndex {
             guard editingIndex.row < categories.count else {
                 print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
@@ -127,7 +127,7 @@ final class ConfigureTableViewCellsHelper {
                 comment: "Новая категория"
             )
         }
-
+        
         configureBaseCell(cell, at: indexPath, totalRows: 1)
         configureSeparator(cell, isLastRow: true)
         
@@ -279,5 +279,60 @@ final class ConfigureTableViewCellsHelper {
         cell.onCancelButtonTapped = onCancelTapped
         cell.selectionStyle = .none
         return cell
+    }
+    
+    // MARK: - Header Configuration
+    static func configureCounterHeaderView(
+        with daysCount: Int
+    ) -> UIView {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        
+        let counterLabel = UILabel()
+        counterLabel.translatesAutoresizingMaskIntoConstraints = false
+        counterLabel.textColor = .ypBlack
+        counterLabel.font = UIFont.boldSystemFont(ofSize: 32)
+        counterLabel.textAlignment = .center
+        
+        counterLabel.text = getLocalizedDayString(for: daysCount)
+        
+        headerView.addSubview(counterLabel)
+        
+        NSLayoutConstraint.activate([
+            counterLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            counterLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 25),
+            counterLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -40)
+        ])
+        
+        return headerView
+    }
+    
+    static func getLocalizedDayString(for countDays: Int) -> String {
+        let localizedFormat = NSLocalizedString("day_count", comment: "")
+        return String.localizedStringWithFormat(localizedFormat, countDays)
+    }
+    
+    static func configureTextHeaderView(
+        title: String
+    ) -> UIView {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        
+        let headerLabel = UILabel()
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.textColor = .ypBlack
+        headerLabel.font = UIFont.boldSystemFont(ofSize: 19)
+        headerLabel.text = title
+        
+        headerView.addSubview(headerLabel)
+        
+        NSLayoutConstraint.activate([
+            headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor),
+            headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        ])
+        
+        return headerView
     }
 }

@@ -55,7 +55,7 @@ final class TrackersContextMenuHelper {
             title: NSLocalizedString("edit", comment: "Редактировать")
         ) { _ in
             Logger.shared.log(.info, message: "Edit action selected for tracker: \(self.tracker.name)")
-            self.presenter?.editTracker(at: self.indexPath)
+            self.showEditTrackerView()
         }
         
         Logger.shared.log(.info, message: "Context menu created successfully")
@@ -64,6 +64,22 @@ final class TrackersContextMenuHelper {
             title: "",
             children: [pinAction, editAction, deleteAction]
         )
+    }
+    
+    // MARK: - Show Edit Tracker View
+    private func showEditTrackerView() {
+        let creatingTrackerVC = CreatingTrackerViewController(
+            type: .creatingTracker,
+            isRegularEvent: tracker.isRegularEvent
+        )
+        creatingTrackerVC.trackerToEdit = tracker
+        creatingTrackerVC.title = NSLocalizedString(
+            "edit_tracker",
+            comment: "Редактирование привычки"
+        )
+        let navController = UINavigationController(rootViewController: creatingTrackerVC)
+        navController.modalPresentationStyle = .formSheet
+        viewController?.present(navController, animated: true)
     }
     
     // MARK: - Show Delete Confirmation Alert

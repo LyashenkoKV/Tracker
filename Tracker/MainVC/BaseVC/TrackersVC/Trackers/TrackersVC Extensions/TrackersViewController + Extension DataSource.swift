@@ -68,7 +68,6 @@ extension TrackersViewController {
         )
         
         cell.longPressHandler = { [weak self] in
-            Logger.shared.log(.info, message: "Long press handler invoked for tracker: \(tracker.name)")
             self?.showContextMenu(for: tracker, at: indexPath)
         }
         

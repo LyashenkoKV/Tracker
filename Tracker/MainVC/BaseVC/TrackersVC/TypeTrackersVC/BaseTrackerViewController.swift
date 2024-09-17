@@ -22,13 +22,13 @@ class BaseTrackerViewController: UIViewController {
     var editingCategoryIndex: IndexPath?
     var trackerToEdit: Tracker?
     
-    var sections: [TrackerSection] {
-        if trackerToEdit != nil {
-            return [.textView, .buttons, .emoji, .color, .createButtons]
-        } else {
-            return [.textView, .buttons, .emoji, .color, .createButtons]
-        }
-    }
+    var sections: [TrackerSection] = [
+        .textView,
+        .buttons,
+        .emoji,
+        .color,
+        .createButtons
+    ]
     
     var isAddingCategory: Bool = false {
         didSet {
@@ -86,10 +86,17 @@ class BaseTrackerViewController: UIViewController {
                 comment: "Категория"
             )
         case .creatingTracker:
-            self.title = NSLocalizedString(
-                "new_habit",
-                comment: "Новая привычка"
-            )
+            if let trackerToEdit = trackerToEdit {
+                self.title = NSLocalizedString(
+                    "edit_habit",
+                    comment: "Редактирование привычки"
+                )
+            } else {
+                self.title = NSLocalizedString(
+                    "new_habit",
+                    comment: "Новая привычка"
+                )
+            }
         case .schedule:
             self.title = NSLocalizedString(
                 "schedule",
@@ -163,10 +170,12 @@ class BaseTrackerViewController: UIViewController {
     func textViewCellDidBeginEditing(_ cell: TextViewCell) {
         switch trackerViewControllerType {
         case .creatingTracker:
-            self.title = NSLocalizedString(
-                "creating_habit",
-                comment: "Создание привычки"
-            )
+            if trackerToEdit == nil {
+                self.title = NSLocalizedString(
+                    "creating_habit",
+                    comment: "Создание привычки"
+                )
+            }
         default:
             break
         }
@@ -309,35 +318,19 @@ extension BaseTrackerViewController: UITableViewDelegate {
         viewForHeaderInSection section: Int) -> UIView? {
             let trackerSection = sections[section]
             
-            let headerView = UIView()
-            headerView.backgroundColor = .clear
-            
-            let headerLabel = UILabel()
-            headerLabel.translatesAutoresizingMaskIntoConstraints = false
-            headerLabel.textColor = .ypBlack
-            headerLabel.font = UIFont.boldSystemFont(ofSize: 19)
-            headerView.addSubview(headerLabel)
-            
-            NSLayoutConstraint.activate([
-                headerLabel.leadingAnchor.constraint(
-                    equalTo: headerView.leadingAnchor,
-                    constant: 16),
-                headerLabel.trailingAnchor.constraint(
-                    equalTo: headerView.trailingAnchor,
-                    constant: -16),
-                headerLabel.topAnchor.constraint(
-                    equalTo: headerView.topAnchor),
-                headerLabel.bottomAnchor.constraint(
-                    equalTo: headerView.bottomAnchor)
-            ])
-            
-            switch trackerViewControllerType {
-            case .creatingTracker:
-                headerLabel.text = trackerSection.headerTitle
+            switch trackerSection {
+            case .textView:
+                if trackerToEdit != nil {
+                    let daysCount = 5
+                    return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
+                }
             default:
-                break
+                if let headerTitle = trackerSection.headerTitle {
+                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
+                }
             }
-            return headerView
+            
+            return nil
         }
     
     func tableView(
@@ -348,7 +341,9 @@ extension BaseTrackerViewController: UITableViewDelegate {
             switch trackerViewControllerType {
             case .creatingTracker:
                 switch trackerSection {
-                case .textView, .color, .emoji:
+                case .textView:
+                    return trackerToEdit != nil ? 100 : 35
+                case .color, .emoji:
                     return 35
                 case .buttons:
                     return 24

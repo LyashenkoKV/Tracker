@@ -49,7 +49,10 @@ final class TrackerStore: NSObject {
         trackerCoreData.isPinned = false
         
         trackerCoreData.categoryTitle = tracker.isPinned
-        ? NSLocalizedString("pinned_category", comment: "Закрепленные")
+        ? NSLocalizedString(
+            "pinned_category",
+            comment: "Закрепленные"
+        )
         : tracker.categoryTitle
         
         trackerCoreData.originalCategoryTitle = tracker.originalCategoryTitle ?? tracker.categoryTitle
