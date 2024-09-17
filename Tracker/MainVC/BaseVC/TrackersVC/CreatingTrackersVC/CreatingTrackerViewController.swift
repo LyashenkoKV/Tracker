@@ -32,11 +32,14 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         
         if let trackerToEdit = trackerToEdit {
             updateUIForEditing(tracker: trackerToEdit)
+            updateCreateButtonTitle()
+            updateCreateButtonState()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        updateCreateButtonTitle()
         updateCreateButtonState()
     }
     
@@ -61,6 +64,18 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             at: [IndexPath(row: 1, section: TrackerSection.buttons.rawValue)],
             with: .automatic
         )
+    }
+    
+    private func updateCreateButtonTitle() {
+        if let createButtonCell = tableView.cellForRow(
+            at: IndexPath(
+                row: 0,
+                section: TrackerSection.createButtons.rawValue
+            )
+        ) as? CreateButtonsViewCell {
+            let isEditing = trackerToEdit != nil
+            createButtonCell.updateCreateButtonTitle(isEditing: isEditing)
+        }
     }
     
     private func setupTrackerForEditing() {
@@ -142,59 +157,85 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     private func updateExistingTracker(_ tracker: Tracker) {
-        guard let trackerName = trackerName,
+        guard let textViewCell = tableView.cellForRow(
+            at: IndexPath(
+                row: 0,
+                section: TrackerSection.textView.rawValue
+            )
+        ) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
+            Logger.shared.log(
+                .error,
+                message: "Не все обязательные поля заполнены для создания трекера"
+            )
             return
         }
+        
+        let categoryTitle = tracker.categoryTitle
+        let scheduleStrings = selectedDays.map { String($0.rawValue) }
         
         let updatedTracker = Tracker(
             id: tracker.id,
             name: trackerName,
             color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: selectedDays.map { $0.rawValue },
-            categoryTitle: tracker.categoryTitle,
+            schedule: scheduleStrings,
+            categoryTitle: categoryTitle,
             isRegularEvent: tracker.isRegularEvent,
             creationDate: tracker.creationDate,
             isPinned: tracker.isPinned
         )
         
-        NotificationCenter.default.post(
-            name: .trackerUpdated,
-            object: nil,
-            userInfo: ["tracker": updatedTracker]
-        )
+        let userInfo: [String: Any] = [
+            "tracker": updatedTracker,
+            "categoryTitle": categoryTitle
+        ]
         
+        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
         presentingViewController?.dismiss(animated: true)
     }
     
     private func createNewTracker() {
-        guard let trackerName = trackerName,
+        guard let textViewCell = tableView.cellForRow(
+            at: IndexPath(
+                row: 0,
+                section: TrackerSection.textView.rawValue
+            )
+        ) as? TextViewCell,
+              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
+            Logger.shared.log(
+                .error,
+                message: "Не все обязательные поля заполнены для создания трекера"
+            )
             return
         }
+        
+        let categoryTitle = selectedCategory?.title ?? ""
+        let scheduleStrings = selectedDays.map { String($0.rawValue) }
         
         let newTracker = Tracker(
             id: UUID(),
             name: trackerName,
             color: selectedColor.toHexString(),
             emoji: selectedEmoji,
-            schedule: selectedDays.map { $0.rawValue },
-            categoryTitle: selectedCategory?.title ?? "",
+            schedule: scheduleStrings,
+            categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date(),
             isPinned: false
         )
+
+        let userInfo: [String: Any] = [
+            "tracker": newTracker,
+            "categoryTitle": categoryTitle
+        ]
         
-        NotificationCenter.default.post(
-            name: .trackerCreated,
-            object: nil,
-            userInfo: ["tracker": newTracker]
-        )
-        
-        presentingViewController?.dismiss(animated: true)
+        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+        presentingViewController?.presentingViewController?.dismiss(animated: true)
     }
     
     private func handleCancelButtonTapped() {
@@ -289,7 +330,8 @@ extension CreatingTrackerViewController {
                 for: tableView,
                 at: indexPath,
                 onCreateTapped: { [weak self] in self?.handleCreateButtonTapped() },
-                onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }
+                onCancelTapped: { [weak self] in self?.handleCancelButtonTapped() }, 
+                isEditing: trackerToEdit != nil
             )
         }
     }

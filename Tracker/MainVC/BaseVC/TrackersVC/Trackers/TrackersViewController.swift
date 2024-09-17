@@ -114,8 +114,10 @@ final class TrackersViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        addNotification()
         
+        Logger.shared.log(.info, message: "TrackersViewController загружен. Начинается загрузка трекеров.")
+        
+        addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil)
         presenter?.loadCompletedTrackers()
         
@@ -128,10 +130,16 @@ final class TrackersViewController: BaseViewController {
     }
     
     private func addNotification() {
-        NotificationCenter.default.addObserver(            
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleTrackerCreated),
             name: .trackerCreated,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleTrackerUpdated),
+            name: .trackerUpdated,
             object: nil
         )
     }
@@ -203,6 +211,9 @@ extension TrackersViewController {
             )
             return
         }
+        
+        Logger.shared.log(.info, message: "userInfo: \(userInfo)")
+        Logger.shared.log(.info, message: "Трекер извлечён: \(tracker.name), Категория: \(categoryTitle)")
 
         var updatedTracker = tracker
 
@@ -226,7 +237,18 @@ extension TrackersViewController {
                 isPinned: false
             )
         }
+        Logger.shared.log(.info, message: "Трекер обновлён и добавлен в presenter: \(updatedTracker.name)")
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
+        presenter?.filterTrackers(for: currentDate, searchText: nil)
+    }
+    
+    @objc private func handleTrackerUpdated(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let tracker = userInfo["tracker"] as? Tracker else {
+            Logger.shared.log(.error, message: "Ошибка: не удалось извлечь трекер из уведомления.")
+            return
+        }
+
         presenter?.filterTrackers(for: currentDate, searchText: nil)
     }
 }

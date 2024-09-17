@@ -77,6 +77,7 @@
 "textView_placeholder" = "Введите название трекера";
 
 // CreateButtonsViewCell
+"save_tracker" = "Сохранить";
 "create_new_tracker" = "Создать";
 "cancel_create_new_tracker" = "Отменить";
 

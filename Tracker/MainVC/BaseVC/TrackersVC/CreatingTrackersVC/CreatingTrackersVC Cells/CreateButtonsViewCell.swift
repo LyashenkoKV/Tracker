@@ -121,4 +121,12 @@ final class CreateButtonsViewCell: UITableViewCell {
             
         }
     }
+    
+    func updateCreateButtonTitle(isEditing: Bool) {
+        let title = isEditing
+        ? NSLocalizedString("save_tracker", comment: "Сохранить")
+        : NSLocalizedString("create_new_tracker", comment: "Создать")
+        
+        createButton.setTitle(title, for: .normal)
+    }
 }

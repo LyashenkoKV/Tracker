@@ -86,7 +86,7 @@ class BaseTrackerViewController: UIViewController {
                 comment: "Категория"
             )
         case .creatingTracker:
-            if let trackerToEdit = trackerToEdit {
+            if trackerToEdit != nil {
                 self.title = NSLocalizedString(
                     "edit_habit",
                     comment: "Редактирование привычки"

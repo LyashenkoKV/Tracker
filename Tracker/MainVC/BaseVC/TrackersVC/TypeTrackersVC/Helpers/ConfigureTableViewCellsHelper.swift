@@ -266,7 +266,8 @@ final class ConfigureTableViewCellsHelper {
         for tableView: UITableView,
         at indexPath: IndexPath,
         onCreateTapped: @escaping () -> Void,
-        onCancelTapped: @escaping () -> Void
+        onCancelTapped: @escaping () -> Void,
+        isEditing: Bool
     ) -> CreateButtonsViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CreateButtonsViewCell.reuseIdentifier,
@@ -277,6 +278,9 @@ final class ConfigureTableViewCellsHelper {
         
         cell.onCreateButtonTapped = onCreateTapped
         cell.onCancelButtonTapped = onCancelTapped
+        
+        cell.updateCreateButtonTitle(isEditing: isEditing)
+        
         cell.selectionStyle = .none
         return cell
     }
