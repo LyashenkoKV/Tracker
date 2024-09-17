@@ -28,47 +28,44 @@ final class TrackersContextMenuHelper {
     }
 
     // MARK: - Create Context Menu
-    func createContextMenu() -> UIContextMenuConfiguration {
+    func createContextMenu() -> UIMenu {
         Logger.shared.log(.info, message: "Creating context menu for tracker: \(tracker.name)")
         
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+        let pinTitle = self.tracker.isPinned
+            ? NSLocalizedString("unpin", comment: "Открепить")
+            : NSLocalizedString("pin", comment: "Закрепить")
+        
+        Logger.shared.log(.info, message: "Pin action title: \(pinTitle)")
 
-            let pinTitle = self.tracker.isPinned
-                ? NSLocalizedString("unpin", comment: "Открепить")
-                : NSLocalizedString("pin", comment: "Закрепить")
-            
-            Logger.shared.log(.info, message: "Pin action title: \(pinTitle)")
-
-            let pinAction = UIAction(
-                title: pinTitle
-            ) { _ in
-                Logger.shared.log(.info, message: "\(pinTitle) action selected for tracker: \(self.tracker.name)")
-                self.presenter?.togglePin(for: self.tracker)
-            }
-
-            let deleteAction = UIAction(
-                title: NSLocalizedString("delete", comment: "Удалить"),
-                attributes: .destructive
-            ) { _ in
-                self.showDeleteConfirmationAlert()
-            }
-
-            let editAction = UIAction(
-                title: NSLocalizedString("edit", comment: "Редактировать")
-            ) { _ in
-                Logger.shared.log(.info, message: "Edit action selected for tracker: \(self.tracker.name)")
-                self.presenter?.editTracker(at: self.indexPath)
-            }
-            
-            Logger.shared.log(.info, message: "Context menu created successfully")
-
-            return UIMenu(
-                title: "",
-                children: [pinAction, editAction, deleteAction]
-            )
+        let pinAction = UIAction(
+            title: pinTitle
+        ) { _ in
+            Logger.shared.log(.info, message: "\(pinTitle) action selected for tracker: \(self.tracker.name)")
+            self.presenter?.togglePin(for: self.tracker)
         }
-    }
 
+        let deleteAction = UIAction(
+            title: NSLocalizedString("delete", comment: "Удалить"),
+            attributes: .destructive
+        ) { _ in
+            self.showDeleteConfirmationAlert()
+        }
+
+        let editAction = UIAction(
+            title: NSLocalizedString("edit", comment: "Редактировать")
+        ) { _ in
+            Logger.shared.log(.info, message: "Edit action selected for tracker: \(self.tracker.name)")
+            self.presenter?.editTracker(at: self.indexPath)
+        }
+        
+        Logger.shared.log(.info, message: "Context menu created successfully")
+
+        return UIMenu(
+            title: "",
+            children: [pinAction, editAction, deleteAction]
+        )
+    }
+    
     // MARK: - Show Delete Confirmation Alert
     private func showDeleteConfirmationAlert() {
         let alertController = UIAlertController(

@@ -24,7 +24,7 @@ final class TrackersCardCell: UICollectionViewCell {
         return stack
     }()
     
-    private lazy var messageStack: UIStackView = {
+    lazy var messageStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             emoji,
             nameLabel
@@ -32,22 +32,16 @@ final class TrackersCardCell: UICollectionViewCell {
         stack.axis = .vertical
         stack.alignment = .leading
         stack.spacing = 8
-        stack.layer.cornerRadius = 15
+        stack.layer.cornerRadius = 13
         stack.layer.masksToBounds = true
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = UIEdgeInsets(top: 12, left: 12, bottom: 10, right: 12)
         stack.heightAnchor.constraint(equalToConstant: 90).isActive = true
         
-        let longPressGesture = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(handleLongPress)
-        )
-        stack.addGestureRecognizer(longPressGesture)
-        
         return stack
     }()
     
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(
             ofSize: 12,
@@ -58,7 +52,7 @@ final class TrackersCardCell: UICollectionViewCell {
         return label
     }()
     
-    private let emoji: UILabel = {
+    lazy var emoji: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(
             ofSize: 16,
@@ -141,6 +135,9 @@ final class TrackersCardCell: UICollectionViewCell {
         contentView.addSubview(mainVerticalStack)
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
         
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        messageStack.addGestureRecognizer(longPressGesture)
+        
         NSLayoutConstraint.activate([
             mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor),
             mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -149,12 +146,27 @@ final class TrackersCardCell: UICollectionViewCell {
         ])
     }
     
+    func createPreview() -> UIView {
+        let previewView = UIView()
+        previewView.backgroundColor = .clear
+        
+        if let messageStackSnapshot = messageStack.snapshotView(afterScreenUpdates: true) {
+            previewView.addSubview(messageStackSnapshot)
+            messageStackSnapshot.frame = previewView.bounds
+        }
+        return previewView
+    }
+    
     @objc private func completeButtonTapped() {
         selectButtonTappedHandler?()
     }
     
     @objc private func handleLongPress() {
         longPressHandler?()
+        
+        UIView.animate(withDuration: 0.2) {
+            self.contentView.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.3)
+        }
     }
     
     func configure(with tracker: Tracker,
@@ -162,6 +174,8 @@ final class TrackersCardCell: UICollectionViewCell {
                    isCompleted: Bool,
                    isDateValidForCompletion: Bool,
                    isRegularEvent: Bool) {
+        
+        Logger.shared.log(.info, message: "Configuring cell with tracker: \(tracker.name), emoji: \(tracker.emoji)")
 
         nameLabel.text = tracker.name
         self.emoji.text = tracker.emoji
