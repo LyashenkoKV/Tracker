@@ -421,6 +421,10 @@ extension CreatingTrackerViewController {
                     let daysCount = calculateDaysCount()
                     return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
                 }
+            case .emoji, .color:
+                if let headerTitle = trackerSection.headerTitle {
+                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
+                }
             default:
                 return nil
             }
