@@ -73,9 +73,18 @@ final class EmojiesAndColorsTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with elements: [String], isEmoji: Bool) {
+    func configure(with elements: [String], isEmoji: Bool, selectedElement: String?) {
         self.elements = elements
         self.isEmoji = isEmoji
+        
+        if let selectedElement = selectedElement {
+            selectedIndexPath = IndexPath(item: elements.firstIndex(of: selectedElement) ?? 0, section: 0)
+            hasSelectedItem = true
+        } else {
+            selectedIndexPath = nil
+            hasSelectedItem = false
+        }
+        
         collectionView.reloadData()
     }
 }

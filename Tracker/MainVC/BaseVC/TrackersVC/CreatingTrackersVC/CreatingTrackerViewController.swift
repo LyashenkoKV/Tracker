@@ -85,8 +85,10 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             selectedColor = UIColor(hex: tracker.color)
             selectedEmoji = tracker.emoji
             selectedDays = tracker.schedule.compactMap { DayOfTheWeek(rawValue: $0) }
-            
+            selectedCategory = TrackerCategory(title: tracker.categoryTitle, trackers: [])
+
             tableView.reloadData()
+            updateCreateButtonState()
         }
     }
     
@@ -183,7 +185,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             return
         }
         
-        let categoryTitle = tracker.categoryTitle
+        let categoryTitle = selectedCategory?.title ?? tracker.categoryTitle
         let scheduleStrings = selectedDays.map { String($0.rawValue) }
         
         let updatedTracker = Tracker(
@@ -326,14 +328,16 @@ extension CreatingTrackerViewController {
                 for: tableView,
                 at: indexPath,
                 with: emojies,
-                isEmoji: true
+                isEmoji: true,
+                selectedElement: selectedEmoji
             )
         case .color:
             return ConfigureTableViewCellsHelper.configureEmojiAndColorCell(
                 for: tableView,
                 at: indexPath,
                 with: colors,
-                isEmoji: false
+                isEmoji: false,
+                selectedElement: selectedColor?.toHexString()
             )
         case .createButtons:
             return ConfigureTableViewCellsHelper.configureCreateButtonsCell(

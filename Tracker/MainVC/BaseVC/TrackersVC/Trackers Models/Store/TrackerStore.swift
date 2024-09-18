@@ -135,36 +135,37 @@ final class TrackerStore: NSObject {
                 trackerCoreData.emoji = tracker.emoji
                 trackerCoreData.isPinned = tracker.isPinned
                 
+                let categoryFetchRequest: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+                categoryFetchRequest.predicate = NSPredicate(format: "title == %@", tracker.categoryTitle)
+                
+                let categories = try context.fetch(categoryFetchRequest)
+
+                if let category = categories.first {
+                    trackerCoreData.categoryTitle = category.title
+                } else {
+                    let newCategory = TrackerCategoryCoreData(context: context)
+                    newCategory.title = tracker.categoryTitle
+                    trackerCoreData.categoryTitle = newCategory.title
+                }
+
                 do {
                     let scheduleData = try JSONEncoder().encode(tracker.schedule)
                     trackerCoreData.schedule = String(data: scheduleData, encoding: .utf8)
                 } catch {
-                    Logger.shared.log(
-                        .error,
-                        message: "Ошибка сериализации расписания при обновлении трекера: \(tracker.name)",
-                        metadata: ["❌": error.localizedDescription]
-                    )
+                    Logger.shared.log(.error, message: "Ошибка сериализации расписания при обновлении трекера: \(tracker.name)", metadata: ["❌": error.localizedDescription])
                     throw error
                 }
-                
+
                 try context.save()
             } else {
-                Logger.shared.log(
-                    .error,
-                    message: "Трекер не найден для обновления: \(tracker.id)"
-                )
+                Logger.shared.log(.error, message: "Трекер не найден для обновления: \(tracker.id)")
             }
         } catch {
-            Logger.shared.log(
-                .error,
-                message: "Ошибка при обновлении трекера: \(tracker.name)",
-                metadata: ["❌": error.localizedDescription]
-            )
+            Logger.shared.log(.error, message: "Ошибка при обновлении трекера: \(tracker.name)", metadata: ["❌": error.localizedDescription])
             throw error
         }
     }
 
-    
     func fetchTrackers() -> [TrackerCoreData] {
         do {
             try fetchedResultsController.performFetch()

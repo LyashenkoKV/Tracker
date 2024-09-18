@@ -113,3 +113,11 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
         didUpdateData?()
     }
 }
+
+extension TrackerCategoryStore {
+    func notifyDataUpdate() {
+        DispatchQueue.main.async { [weak self] in
+            self?.didUpdateData?()
+        }
+    }
+}

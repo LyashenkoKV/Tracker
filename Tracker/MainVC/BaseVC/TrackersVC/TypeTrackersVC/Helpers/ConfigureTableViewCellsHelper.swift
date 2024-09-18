@@ -253,7 +253,8 @@ final class ConfigureTableViewCellsHelper {
         for tableView: UITableView,
         at indexPath: IndexPath,
         with items: [String],
-        isEmoji: Bool
+        isEmoji: Bool,
+        selectedElement: String?
     ) -> EmojiesAndColorsTableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: EmojiesAndColorsTableViewCell.reuseIdentifier,
@@ -261,7 +262,7 @@ final class ConfigureTableViewCellsHelper {
         ) as? EmojiesAndColorsTableViewCell else {
             return EmojiesAndColorsTableViewCell()
         }
-        cell.configure(with: items, isEmoji: isEmoji)
+        cell.configure(with: items, isEmoji: isEmoji, selectedElement: selectedElement)
         cell.selectionStyle = .none
         return cell
     }
