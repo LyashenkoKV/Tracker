@@ -186,7 +186,9 @@ final class ConfigureTableViewCellsHelper {
         
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
-            content.text = indexPath.row == 0 ? NSLocalizedString("category", comment: "Категория") : NSLocalizedString("schedule", comment: "Расписание")
+            content.text = indexPath.row == 0
+            ? NSLocalizedString("category", comment: "Категория")
+            : NSLocalizedString("schedule", comment: "Расписание")
             content.textProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             content.textProperties.adjustsFontSizeToFitWidth = true
             content.textProperties.minimumScaleFactor = 0.8
@@ -206,7 +208,9 @@ final class ConfigureTableViewCellsHelper {
             
             cell.contentConfiguration = content
         } else {
-            cell.textLabel?.text = indexPath.row == 0 ? NSLocalizedString("category", comment: "Категория") : NSLocalizedString("schedule", comment: "Расписание")
+            cell.textLabel?.text = indexPath.row == 0
+            ? NSLocalizedString("category", comment: "Категория")
+            : NSLocalizedString("schedule", comment: "Расписание")
             cell.detailTextLabel?.textColor = .ypGray
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             cell.detailTextLabel?.adjustsFontSizeToFitWidth = true

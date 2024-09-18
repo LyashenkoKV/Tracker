@@ -23,7 +23,8 @@ extension TrackersViewController {
             tracker: tracker,
             indexPath: indexPath,
             presenter: presenter,
-            viewController: self
+            viewController: self,
+            completedTrackers: completedTrackers
         )
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: {

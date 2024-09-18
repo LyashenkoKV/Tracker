@@ -215,7 +215,6 @@ extension BaseTrackerViewController: TextViewCellDelegate {
 
 // MARK: - UITableViewDataSource
 extension BaseTrackerViewController: UITableViewDataSource {
-    // Устанавливаю количесво секций в каждом VC
     func numberOfSections(in tableView: UITableView) -> Int {
         switch trackerViewControllerType {
         case .typeTrackers:
@@ -228,7 +227,7 @@ extension BaseTrackerViewController: UITableViewDataSource {
             return 0
         }
     }
-    // Устанавливаю количесво ячеек в каждой секции VC
+
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
@@ -313,25 +312,24 @@ extension BaseTrackerViewController: UITableViewDelegate {
             return ""
         }
     
-    func tableView(
-        _ tableView: UITableView,
-        viewForHeaderInSection section: Int) -> UIView? {
-            let trackerSection = sections[section]
-            
-            switch trackerSection {
-            case .textView:
-                if trackerToEdit != nil {
-                    let daysCount = 5
-                    return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
-                }
-            default:
-                if let headerTitle = trackerSection.headerTitle {
-                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
-                }
-            }
-            
-            return nil
-        }
+//    func tableView(
+//        _ tableView: UITableView,
+//        viewForHeaderInSection section: Int) -> UIView? {
+//            let trackerSection = sections[section]
+//            
+//            switch trackerSection {
+//            case .textView:
+//                if trackerToEdit != nil {
+//                    let daysCount = 5
+//                    return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
+//                }
+//            default:
+//                if let headerTitle = trackerSection.headerTitle {
+//                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
+//                }
+//            }
+//            return nil
+//        }
     
     func tableView(
         _ tableView: UITableView,

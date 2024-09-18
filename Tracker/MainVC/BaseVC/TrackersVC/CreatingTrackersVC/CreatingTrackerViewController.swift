@@ -10,9 +10,10 @@ import UIKit
 final class CreatingTrackerViewController: BaseTrackerViewController {
     
     private var trackerName: String?
+    private var isRegularEvent: Bool
+    var completedTrackers: Set<TrackerRecord>?
     var selectedColor: UIColor?
     var selectedEmoji: String?
-    private var isRegularEvent: Bool
     
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
@@ -113,6 +114,15 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         ) as? CreateButtonsViewCell {
             createButtonCell.updateCreateButtonState(isEnabled: isValid)
         }
+    }
+    
+    private func calculateDaysCount() -> Int {
+        guard let tracker = trackerToEdit, let completedTrackers = completedTrackers else {
+            return 0
+        }
+        
+        let count = completedTrackers.filter { $0.trackerId == tracker.id }.count
+        return count
     }
     
     private func setupNotificationObservers() {
@@ -382,4 +392,25 @@ extension CreatingTrackerViewController {
         
         return dayShortcuts.joined(separator: ", ")
     }
+}
+
+extension CreatingTrackerViewController {
+    func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int) -> UIView? {
+            let trackerSection = sections[section]
+            
+            switch trackerSection {
+            case .textView:
+                if trackerToEdit != nil {
+                    let daysCount = calculateDaysCount()
+                    return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
+                }
+            default:
+                if let headerTitle = trackerSection.headerTitle {
+                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
+                }
+            }
+            return nil
+        }
 }

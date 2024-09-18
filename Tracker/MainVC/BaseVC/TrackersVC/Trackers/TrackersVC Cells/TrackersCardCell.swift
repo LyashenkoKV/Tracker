@@ -196,15 +196,7 @@ final class TrackersCardCell: UICollectionViewCell {
             return record.trackerId == tracker.id
         }.count
         
-        let day = getLocalizedDayString(for: countDays)
+        let day = ConfigureTableViewCellsHelper.getLocalizedDayString(for: countDays)
         counterLabel.text = day
-    }
-    
-    private func getLocalizedDayString(for countDays: Int) -> String {
-        let localizedFormat = NSLocalizedString(
-            "day_count",
-            comment: ""
-        )
-        return String.localizedStringWithFormat(localizedFormat, countDays)
     }
 }

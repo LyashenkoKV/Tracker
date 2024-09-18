@@ -15,16 +15,21 @@ final class TrackersContextMenuHelper {
     private let indexPath: IndexPath
     private var presenter: TrackersPresenterProtocol?
     private var viewController: UIViewController?
-
+    private var completedTrackers: Set<TrackerRecord>
+    
     // MARK: - Init
-    init(tracker: Tracker,
-         indexPath: IndexPath,
-         presenter: TrackersPresenterProtocol?,
-         viewController: UIViewController?) {
+    init(
+        tracker: Tracker,
+        indexPath: IndexPath,
+        presenter: TrackersPresenterProtocol?,
+        viewController: UIViewController?,
+        completedTrackers: Set<TrackerRecord>
+    ) {
         self.tracker = tracker
         self.indexPath = indexPath
         self.presenter = presenter
         self.viewController = viewController
+        self.completedTrackers = completedTrackers
     }
 
     // MARK: - Create Context Menu
@@ -73,6 +78,7 @@ final class TrackersContextMenuHelper {
             isRegularEvent: tracker.isRegularEvent
         )
         creatingTrackerVC.trackerToEdit = tracker
+        creatingTrackerVC.completedTrackers = completedTrackers
         creatingTrackerVC.title = NSLocalizedString(
             "edit_tracker",
             comment: "Редактирование привычки"
