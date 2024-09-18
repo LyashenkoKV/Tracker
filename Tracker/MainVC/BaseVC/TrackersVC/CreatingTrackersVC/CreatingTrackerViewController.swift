@@ -395,7 +395,7 @@ extension CreatingTrackerViewController {
 }
 
 extension CreatingTrackerViewController {
-    func tableView(
+    override func tableView(
         _ tableView: UITableView,
         viewForHeaderInSection section: Int) -> UIView? {
             let trackerSection = sections[section]
@@ -407,9 +407,7 @@ extension CreatingTrackerViewController {
                     return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
                 }
             default:
-                if let headerTitle = trackerSection.headerTitle {
-                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
-                }
+                return nil
             }
             return nil
         }

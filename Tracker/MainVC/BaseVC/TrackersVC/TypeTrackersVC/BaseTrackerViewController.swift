@@ -312,24 +312,19 @@ extension BaseTrackerViewController: UITableViewDelegate {
             return ""
         }
     
-//    func tableView(
-//        _ tableView: UITableView,
-//        viewForHeaderInSection section: Int) -> UIView? {
-//            let trackerSection = sections[section]
-//            
-//            switch trackerSection {
-//            case .textView:
-//                if trackerToEdit != nil {
-//                    let daysCount = 5
-//                    return ConfigureTableViewCellsHelper.configureCounterHeaderView(with: daysCount)
-//                }
-//            default:
-//                if let headerTitle = trackerSection.headerTitle {
-//                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
-//                }
-//            }
-//            return nil
-//        }
+    func tableView(
+        _ tableView: UITableView,
+        viewForHeaderInSection section: Int) -> UIView? {
+            let trackerSection = sections[section]
+            
+            switch trackerSection {
+            default:
+                if let headerTitle = trackerSection.headerTitle {
+                    return ConfigureTableViewCellsHelper.configureTextHeaderView(title: headerTitle)
+                }
+            }
+            return nil
+        }
     
     func tableView(
         _ tableView: UITableView,
