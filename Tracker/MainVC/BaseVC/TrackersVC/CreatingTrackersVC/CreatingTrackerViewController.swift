@@ -9,11 +9,28 @@ import UIKit
 
 final class CreatingTrackerViewController: BaseTrackerViewController {
     
-    private var trackerName: String?
+    private var trackerName: String? {
+        didSet { validateForm() }
+    }
+    
     private var isRegularEvent: Bool
     var completedTrackers: Set<TrackerRecord>?
-    var selectedColor: UIColor?
-    var selectedEmoji: String?
+    
+    var selectedColor: UIColor? {
+        didSet { validateForm() }
+    }
+    
+    var selectedEmoji: String? {
+        didSet { validateForm() }
+    }
+    
+    override var selectedDays: [DayOfTheWeek] {
+        didSet { validateForm() }
+    }
+    
+    override var selectedCategory: TrackerCategory? {
+        didSet { validateForm() }
+    }
     
     init(type: TrackerViewControllerType, isRegularEvent: Bool) {
         self.isRegularEvent = isRegularEvent
@@ -34,14 +51,12 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         if let trackerToEdit = trackerToEdit {
             updateUIForEditing(tracker: trackerToEdit)
             updateCreateButtonTitle()
-            updateCreateButtonState()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateCreateButtonTitle()
-        updateCreateButtonState()
     }
     
     deinit {
@@ -49,18 +64,16 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     override func textViewCellDidChange(_ cell: TextViewCell) {
-        updateCreateButtonState()
+        self.trackerName = cell.getText().text
     }
     
     override func didSelectCategory(_ category: TrackerCategory) {
-        selectedCategory = category
+        self.selectedCategory = category
         tableView.reloadData()
-        updateCreateButtonState()
     }
     
     override func didSelect(_ days: [DayOfTheWeek]) {
         self.selectedDays = days
-        updateCreateButtonState()
         tableView.reloadRows(
             at: [IndexPath(row: 1, section: TrackerSection.buttons.rawValue)],
             with: .automatic
@@ -88,29 +101,27 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             selectedCategory = TrackerCategory(title: tracker.categoryTitle, trackers: [])
 
             tableView.reloadData()
-            updateCreateButtonState()
         }
     }
-    
-    func updateCreateButtonState() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(row: 0, section: TrackerSection.textView.rawValue)
-        ) as? TextViewCell else { return }
-        
-        let textIsValid = !textViewCell.isPlaceholderActive() && !textViewCell.getText().text.isEmpty
-        let categoryIsSelected = selectedCategory != nil
-        let colorIsSelected = selectedColor != nil
-        let emojiIsSelected = selectedEmoji != nil && !(selectedEmoji?.isEmpty ?? true)
+
+    private func validateForm() {
+        let nameIsValid = trackerName != nil && !trackerName!.isEmpty
+        let colorIsValid = selectedColor != nil
+        let emojiIsValid = selectedEmoji != nil && !selectedEmoji!.isEmpty
+        let categoryIsValid = selectedCategory != nil
         let daysAreSelected = !selectedDays.isEmpty
         
         let isValid: Bool
-        
         if isRegularEvent {
-            isValid = textIsValid && daysAreSelected && categoryIsSelected && colorIsSelected && emojiIsSelected
+            isValid = nameIsValid && colorIsValid && emojiIsValid && categoryIsValid && daysAreSelected
         } else {
-            isValid = textIsValid && categoryIsSelected && colorIsSelected && emojiIsSelected
+            isValid = nameIsValid && colorIsValid && emojiIsValid && categoryIsValid
         }
         
+        updateCreateButtonState(isValid: isValid)
+    }
+    
+    private func updateCreateButtonState(isValid: Bool) {
         if let createButtonCell = tableView.cellForRow(
             at: IndexPath(row: 0, section: TrackerSection.createButtons.rawValue)
         ) as? CreateButtonsViewCell {
@@ -157,7 +168,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         textViewCell.getText().text = tracker.name
         
         tableView.reloadData()
-        updateCreateButtonState()
     }
     
     func handleCreateButtonTapped() {
@@ -398,6 +408,7 @@ extension CreatingTrackerViewController {
     }
 }
 
+// MARK: - viewForHeaderInSection
 extension CreatingTrackerViewController {
     override func tableView(
         _ tableView: UITableView,

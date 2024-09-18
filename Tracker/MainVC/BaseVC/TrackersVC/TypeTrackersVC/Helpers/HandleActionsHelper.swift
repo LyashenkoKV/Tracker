@@ -117,7 +117,6 @@ final class HandleActionsHelper {
     ) {
         if let emoji = notification.userInfo?["selectedEmoji"] as? String {
             viewController.selectedEmoji = emoji
-            viewController.updateCreateButtonState()
         }
     }
     
@@ -127,7 +126,6 @@ final class HandleActionsHelper {
     ) {
         if let hexColor = notification.userInfo?["selectedColor"] as? String {
             viewController.selectedColor = UIColor(hex: hexColor)
-            viewController.updateCreateButtonState()
         }
     }
 }
