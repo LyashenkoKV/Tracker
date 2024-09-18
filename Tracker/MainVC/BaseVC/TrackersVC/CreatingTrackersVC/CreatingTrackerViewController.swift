@@ -193,7 +193,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             "categoryTitle": categoryTitle
         ]
         
-        NotificationCenter.default.post(name: .trackerCreated, object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: .trackerUpdated, object: nil, userInfo: userInfo)
         presentingViewController?.dismiss(animated: true)
     }
     

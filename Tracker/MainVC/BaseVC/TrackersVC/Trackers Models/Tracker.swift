@@ -33,14 +33,21 @@ extension Tracker {
         self.originalCategoryTitle = coreData.originalCategoryTitle
 
         if let scheduleString = coreData.schedule,
-           let scheduleData = scheduleString.data(using: .utf8),
-           let decodedSchedule = try? JSONDecoder().decode([String].self, from: scheduleData) {
-            self.schedule = decodedSchedule
+           let scheduleData = scheduleString.data(using: .utf8) {
+            do {
+                self.schedule = try JSONDecoder().decode([String].self, from: scheduleData)
+            } catch {
+                Logger.shared.log(
+                    .error,
+                    message: "Ошибка десериализации расписания для трекера: \(self.name)",
+                    metadata: ["❌": error.localizedDescription]
+                )
+                self.schedule = []
+            }
         } else {
             Logger.shared.log(
                 .error,
-                message: "Ошибка десериализации расписания для трекера",
-                metadata: ["❌": "\(self.name)"]
+                message: "Ошибка: расписание для трекера пустое или неверного формата: \(self.name)"
             )
             self.schedule = []
         }

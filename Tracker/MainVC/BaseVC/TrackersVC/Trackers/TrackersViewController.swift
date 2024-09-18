@@ -244,11 +244,12 @@ extension TrackersViewController {
     
     @objc private func handleTrackerUpdated(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
-              let tracker = userInfo["tracker"] as? Tracker else {
+              let updatedTracker = userInfo["tracker"] as? Tracker else {
             Logger.shared.log(.error, message: "Ошибка: не удалось извлечь трекер из уведомления.")
             return
         }
-
+        
+        presenter?.updateTracker(updatedTracker)
         presenter?.filterTrackers(for: currentDate, searchText: nil)
     }
 }

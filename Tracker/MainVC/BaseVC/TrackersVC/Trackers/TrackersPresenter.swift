@@ -21,8 +21,8 @@ protocol TrackersPresenterProtocol: AnyObject {
     func loadTrackers()
     func loadCompletedTrackers()
     func deleteTracker(at indexPath: IndexPath)
-    func editTracker(at indexPath: IndexPath)
     func togglePin(for tracker: Tracker)
+    func updateTracker(_ updatedTracker: Tracker)
 }
 
 // MARK: - Object
@@ -241,5 +241,12 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         }
     }
     
-    func editTracker(at indexPath: IndexPath) {}
+    func updateTracker(_ updatedTracker: Tracker) {
+        do {
+            try trackerStore.updateTracker(updatedTracker)
+            loadTrackers()
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при обновлении трекера \(updatedTracker.name)")
+        }
+    }
 }

@@ -130,18 +130,40 @@ final class TrackerStore: NSObject {
 
         do {
             if let trackerCoreData = try context.fetch(fetchRequest).first {
-                trackerCoreData.isPinned = tracker.isPinned 
+                trackerCoreData.name = tracker.name
+                trackerCoreData.color = tracker.color
+                trackerCoreData.emoji = tracker.emoji
+                trackerCoreData.isPinned = tracker.isPinned
+                
+                do {
+                    let scheduleData = try JSONEncoder().encode(tracker.schedule)
+                    trackerCoreData.schedule = String(data: scheduleData, encoding: .utf8)
+                } catch {
+                    Logger.shared.log(
+                        .error,
+                        message: "Ошибка сериализации расписания при обновлении трекера: \(tracker.name)",
+                        metadata: ["❌": error.localizedDescription]
+                    )
+                    throw error
+                }
+                
                 try context.save()
+            } else {
+                Logger.shared.log(
+                    .error,
+                    message: "Трекер не найден для обновления: \(tracker.id)"
+                )
             }
         } catch {
             Logger.shared.log(
                 .error,
-                message: "Ошибка при обновлении трекера \(tracker.name)",
+                message: "Ошибка при обновлении трекера: \(tracker.name)",
                 metadata: ["❌": error.localizedDescription]
             )
             throw error
         }
     }
+
     
     func fetchTrackers() -> [TrackerCoreData] {
         do {
