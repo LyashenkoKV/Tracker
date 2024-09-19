@@ -30,7 +30,7 @@ final class ContextMenuHelper {
                     )
                 ) { _ in
                     viewController.startEditingCategory(at: indexPath)
-                    tableView.reloadData()
+                    tableView.reloadRows(at: [indexPath], with: .automatic)
                 }
                 
                 let deleteAction = UIAction(
@@ -40,7 +40,7 @@ final class ContextMenuHelper {
                     ),
                     attributes: .destructive) { _ in
                         viewController.deleteCategory(at: indexPath)
-                        tableView.reloadData()
+                        tableView.reloadRows(at: [indexPath], with: .automatic)
                     }
                 return UIMenu(title: "", children: [editAction, deleteAction])
             })

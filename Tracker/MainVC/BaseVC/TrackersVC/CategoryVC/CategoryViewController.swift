@@ -88,6 +88,7 @@ final class CategoryViewController: BaseTrackerViewController {
     
     private func setupBindings() {
         viewModel.onCategoriesUpdated = { [weak self] categories in
+            self?.categories = categories
             self?.tableView.reloadData()
         }
         

@@ -50,7 +50,7 @@ final class HandleActionsHelper {
                 navController.modalPresentationStyle = .formSheet
                 viewController.present(navController, animated: true)
             } else {
-                print("Неизвестный индекс ячейки: \(indexPath.row)")
+                Logger.shared.log(.error, message: "Неизвестный индекс ячейки: \(indexPath.row)")
             }
         }
     }
@@ -70,19 +70,17 @@ final class HandleActionsHelper {
         viewController: BaseTrackerViewController
     ) {
         guard let dataProvider = viewController.dataProvider, indexPath.row < dataProvider.numberOfItems else {
-            print("Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
+            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
             return
         }
 
         guard indexPath.row < viewController.categories.count else {
-            print("Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
+            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
             return
         }
 
         viewController.editingCategoryIndex = indexPath
         viewController.isAddingCategory = true
-
-        print("Начинаем редактирование категории на индексе \(indexPath.row)")
         viewController.tableView.reloadData()
     }
 
@@ -98,7 +96,7 @@ final class HandleActionsHelper {
 
         if let editingIndex = viewController.editingCategoryIndex {
             guard editingIndex.row < viewController.categories.count else {
-                print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                Logger.shared.log(.error, message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
                 return
             }
             viewController.categories[editingIndex.row] = newCategory

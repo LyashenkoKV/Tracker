@@ -114,9 +114,7 @@ final class TrackersViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        Logger.shared.log(.info, message: "TrackersViewController загружен. Начинается загрузка трекеров.")
-        
+
         addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil)
         presenter?.loadCompletedTrackers()

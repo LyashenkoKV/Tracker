@@ -34,18 +34,14 @@ final class TrackersContextMenuHelper {
 
     // MARK: - Create Context Menu
     func createContextMenu() -> UIMenu {
-        Logger.shared.log(.info, message: "Creating context menu for tracker: \(tracker.name)")
-        
         let pinTitle = self.tracker.isPinned
             ? NSLocalizedString("unpin", comment: "Открепить")
             : NSLocalizedString("pin", comment: "Закрепить")
         
-        Logger.shared.log(.info, message: "Pin action title: \(pinTitle)")
-
         let pinAction = UIAction(
             title: pinTitle
-        ) { _ in
-            Logger.shared.log(.info, message: "\(pinTitle) action selected for tracker: \(self.tracker.name)")
+        ) { [weak self] _ in
+            guard let self else { return }
             self.presenter?.togglePin(for: self.tracker)
         }
 
@@ -59,12 +55,9 @@ final class TrackersContextMenuHelper {
         let editAction = UIAction(
             title: NSLocalizedString("edit", comment: "Редактировать")
         ) { _ in
-            Logger.shared.log(.info, message: "Edit action selected for tracker: \(self.tracker.name)")
             self.showEditTrackerView()
         }
         
-        Logger.shared.log(.info, message: "Context menu created successfully")
-
         return UIMenu(
             title: "",
             children: [pinAction, editAction, deleteAction]

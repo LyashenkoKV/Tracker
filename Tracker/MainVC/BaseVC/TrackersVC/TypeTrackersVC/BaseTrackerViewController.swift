@@ -126,20 +126,19 @@ class BaseTrackerViewController: UIViewController {
     func textViewCellDidChange(_ cell: TextViewCell) {}
     
     func startEditingCategory(at indexPath: IndexPath) {
+
         guard let dataProvider = dataProvider, indexPath.row < dataProvider.numberOfItems else {
-            print("Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
+            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
             return
         }
 
         guard indexPath.row < categories.count else {
-            print("Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
+            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
             return
         }
 
         editingCategoryIndex = indexPath
         isAddingCategory = true
-
-        print("Начинаем редактирование категории на индексе \(indexPath.row)")
 
         tableView.reloadData()
     }
@@ -151,12 +150,11 @@ class BaseTrackerViewController: UIViewController {
         let newCategory = TrackerCategory(title: newText, trackers: [])
 
         if let editingIndex = editingCategoryIndex {
-            // Проверка перед изменением массива
             guard editingIndex.row < categories.count else {
-                print("Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                Logger.shared.log(.error, message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
                 return
             }
-
+            
             categories[editingIndex.row] = newCategory
             editingCategoryIndex = nil
         } else {
