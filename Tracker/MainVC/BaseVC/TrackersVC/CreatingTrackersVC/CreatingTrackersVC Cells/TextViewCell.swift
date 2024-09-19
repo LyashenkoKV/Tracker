@@ -90,7 +90,6 @@ final class TextViewCell: UITableViewCell {
             isVisiblePlaceholder = false
             textView.textColor = .ypBlack
             textView.text = text
-            //isVisiblePlaceholder = true
         } else {
             isVisiblePlaceholder = true
             textView.text = text

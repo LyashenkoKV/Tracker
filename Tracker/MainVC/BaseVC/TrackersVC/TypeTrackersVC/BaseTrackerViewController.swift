@@ -128,12 +128,18 @@ class BaseTrackerViewController: UIViewController {
     func startEditingCategory(at indexPath: IndexPath) {
 
         guard let dataProvider = dataProvider, indexPath.row < dataProvider.numberOfItems else {
-            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы источника данных.")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка: индекс \(indexPath.row) выходит за пределы источника данных."
+            )
             return
         }
 
         guard indexPath.row < categories.count else {
-            Logger.shared.log(.error, message: "Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий.")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка: индекс \(indexPath.row) выходит за пределы массива категорий."
+            )
             return
         }
 
@@ -151,7 +157,10 @@ class BaseTrackerViewController: UIViewController {
 
         if let editingIndex = editingCategoryIndex {
             guard editingIndex.row < categories.count else {
-                Logger.shared.log(.error, message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                Logger.shared.log(
+                    .error,
+                    message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий."
+                )
                 return
             }
             

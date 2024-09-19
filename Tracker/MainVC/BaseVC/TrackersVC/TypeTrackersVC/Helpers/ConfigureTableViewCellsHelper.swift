@@ -107,9 +107,14 @@ final class ConfigureTableViewCellsHelper {
         
         if let editingIndex = editingCategoryIndex {
             guard editingIndex.row < categories.count else {
-                Logger.shared.log(.error, message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий.")
+                Logger.shared.log(
+                    .error,
+                    message: "Ошибка: индекс \(editingIndex.row) выходит за пределы массива категорий."
+                )
                 return UITableViewCell()
             }
+            
+            cell.changeText(categories[editingIndex.row].title, editing: true)
             
             viewController.title = NSLocalizedString(
                 "edit_category",

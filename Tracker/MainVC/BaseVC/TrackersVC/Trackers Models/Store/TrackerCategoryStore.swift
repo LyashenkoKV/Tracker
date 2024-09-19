@@ -52,7 +52,6 @@ final class TrackerCategoryStore: NSObject {
             let categoryCoreData = TrackerCategoryCoreData(context: context)
             categoryCoreData.title = category.title
             try context.save()
-            Logger.shared.log(.debug, message: "Добавлена новая категория: \(category.title)")
         }
         
         try fetchedResultsController.performFetch()
