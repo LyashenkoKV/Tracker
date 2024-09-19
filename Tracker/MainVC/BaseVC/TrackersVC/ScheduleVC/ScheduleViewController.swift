@@ -22,7 +22,7 @@ final class ScheduleViewController: BaseTrackerViewController {
         ),
         backgroundColor: .ypBlack,
         titleColor: .ypBackground,
-        cornerRadius: 16,
+        cornerRadius: 20,
         font: UIFont.systemFont(ofSize: 16, weight: .medium),
         target: self,
         action: #selector(addDoneButtonAction)

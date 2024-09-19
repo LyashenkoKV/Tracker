@@ -38,7 +38,7 @@ final class TextViewCell: UITableViewCell {
         textView.textColor = .lightGray
         textView.tintColor = .systemBlue
         textView.isScrollEnabled = false
-        textView.layer.cornerRadius = 16
+        textView.layer.cornerRadius = 15
         textView.layer.masksToBounds = true
         textView.backgroundColor = .ypWhiteGray
         textView.textAlignment = .left

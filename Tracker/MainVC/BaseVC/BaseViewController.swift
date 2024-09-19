@@ -56,7 +56,7 @@ class BaseViewController: UIViewController {
     }
     
     // MARK: - Setup UI
-    func setupUI() {
+    private func setupUI() {
         [collectionView, placeholder.view].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false

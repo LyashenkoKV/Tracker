@@ -21,7 +21,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
     private let colorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = 10
         return view
     }()
     
@@ -39,7 +39,7 @@ final class EmojiesAndColorsCollectionViewCell: UICollectionViewCell {
             contentView.addSubview($0)
         }
         contentView.backgroundColor = .clear
-        contentView.layer.cornerRadius = 16
+        contentView.layer.cornerRadius = 15
         NSLayoutConstraint.activate([
             emojiLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),

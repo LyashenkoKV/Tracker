@@ -176,7 +176,7 @@ final class ConfigureTableViewCellsHelper {
         cell.tintColor = .systemBlue
         
         if totalRows == 1 {
-            cell.layer.cornerRadius = 16
+            cell.layer.cornerRadius = 15
             cell.layer.maskedCorners = [
                 .layerMinXMinYCorner,
                 .layerMaxXMinYCorner,
@@ -184,13 +184,13 @@ final class ConfigureTableViewCellsHelper {
                 .layerMaxXMaxYCorner
             ]
         } else if indexPath.row == 0 {
-            cell.layer.cornerRadius = 16
+            cell.layer.cornerRadius = 15
             cell.layer.maskedCorners = [
                 .layerMinXMinYCorner,
                 .layerMaxXMinYCorner
             ]
         } else if indexPath.row == totalRows - 1 {
-            cell.layer.cornerRadius = 16
+            cell.layer.cornerRadius = 15
             cell.layer.maskedCorners = [
                 .layerMinXMaxYCorner,
                 .layerMaxXMaxYCorner

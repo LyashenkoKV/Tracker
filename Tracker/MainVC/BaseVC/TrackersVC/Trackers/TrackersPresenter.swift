@@ -11,7 +11,6 @@ import Foundation
 protocol TrackersPresenterProtocol: AnyObject {
     var view: TrackersViewControllerProtocol? { get set }
     var dateFormatter: DateFormatter { get }
-    
     func addTracker(_ tracker: Tracker, categoryTitle: String)
     func trackerCompletedMark(_ trackerId: UUID, date: String)
     func trackerCompletedUnmark(_ trackerId: UUID, date: String)

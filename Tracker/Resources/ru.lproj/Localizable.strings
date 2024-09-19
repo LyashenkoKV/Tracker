@@ -32,7 +32,6 @@
 "trackers_placeholder" = "Что будем отслеживать?";
 "notfound_search_placholder" = "Ничего не найдено";
 "search_cancel" = "Отменить";
-"filters_button" = "Фильтры";
 
 // TrackerVCDelegate & ContextMenuHelper
 "pin" = "Закрепить";

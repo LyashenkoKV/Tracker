@@ -134,7 +134,7 @@ final class TrackersCardCell: UICollectionViewCell {
     private func setupConstraints() {
         contentView.addSubview(mainVerticalStack)
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
-        mainVerticalStack.layer.cornerRadius = 16
+        mainVerticalStack.layer.cornerRadius = 13
         mainVerticalStack.layer.masksToBounds = true
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))

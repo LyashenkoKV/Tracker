@@ -74,8 +74,6 @@
 		24937A972C906BDD00EDBAB7 /* ViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937A962C906BDD00EDBAB7 /* ViewControllerType.swift */; };
 		24937B072C981EEA00EDBAB7 /* TrackerDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */; };
 		24937B0C2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24937B0B2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift */; };
-		24EADFD92C9CC2920095E361 /* TrackersFilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EADFD82C9CC2920095E361 /* TrackersFilterManager.swift */; };
-		24EADFDB2C9CC3E70095E361 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EADFDA2C9CC3E70095E361 /* FilterViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -170,8 +168,6 @@
 		24937AB72C91951500EDBAB7 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		24937B062C981EEA00EDBAB7 /* TrackerDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataProvider.swift; sourceTree = "<group>"; };
 		24937B0B2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersContextMenuHelper.swift; sourceTree = "<group>"; };
-		24EADFD82C9CC2920095E361 /* TrackersFilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersFilterManager.swift; sourceTree = "<group>"; };
-		24EADFDA2C9CC3E70095E361 /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -333,7 +329,6 @@
 		243024F02C52891C00B0F1D3 /* TrackersVC */ = {
 			isa = PBXGroup;
 			children = (
-				24EADFD72C9CC2650095E361 /* Filters */,
 				247E504C2C58DC3200630037 /* Trackers Models */,
 				24937A8E2C903AE400EDBAB7 /* Trackers */,
 				2411D6722C621C3B0031C584 /* TypeTrackersVC */,
@@ -446,15 +441,6 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		24EADFD72C9CC2650095E361 /* Filters */ = {
-			isa = PBXGroup;
-			children = (
-				24EADFD82C9CC2920095E361 /* TrackersFilterManager.swift */,
-				24EADFDA2C9CC3E70095E361 /* FilterViewController.swift */,
-			);
-			path = Filters;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -556,7 +542,6 @@
 				243024DC2C525B3500B0F1D3 /* AppDelegate.swift in Sources */,
 				2411D67E2C6233F50031C584 /* EmojiesAndColorsTableViewCell.swift in Sources */,
 				243024F52C5289B500B0F1D3 /* StatisticsViewController.swift in Sources */,
-				24EADFD92C9CC2920095E361 /* TrackersFilterManager.swift in Sources */,
 				2411D6942C63676E0031C584 /* UIColor + Extensions.swift in Sources */,
 				2411D6AC2C69456B0031C584 /* CategoryBaseCell.swift in Sources */,
 				24937B0C2C98718D00EDBAB7 /* TrackersContextMenuHelper.swift in Sources */,
@@ -593,7 +578,6 @@
 				2476B0A92C6A8F3700ADAD1B /* TrackerViewControllerType.swift in Sources */,
 				2411D69B2C63AAD90031C584 /* CategoryViewController.swift in Sources */,
 				24937A972C906BDD00EDBAB7 /* ViewControllerType.swift in Sources */,
-				24EADFDB2C9CC3E70095E361 /* FilterViewController.swift in Sources */,
 				241FE2C52C7383CB00903AC8 /* CoreDataStack.swift in Sources */,
 				247E50502C58DC6400630037 /* TrackerCategory.swift in Sources */,
 				2411D6772C622E200031C584 /* CreatingTrackerViewController.swift in Sources */,
