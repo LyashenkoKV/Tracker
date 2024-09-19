@@ -12,6 +12,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
     var visibleCategories: [TrackerCategory] { get set }
     var completedTrackers: Set<TrackerRecord> { get set }
     var currentDate: Date { get set }
+    
     func updatePlaceholder(isSearchActive: Bool)
     func reloadData()
 }
@@ -24,6 +25,8 @@ final class TrackersViewController: BaseViewController {
     var visibleCategories: [TrackerCategory] = []
     var completedTrackers: Set<TrackerRecord> = []
     var currentDate: Date = Date()
+    
+    private var currentFilter: TrackerFilter = .allTrackers
     
     let params = GeometricParams(
         cellCount: 1,
@@ -39,7 +42,7 @@ final class TrackersViewController: BaseViewController {
         picker.locale = Locale.current
         picker.backgroundColor = .ypLightGray
         picker.overrideUserInterfaceStyle = .light
-        picker.layer.cornerRadius = 10
+        picker.layer.cornerRadius = 8
         picker.layer.masksToBounds = true
         picker.tintColor = .systemBlue
         picker.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -68,7 +71,22 @@ final class TrackersViewController: BaseViewController {
         return searchController
     }()
     
-    // MARK: - BarButtonItems
+    private lazy var filterButtonItem: UIButton = {
+        let button = UIButton()
+        button.setTitle(NSLocalizedString("filters_button", comment: "Фильтры"), for: .normal)
+        button.titleLabel?.font = .systemFont(
+            ofSize: 17,
+            weight: .regular
+        )
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .ypBlue
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private lazy var addNewTrackerButtonItem: UIBarButtonItem = {
         let button = UIButton()
         button.tintColor = .ypBlack
@@ -115,11 +133,24 @@ final class TrackersViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupUI()
         addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil)
         presenter?.loadCompletedTrackers()
         
         updatePlaceholder(isSearchActive: false)
+    }
+    
+    override func setupUI() {
+        super.setupUI()
+        view.addSubview(filterButtonItem)
+        
+        NSLayoutConstraint.activate([
+            filterButtonItem.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButtonItem.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButtonItem.widthAnchor.constraint(equalToConstant: 114),
+            filterButtonItem.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
     
     func configure(_ presenter: TrackersPresenterProtocol) {
@@ -146,14 +177,32 @@ final class TrackersViewController: BaseViewController {
         let categoriesToCheck = isSearchActive ? visibleCategories : categories
         let hasData = categoriesToCheck.contains { !$0.trackers.isEmpty }
         
-        self.placeholderImageName = hasData ? PHName.trackersPH.rawValue : (isSearchActive ? PHName.searchPH.rawValue : PHName.trackersPH.rawValue)
+        self.placeholderImageName = hasData
+        ? PHName.trackersPH.rawValue
+        : (isSearchActive
+            ? PHName.searchPH.rawValue
+            : PHName.trackersPH.rawValue)
         self.placeholderText = NSLocalizedString(
-            hasData ? "trackers_placeholder" : (isSearchActive ? "notfound_search_placholder" : "trackers_placeholder"),
+            hasData
+            ? "trackers_placeholder"
+            : (isSearchActive
+               ? "notfound_search_placholder"
+               : "trackers_placeholder"),
             comment: "Обновление плейсхолдера в зависимости от состояния"
         )
 
-        placeholder.update(image: UIImage(named: placeholderImageName) ?? UIImage(), text: placeholderText)
+        placeholder.update(
+            image: UIImage(named: placeholderImageName) ?? UIImage(),
+            text: placeholderText
+        )
         updatePlaceholderView(hasData: hasData)
+    }
+    
+    @objc private func filterButtonTapped() {
+//        let filterOptionsVC = FilterOptionsViewController(selectedFilter: currentFilter)
+//        filterOptionsVC.modalPresentationStyle = .overFullScreen
+//        filterOptionsVC.delegate = self
+//        self.present(filterOptionsVC, animated: true, completion: nil)
     }
 }
 

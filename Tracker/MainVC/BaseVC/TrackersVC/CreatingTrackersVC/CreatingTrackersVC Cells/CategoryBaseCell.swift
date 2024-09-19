@@ -41,7 +41,7 @@ class CategoryBaseCell: UITableViewCell {
         contentView.addSubview(categoryLabel)
         contentView.addSubview(toggleSwitch)
         contentView.backgroundColor = .clear
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = 16
         
         NSLayoutConstraint.activate([
             categoryLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 26),

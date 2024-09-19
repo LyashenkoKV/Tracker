@@ -38,7 +38,7 @@ final class CategoryViewController: BaseTrackerViewController {
         ),
         backgroundColor: .ypBlack,
         titleColor: .ypBackground,
-        cornerRadius: 20,
+        cornerRadius: 16,
         font: UIFont.systemFont(
             ofSize: 16,
             weight: .medium

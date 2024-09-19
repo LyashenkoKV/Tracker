@@ -67,7 +67,7 @@ extension TrackersViewController {
         forItemAt indexPath: IndexPath
     ) {
         if let trackersCell = cell as? TrackersCardCell {
-            trackersCell.layer.cornerRadius = 13
+            trackersCell.layer.cornerRadius = 16
             trackersCell.layer.masksToBounds = true
         }
     }
