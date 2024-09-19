@@ -42,19 +42,14 @@ extension UIColor {
 }
 
 extension UIColor {
-    func toHexString(includeAlpha: Bool = true) -> String {
+    func toHexString() -> String {
         var r: CGFloat = 0
         var g: CGFloat = 0
         var b: CGFloat = 0
         var a: CGFloat = 0
         getRed(&r, green: &g, blue: &b, alpha: &a)
         
-        if includeAlpha {
-            let rgba: UInt32 = (UInt32)(r*255)<<24 | (UInt32)(g*255)<<16 | (UInt32)(b*255)<<8 | (UInt32)(a*255)<<0
-            return String(format:"#%08x", rgba)
-        } else {
-            let rgb: UInt32 = (UInt32)(r*255)<<16 | (UInt32)(g*255)<<8 | (UInt32)(b*255)<<0
-            return String(format:"#%06x", rgb)
-        }
+        let rgb: UInt32 = (UInt32)(r * 255) << 16 | (UInt32)(g * 255) << 8 | (UInt32)(b * 255)
+        return String(format: "#%06X", rgb)
     }
 }
