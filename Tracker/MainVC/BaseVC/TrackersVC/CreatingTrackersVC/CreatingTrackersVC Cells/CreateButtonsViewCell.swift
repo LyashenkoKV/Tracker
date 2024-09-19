@@ -118,7 +118,6 @@ final class CreateButtonsViewCell: UITableViewCell {
             createButton.isUserInteractionEnabled = true
         } else {
             createButton.backgroundColor = .ypGray
-            
         }
     }
     

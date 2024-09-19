@@ -31,10 +31,13 @@ extension TrackersViewController {
             guard let cell = collectionView.cellForItem(at: indexPath) as? TrackersCardCell else {
                 return nil
             }
-            
+
             let previewViewController = UIViewController()
-            previewViewController.view = cell.messageStack.snapshotView(afterScreenUpdates: true)
+            let snapshot = cell.messageStack.snapshotView(afterScreenUpdates: true)
+            previewViewController.view = snapshot
+            snapshot?.frame = cell.messageStack.bounds
             previewViewController.preferredContentSize = cell.messageStack.bounds.size
+            
             return previewViewController
         }, actionProvider: { _ in
             return contextMenuHelper.createContextMenu()
@@ -47,7 +50,7 @@ extension TrackersViewController {
         animator: UIContextMenuInteractionAnimating?) {
             
             animator?.addCompletion { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 
                 if let indexPath = configuration.identifier as? IndexPath {
                     if let cell = self.collectionView.cellForItem(at: indexPath) as? TrackersCardCell {
@@ -57,5 +60,16 @@ extension TrackersViewController {
                 }
             }
         }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        if let trackersCell = cell as? TrackersCardCell {
+            trackersCell.layer.cornerRadius = 13
+            trackersCell.layer.masksToBounds = true
+        }
+    }
 }
 

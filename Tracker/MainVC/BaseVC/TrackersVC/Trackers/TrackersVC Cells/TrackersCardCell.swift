@@ -134,6 +134,8 @@ final class TrackersCardCell: UICollectionViewCell {
     private func setupConstraints() {
         contentView.addSubview(mainVerticalStack)
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
+        mainVerticalStack.layer.cornerRadius = 13
+        mainVerticalStack.layer.masksToBounds = true
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         messageStack.addGestureRecognizer(longPressGesture)
@@ -146,26 +148,19 @@ final class TrackersCardCell: UICollectionViewCell {
         ])
     }
     
-    func createPreview() -> UIView {
-        let previewView = UIView()
-        previewView.backgroundColor = .clear
-        
-        if let messageStackSnapshot = messageStack.snapshotView(afterScreenUpdates: true) {
-            previewView.addSubview(messageStackSnapshot)
-            messageStackSnapshot.frame = previewView.bounds
-        }
-        return previewView
-    }
-    
     @objc private func completeButtonTapped() {
         selectButtonTappedHandler?()
     }
     
     @objc private func handleLongPress() {
         longPressHandler?()
-        
-        UIView.animate(withDuration: 0.2) {
-            self.contentView.backgroundColor = UIColor.systemOrange.withAlphaComponent(0.3)
+
+        UIView.animate(withDuration: 0.2, animations: {
+            self.contentView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                self.contentView.transform = CGAffineTransform.identity
+            }
         }
     }
     
