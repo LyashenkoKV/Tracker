@@ -157,16 +157,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         selectedEmoji = tracker.emoji
         selectedDays = tracker.schedule.compactMap { DayOfTheWeek(rawValue: $0) }
         
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(
-                row: 0,
-                section: TrackerSection.textView.rawValue
-            )
-        ) as? TextViewCell else {
-            return
-        }
-        textViewCell.getText().text = tracker.name
-        
         tableView.reloadData()
     }
     
@@ -179,13 +169,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     private func updateExistingTracker(_ tracker: Tracker) {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(
-                row: 0,
-                section: TrackerSection.textView.rawValue
-            )
-        ) as? TextViewCell,
-              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+        guard let trackerName = trackerName, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
             Logger.shared.log(
@@ -220,13 +204,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     private func createNewTracker() {
-        guard let textViewCell = tableView.cellForRow(
-            at: IndexPath(
-                row: 0,
-                section: TrackerSection.textView.rawValue
-            )
-        ) as? TextViewCell,
-              let trackerName = textViewCell.getText().text, !trackerName.isEmpty,
+        guard let trackerName = trackerName, !trackerName.isEmpty,
               let selectedColor = selectedColor,
               let selectedEmoji = selectedEmoji else {
             Logger.shared.log(
@@ -311,7 +289,12 @@ extension CreatingTrackerViewController {
         
         switch trackerSection {
         case .textView:
-            return ConfigureTableViewCellsHelper.configureTextViewCell(for: tableView, at: indexPath, delegate: self)
+            return ConfigureTableViewCellsHelper.configureTextViewCell(
+                for: tableView,
+                at: indexPath,
+                delegate: self,
+                trackerToEdit: trackerToEdit
+            )
         case .buttons:
             let cell = UITableViewCell()
             let totalRows = isRegularEvent ? 2 : 1

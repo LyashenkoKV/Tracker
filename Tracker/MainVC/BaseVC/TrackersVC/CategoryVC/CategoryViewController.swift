@@ -154,10 +154,6 @@ final class CategoryViewController: BaseTrackerViewController {
         
         tableView.reloadData()
     }
-    
-    private func updatePlaceholder() {
-        placeholder.view.isHidden = !categories.isEmpty || isAddingCategory
-    }
 
     override func textViewCellDidChange(_ cell: TextViewCell) {
         super.textViewCellDidChange(cell)

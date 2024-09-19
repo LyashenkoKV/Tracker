@@ -111,16 +111,17 @@ final class ConfigureTableViewCellsHelper {
                 return UITableViewCell()
             }
             
-            let category = categories[editingIndex.row]
-            cell.getText().text = category.title
             viewController.title = NSLocalizedString(
                 "edit_category",
                 comment: "Редактирование категории"
             )
         } else {
-            cell.getText().text = !isAddingCategory ? "" : NSLocalizedString(
-                "enter_cat_name",
-                comment: "Введите название категории"
+            cell.changeText(
+                NSLocalizedString(
+                    "enter_cat_name",
+                    comment: "Введите название категории"
+                ),
+                editing: false
             )
             viewController.title = NSLocalizedString(
                 "new_category",
@@ -137,7 +138,8 @@ final class ConfigureTableViewCellsHelper {
     static func configureTextViewCell(
         for tableView: UITableView,
         at indexPath: IndexPath,
-        delegate: TextViewCellDelegate
+        delegate: TextViewCellDelegate,
+        trackerToEdit: Tracker?
     ) -> TextViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TextViewCell.reuseIdentifier,
@@ -145,6 +147,14 @@ final class ConfigureTableViewCellsHelper {
         ) as? TextViewCell else {
             return TextViewCell()
         }
+        
+        if let trackerToEdit = trackerToEdit {
+            cell.changeText(
+                trackerToEdit.name,
+                editing: true
+            )
+        }
+        
         cell.delegate = delegate
         cell.selectionStyle = .none
         return cell
@@ -162,13 +172,24 @@ final class ConfigureTableViewCellsHelper {
         
         if totalRows == 1 {
             cell.layer.cornerRadius = 15
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.layer.maskedCorners = [
+                .layerMinXMinYCorner,
+                .layerMaxXMinYCorner,
+                .layerMinXMaxYCorner,
+                .layerMaxXMaxYCorner
+            ]
         } else if indexPath.row == 0 {
             cell.layer.cornerRadius = 15
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            cell.layer.maskedCorners = [
+                .layerMinXMinYCorner,
+                .layerMaxXMinYCorner
+            ]
         } else if indexPath.row == totalRows - 1 {
             cell.layer.cornerRadius = 15
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.layer.maskedCorners = [
+                .layerMinXMaxYCorner,
+                .layerMaxXMaxYCorner
+            ]
         } else {
             cell.layer.cornerRadius = 0
         }

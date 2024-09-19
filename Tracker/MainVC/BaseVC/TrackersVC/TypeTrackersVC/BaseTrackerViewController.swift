@@ -17,8 +17,8 @@ class BaseTrackerViewController: UIViewController {
     var colors: [String] = []
     var categories: [TrackerCategory] = []
     var selectedCategories: [TrackerCategory] = []
-    var selectedDays: [DayOfTheWeek] = []
     var selectedCategory: TrackerCategory?
+    var selectedDays: [DayOfTheWeek] = []
     var editingCategoryIndex: IndexPath?
     var trackerToEdit: Tracker?
     

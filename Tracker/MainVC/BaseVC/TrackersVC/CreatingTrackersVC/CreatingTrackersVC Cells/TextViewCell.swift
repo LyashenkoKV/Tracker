@@ -64,6 +64,7 @@ final class TextViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        textView.text = ""
         if isVisiblePlaceholder {
             textView.text = placeholderText
             textView.textColor = .lightGray
@@ -80,12 +81,20 @@ final class TextViewCell: UITableViewCell {
         ])
     }
     
-    func isPlaceholderActive() -> Bool {
-        return getText().text == placeholderText
-    }
-    
     func getText() -> UITextView {
         return textView
+    }
+    
+    func changeText(_ text: String, editing: Bool) {
+        if editing {
+            isVisiblePlaceholder = false
+            textView.textColor = .ypBlack
+            textView.text = text
+            //isVisiblePlaceholder = true
+        } else {
+            isVisiblePlaceholder = true
+            textView.text = text
+        }
     }
 }
 
