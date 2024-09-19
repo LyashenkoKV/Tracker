@@ -27,7 +27,7 @@ final class StatisticCell: UICollectionViewCell {
     
     private let containerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 8
+        view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         return view
     }()
@@ -47,7 +47,7 @@ final class StatisticCell: UICollectionViewCell {
     private let borderLayer: CALayer = {
         let borderLayer = CALayer()
         borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 8
+        borderLayer.cornerRadius = 16
         borderLayer.masksToBounds = true
         return borderLayer
     }()
@@ -67,7 +67,7 @@ final class StatisticCell: UICollectionViewCell {
         gradientLayer.frame = containerView.bounds
         borderLayer.frame = containerView.bounds
         borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 8
+        borderLayer.cornerRadius = 16
     }
     
     private func setupUI() {

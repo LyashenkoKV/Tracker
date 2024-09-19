@@ -97,7 +97,7 @@ final class CreateButtonsViewCell: UITableViewCell {
             ofSize: 16,
             weight: .medium
         )
-        button.layer.cornerRadius = 15
+        button.layer.cornerRadius = 16
         button.isUserInteractionEnabled = true
         button.addTarget(self, action: action, for: .touchUpInside)
         return button
