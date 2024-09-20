@@ -71,8 +71,15 @@ final class ScheduleViewController: BaseTrackerViewController {
         
         cell.toggleSwitch.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
         
-        ConfigureTableViewCellsHelper.configureBaseCell(cell, at: indexPath, totalRows: DayOfTheWeek.allCases.count)
-        ConfigureTableViewCellsHelper.configureSeparator(cell, isLastRow: indexPath.row == DayOfTheWeek.allCases.count - 1)
+        ConfigureTableViewCellsHelper.configureBaseCell(
+            cell,
+            at: indexPath,
+            totalRows: DayOfTheWeek.allCases.count
+        )
+        ConfigureTableViewCellsHelper.configureSeparator(
+            cell,
+            isLastRow: indexPath.row == DayOfTheWeek.allCases.count - 1
+        )
         
         return cell
     }

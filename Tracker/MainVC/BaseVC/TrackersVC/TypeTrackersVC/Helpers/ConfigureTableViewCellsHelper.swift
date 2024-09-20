@@ -84,8 +84,15 @@ final class ConfigureTableViewCellsHelper {
             cell.accessoryType = .none
         }
         
-        configureBaseCell(cell, at: indexPath, totalRows: dataProvider?.numberOfItems ?? 0)
-        configureSeparator(cell, isLastRow: indexPath.row == (dataProvider?.numberOfItems ?? 0) - 1)
+        configureBaseCell(
+            cell,
+            at: indexPath,
+            totalRows: dataProvider?.numberOfItems ?? 0
+        )
+        configureSeparator(
+            cell,
+            isLastRow: indexPath.row == (dataProvider?.numberOfItems ?? 0) - 1
+        )
         
         return cell
     }
@@ -94,8 +101,7 @@ final class ConfigureTableViewCellsHelper {
                                       tableView: UITableView,
                                       categories: [TrackerCategory],
                                       viewController: BaseTrackerViewController,
-                                      editingCategoryIndex: IndexPath?,
-                                      isAddingCategory: Bool
+                                      editingCategoryIndex: IndexPath?
     ) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TextViewCell.reuseIdentifier,

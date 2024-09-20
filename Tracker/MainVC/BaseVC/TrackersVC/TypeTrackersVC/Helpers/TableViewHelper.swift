@@ -57,8 +57,7 @@ final class TableViewHelper {
                     tableView: tableView,
                     categories: categories,
                     viewController: viewController,
-                    editingCategoryIndex: editingCategoryIndex,
-                    isAddingCategory: isAddingCategory
+                    editingCategoryIndex: editingCategoryIndex
                 )
             } else {
                 return ConfigureTableViewCellsHelper.configureCategoryCell(

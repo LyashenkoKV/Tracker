@@ -258,9 +258,6 @@ extension TrackersViewController {
             )
             return
         }
-        
-        Logger.shared.log(.info, message: "userInfo: \(userInfo)")
-        Logger.shared.log(.info, message: "Трекер извлечён: \(tracker.name), Категория: \(categoryTitle)")
 
         var updatedTracker = tracker
 
@@ -284,7 +281,6 @@ extension TrackersViewController {
                 isPinned: false
             )
         }
-        Logger.shared.log(.info, message: "Трекер обновлён и добавлен в presenter: \(updatedTracker.name)")
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
         presenter?.filterTrackers(for: currentDate, searchText: nil)
     }

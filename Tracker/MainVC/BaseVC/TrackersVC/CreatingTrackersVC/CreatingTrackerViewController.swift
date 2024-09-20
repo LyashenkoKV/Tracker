@@ -239,7 +239,11 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
     }
     
     private func handleCancelButtonTapped() {
-        presentingViewController?.presentingViewController?.dismiss(animated: true)
+        if trackerToEdit != nil {
+            presentingViewController?.dismiss(animated: true)
+        } else {
+            presentingViewController?.presentingViewController?.dismiss(animated: true)
+        }
     }
     
     @objc private func handleEmojiSelected(_ notification: Notification) {

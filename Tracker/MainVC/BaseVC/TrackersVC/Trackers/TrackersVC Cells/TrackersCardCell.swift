@@ -67,6 +67,21 @@ final class TrackersCardCell: UICollectionViewCell {
         return label
     }()
     
+    private lazy var pinImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "pin.fill")
+        imageView.tintColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    private lazy var pinContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var horizontalStack: UIStackView = {
         let view = UIView()
         view.widthAnchor.constraint(equalToConstant: 5).isActive = true
@@ -132,7 +147,11 @@ final class TrackersCardCell: UICollectionViewCell {
     }
     
     private func setupConstraints() {
-        contentView.addSubview(mainVerticalStack)
+        [mainVerticalStack, pinContainerView].forEach {
+            contentView.addSubview($0)
+        }
+        pinContainerView.addSubview(pinImageView)
+        
         mainVerticalStack.translatesAutoresizingMaskIntoConstraints = false
         mainVerticalStack.layer.cornerRadius = 16
         mainVerticalStack.layer.masksToBounds = true
@@ -144,7 +163,17 @@ final class TrackersCardCell: UICollectionViewCell {
             mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor),
             mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             mainVerticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
+            pinContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            pinContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            pinContainerView.widthAnchor.constraint(equalToConstant: 24),
+            pinContainerView.heightAnchor.constraint(equalToConstant: 24),
+            
+            pinImageView.topAnchor.constraint(equalTo: pinContainerView.topAnchor, constant: 6),
+            pinImageView.leadingAnchor.constraint(equalTo: pinContainerView.leadingAnchor, constant: 8),
+            pinImageView.trailingAnchor.constraint(equalTo: pinContainerView.trailingAnchor, constant: -6),
+            pinImageView.bottomAnchor.constraint(equalTo: pinContainerView.bottomAnchor, constant: -6)
         ])
     }
     
@@ -193,5 +222,7 @@ final class TrackersCardCell: UICollectionViewCell {
         
         let day = ConfigureTableViewCellsHelper.getLocalizedDayString(for: countDays)
         counterLabel.text = day
+        
+        pinImageView.isHidden = !tracker.isPinned
     }
 }

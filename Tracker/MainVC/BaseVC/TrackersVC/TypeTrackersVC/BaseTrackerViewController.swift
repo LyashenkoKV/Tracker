@@ -288,7 +288,6 @@ extension BaseTrackerViewController: UITableViewDelegate {
         HandleActionsHelper.handleCategorySelection(at: indexPath, viewController: self)
     }
     
-    // Контекстное меню для редактирования категории
     func tableView(
         _ tableView: UITableView,
         contextMenuConfigurationForRowAt indexPath: IndexPath,
@@ -302,6 +301,17 @@ extension BaseTrackerViewController: UITableViewDelegate {
                 viewController: self
             )
         }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willEndContextMenuInteraction configuration: UIContextMenuConfiguration,
+        animator: UIContextMenuInteractionAnimating?
+    ) {
+
+        if let indexPath = configuration.identifier as? IndexPath {
+            tableView.reloadRows(at: [indexPath], with: .none)
+        }
+    }
     
     // MARK: - Header
     // Настройка хедера
