@@ -133,23 +133,27 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func filterTrackers(for date: Date, searchText: String?, filter: TrackerFilter) {
-        Logger.shared.log(.debug, message: "Начало фильтрации. Дата: \(date), Фильтр: \(filter), Поиск: \(searchText ?? "нет")")
-
+        let actualDate: Date
+        if filter == .today {
+            actualDate = Date()
+        } else {
+            actualDate = date
+        }
+        
+        let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: actualDate)
+        let adjustedIndex = (weekdayIndex + 5) % 7
+        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
+        
         let dateString = dateFormatter.string(from: date)
         let completedTrackerIds = recordStore.fetchCompletedTrackerIds(for: dateString)
         let predicate = filterManager?.createPredicate(for: date, filter: filter, completedTrackerIds: completedTrackerIds)
         
-
         trackerStore.fetchTrackers(predicate: predicate)
         
         let filteredTrackers = trackerStore.fetchTrackers()
 
         Logger.shared.log(.debug, message: "Трекеров после фильтрации: \(filteredTrackers.count)")
-        
-        let calendar = Calendar.current
-        let weekdayIndex = calendar.component(.weekday, from: date)
-        let adjustedIndex = (weekdayIndex + 5) % 7
-        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
 
         var finalFilteredTrackers = filteredTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
@@ -180,7 +184,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         view?.reloadData()
     }
 
-
     func togglePin(for tracker: Tracker) {
         var updatedTracker = tracker
         updatedTracker.isPinned.toggle()
@@ -208,16 +211,11 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
 
     func loadCompletedTrackers() {
-        Logger.shared.log(.debug, message: "Загрузка завершенных трекеров")
-        
         let loadedCompletedTrackers = recordStore.fetchRecords()
         let tempCompletedTrackers = Set(loadedCompletedTrackers.map { TrackerRecord(from: $0) })
         
         if tempCompletedTrackers != view?.completedTrackers {
-            Logger.shared.log(.debug, message: "Обновление завершенных трекеров. Было: \(view?.completedTrackers.count ?? 0), стало: \(tempCompletedTrackers.count)")
             view?.completedTrackers = tempCompletedTrackers
-        } else {
-            Logger.shared.log(.debug, message: "Количество завершенных трекеров не изменилось.")
         }
         view?.reloadData()
     }

@@ -161,10 +161,16 @@ final class TrackerStore: NSObject {
 
                 try context.save()
             } else {
-                Logger.shared.log(.error, message: "Трекер не найден для обновления: \(tracker.id)")
+                Logger.shared.log(
+                    .error,
+                    message: "Трекер не найден для обновления: \(tracker.id)"
+                )
             }
         } catch {
-            Logger.shared.log(.error, message: "Ошибка при обновлении трекера: \(tracker.name)", metadata: ["❌": error.localizedDescription])
+            Logger.shared.log(
+                .error, message: "Ошибка при обновлении трекера: \(tracker.name)",
+                metadata: ["❌": error.localizedDescription]
+            )
             throw error
         }
     }

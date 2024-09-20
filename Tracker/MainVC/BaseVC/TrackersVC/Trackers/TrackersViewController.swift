@@ -175,11 +175,8 @@ final class TrackersViewController: BaseViewController {
     }
     
     func updatePlaceholder(isSearchActive: Bool) {
-        Logger.shared.log(.debug, message: "Обновление плейсхолдера. Поиск активен: \(isSearchActive)")
         let categoriesToCheck = isSearchActive ? visibleCategories : categories
         let hasData = categoriesToCheck.contains { !$0.trackers.isEmpty }
-        
-        Logger.shared.log(.debug, message: "Есть данные для отображения: \(hasData)")
         
         self.placeholderImageName = hasData
         ? PHName.trackersPH.rawValue
@@ -381,12 +378,14 @@ extension TrackersViewController: FilterViewControllerDelegate {
         presenter?.filterTrackers(for: currentDate, searchText: searchController.searchBar.text, filter: currentFilter)
         updatePlaceholder(isSearchActive: searchController.isActive)
         
+        if currentFilter == .today {
+            datePicker.date = Date()
+        }
+        
         if currentFilter != .allTrackers {
             filterButtonItem.setTitleColor(.red, for: .normal)
-            Logger.shared.log(.debug, message: "Фильтр активен. Изменен цвет кнопки.")
         } else {
             filterButtonItem.setTitleColor(.white, for: .normal)
-            Logger.shared.log(.debug, message: "Сброшен фильтр. Показаны все трекеры.")
         }
     }
 }

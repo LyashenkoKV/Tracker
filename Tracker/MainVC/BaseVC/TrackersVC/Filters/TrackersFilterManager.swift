@@ -18,16 +18,23 @@ final class TrackersFilterManager {
     
     func createPredicate(for date: Date, filter: TrackerFilter, completedTrackerIds: Set<UUID>) -> NSPredicate {
         let calendar = Calendar.current
-        let weekdayIndex = calendar.component(.weekday, from: date)
-        let adjustedIndex = (weekdayIndex + 5) % 7
-        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
         switch filter {
         case .allTrackers:
+            let weekdayIndex = calendar.component(.weekday, from: date)
+            let adjustedIndex = (weekdayIndex + 5) % 7
+            let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
             return NSPredicate(format: "schedule CONTAINS[cd] %@", selectedDayString)
+            
         case .today:
-            let todayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
-            return NSPredicate(format: "schedule CONTAINS[cd] %@", todayString)
+            let today = Date()
+            let todayWeekdayIndex = calendar.component(.weekday, from: today)
+            let todayAdjustedIndex = (todayWeekdayIndex + 5) % 7
+            let todaySelectedDayString = String(DayOfTheWeek.allCases[todayAdjustedIndex].rawValue)
+            
+            Logger.shared.log(.info, message: "Проверка предиката: \(NSPredicate(format: "(schedule CONTAINS[cd] %@) OR (creationDate == %@)", todaySelectedDayString, today as NSDate))")
+
+            return NSPredicate(format: "(schedule CONTAINS[cd] %@) OR (creationDate == %@)", todaySelectedDayString, today as NSDate)
         case .completed:
             return NSPredicate(format: "id IN %@", completedTrackerIds)
         case .uncompleted:
