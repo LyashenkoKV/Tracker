@@ -58,7 +58,6 @@ final class CategoryViewController: BaseTrackerViewController {
     
     // MARK: - Initializer
     init() {
-        // Инициализация ViewModel
         self.viewModel = CategoryViewModel(
             trackerCategoryStore: TrackerCategoryStore(
                 persistentContainer: CoreDataStack.shared.persistentContainer
@@ -132,6 +131,7 @@ final class CategoryViewController: BaseTrackerViewController {
             let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text ?? ""
             viewModel.addCategory(named: categoryName)
             isAddingCategory = false
+            placeholder.view.isHidden = true
         } else {
             isAddingCategory.toggle()
         }

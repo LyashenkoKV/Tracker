@@ -64,7 +64,7 @@ final class TextViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        textView.text = ""
+ 
         if isVisiblePlaceholder {
             textView.text = placeholderText
             textView.textColor = .lightGray

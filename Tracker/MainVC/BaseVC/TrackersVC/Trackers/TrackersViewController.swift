@@ -137,6 +137,7 @@ final class TrackersViewController: BaseViewController {
         addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         presenter?.loadCompletedTrackers()
+        //updateFilterButtonVisibility()
         
         updatePlaceholder(isSearchActive: false)
     }
@@ -196,6 +197,11 @@ final class TrackersViewController: BaseViewController {
             text: placeholderText
         )
         updatePlaceholderView(hasData: hasData)
+    }
+    
+    func updateFilterButtonVisibility() {
+        let hasTrackers = !visibleCategories.flatMap { $0.trackers }.isEmpty
+        filterButtonItem.isHidden = !hasTrackers
     }
     
     @objc private func filterButtonTapped() {
@@ -369,5 +375,11 @@ extension TrackersViewController: FilterViewControllerDelegate {
         currentFilter = filter
         presenter?.filterTrackers(for: currentDate, searchText: searchController.searchBar.text, filter: currentFilter)
         updatePlaceholder(isSearchActive: searchController.isActive)
+        
+        if currentFilter != .allTrackers {
+            filterButtonItem.setTitleColor(.red, for: .normal)
+        } else {
+            filterButtonItem.setTitleColor(.white, for: .normal)
+        }
     }
 }
