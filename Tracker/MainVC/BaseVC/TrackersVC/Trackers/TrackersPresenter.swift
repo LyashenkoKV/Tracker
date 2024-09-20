@@ -18,7 +18,7 @@ protocol TrackersPresenterProtocol: AnyObject {
     func isTrackerCompleted(_ trackerId: UUID, date: String) -> Bool
     func handleTrackerSelection(_ tracker: Tracker, isCompleted: Bool, date: Date)
     func isDateValidForCompletion(date: Date) -> Bool
-    func filterTrackers(for date: Date, searchText: String?)
+    func filterTrackers(for date: Date, searchText: String?, filter: TrackerFilter)
     func loadTrackers()
     func loadCompletedTrackers()
     func deleteTracker(at indexPath: IndexPath)
@@ -32,6 +32,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     private let categoryStore: TrackerCategoryStore
     private let recordStore: TrackerRecordStore
     private let pinnedCategoryKey = "pinned_category_key"
+    private let filterManager: TrackersFilterManager?
     
     weak var view: TrackersViewControllerProtocol?
     
@@ -43,10 +44,16 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         return dateFormatter
     }()
     
-    init(trackerStore: TrackerStore, categoryStore: TrackerCategoryStore, recordStore: TrackerRecordStore) {
+    init(
+        trackerStore: TrackerStore,
+        categoryStore: TrackerCategoryStore,
+        recordStore: TrackerRecordStore,
+        filterManager: TrackersFilterManager?
+    ) {
         self.trackerStore = trackerStore
         self.categoryStore = categoryStore
         self.recordStore = recordStore
+        self.filterManager = filterManager
     }
     
     func addTracker(_ tracker: Tracker, categoryTitle: String) {
@@ -125,15 +132,18 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         return date <= Date()
     }
     
-    func filterTrackers(for date: Date, searchText: String? = nil) {
-        let allTrackers = trackerStore.fetchTrackers()
+    func filterTrackers(for date: Date, searchText: String?, filter: TrackerFilter) {
+        let allTrackersCoreData = trackerStore.fetchTrackers()
+        
+        let allTrackers = allTrackersCoreData.map { Tracker(from: $0) }
+        let filteredTrackers = filterManager?.applyFilter(to: allTrackers, for: date)
         
         let calendar = Calendar.current
         let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
         let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
-        var filteredTrackers = allTrackers.filter { trackerCoreData in
+        var finalFilteredTrackers = allTrackersCoreData.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
             
             if tracker.isRegularEvent {
@@ -153,9 +163,9 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             }
         }
         
-        filteredTrackers.sort { $0.isPinned && !$1.isPinned }
+        finalFilteredTrackers.sort { $0.isPinned && !$1.isPinned }
         
-        let categorizedTrackers = categorizeTrackers(filteredTrackers)
+        let categorizedTrackers = categorizeTrackers(finalFilteredTrackers)
         view?.categories = categorizedTrackers
         view?.visibleCategories = categorizedTrackers
         view?.reloadData()
@@ -172,7 +182,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
 
             try trackerStore.updateTracker(updatedTracker)
 
-            filterTrackers(for: view?.currentDate ?? Date(), searchText: nil)
+            filterTrackers(for: view?.currentDate ?? Date(), searchText: nil, filter: .allTrackers)
         } catch {
             Logger.shared.log(.error, message: "Не удалось закрепить трекер: \(tracker.name)")
         }
@@ -232,7 +242,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         do {
             try trackerStore.deleteTracker(withId: trackerToDelete.id)
 
-            filterTrackers(for: view.currentDate, searchText: nil)
+            filterTrackers(for: view.currentDate, searchText: nil, filter: .allTrackers)
         } catch {
             Logger.shared.log(
                 .error,

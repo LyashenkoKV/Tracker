@@ -38,8 +38,10 @@ class CategoryBaseCell: UITableViewCell {
     }
     
     private func setupUI() {
-        contentView.addSubview(categoryLabel)
-        contentView.addSubview(toggleSwitch)
+        [categoryLabel, toggleSwitch].forEach {
+            contentView.addSubview($0)
+        }
+        
         contentView.backgroundColor = .clear
         contentView.layer.cornerRadius = 16
         

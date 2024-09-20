@@ -135,7 +135,7 @@ final class TrackersViewController: BaseViewController {
 
         setupUI()
         addNotification()
-        presenter?.filterTrackers(for: currentDate, searchText: nil)
+        presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         presenter?.loadCompletedTrackers()
         
         updatePlaceholder(isSearchActive: false)
@@ -199,10 +199,11 @@ final class TrackersViewController: BaseViewController {
     }
     
     @objc private func filterButtonTapped() {
-//        let filterOptionsVC = FilterOptionsViewController(selectedFilter: currentFilter)
-//        filterOptionsVC.modalPresentationStyle = .overFullScreen
-//        filterOptionsVC.delegate = self
-//        self.present(filterOptionsVC, animated: true, completion: nil)
+        let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
+        let navController = UINavigationController(rootViewController: filterOptionsVC)
+        filterOptionsVC.modalPresentationStyle = .formSheet
+        filterOptionsVC.delegate = self
+        self.present(navController, animated: true)
     }
 }
 
@@ -236,7 +237,7 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
-        presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "")
+        presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "", filter: currentFilter)
         
         let isSearchActive = searchController.isActive
         updatePlaceholder(isSearchActive: isSearchActive)
@@ -268,6 +269,8 @@ extension TrackersViewController {
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
             let selectedDayString = String(selectedDay.rawValue)
+            let isCompleted = presenter?.isTrackerCompleted(tracker.id, date: presenter?.dateFormatter.string(from: creationDate) ?? "") ?? false
+
 
             updatedTracker = Tracker(
                 id: tracker.id,
@@ -278,22 +281,26 @@ extension TrackersViewController {
                 categoryTitle: categoryTitle,
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate, 
-                isPinned: false
+                isPinned: false,
+                isCompleted: isCompleted
             )
         }
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
-        presenter?.filterTrackers(for: currentDate, searchText: nil)
+        presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
     }
     
     @objc private func handleTrackerUpdated(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let updatedTracker = userInfo["tracker"] as? Tracker else {
-            Logger.shared.log(.error, message: "Ошибка: не удалось извлечь трекер из уведомления.")
+            Logger.shared.log(
+                .error,
+                message: "Ошибка: не удалось извлечь трекер из уведомления."
+            )
             return
         }
         
         presenter?.updateTracker(updatedTracker)
-        presenter?.filterTrackers(for: currentDate, searchText: nil)
+        presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
     }
 }
 
@@ -308,13 +315,13 @@ extension TrackersViewController: TrackersViewControllerProtocol {
 // MARK: - UISearchControllerDelegate, UISearchBarDelegate
 extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter?.filterTrackers(for: currentDate, searchText: searchText)
+        presenter?.filterTrackers(for: currentDate, searchText: searchText, filter: currentFilter)
         
         updatePlaceholder(isSearchActive: true)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        presenter?.filterTrackers(for: currentDate, searchText: nil)
+        presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         
         updatePlaceholder(isSearchActive: false)
     }
@@ -350,5 +357,17 @@ extension TrackersViewController {
             completedTrackers: completedTrackers
         )
         _ = contextMenuHelper.createContextMenu()
+    }
+}
+
+extension TrackersViewController: FilterViewControllerDelegate {
+    func didSelectFilter(_ filter: TrackerFilter) {
+        applyFilter(filter)
+    }
+    
+    private func applyFilter(_ filter: TrackerFilter) {
+        currentFilter = filter
+        presenter?.filterTrackers(for: currentDate, searchText: searchController.searchBar.text, filter: currentFilter)
+        updatePlaceholder(isSearchActive: searchController.isActive)
     }
 }

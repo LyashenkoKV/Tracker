@@ -72,7 +72,7 @@ final class ConfigureTableViewCellsHelper {
         }
         
         guard let itemTitle = dataProvider?.item(at: indexPath.row) else {
-            print("Ошибка: itemTitle отсутствует для индекса \(indexPath.row)")
+            Logger.shared.log(.error, message: "Ошибка: itemTitle отсутствует для индекса \(indexPath.row)")
             return UITableViewCell()
         }
         

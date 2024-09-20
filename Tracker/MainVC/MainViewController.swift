@@ -38,13 +38,15 @@ final class MainViewController: UIViewController {
         let trackersNavigationController = trackersViewController.setupNavigationBar()
         let statisticsNavigationController = statisticViewController.setupNavigationBar()
 
+        let filterManager = TrackersFilterManager()
         let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let trackersPresenter = TrackersPresenter(
             trackerStore: trackerStore,
             categoryStore: categoryStore,
-            recordStore: recordStore
+            recordStore: recordStore,
+            filterManager: filterManager
         )
 
         trackersViewController.configure(trackersPresenter)
@@ -99,9 +101,14 @@ final class MainViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
+        
         if let tabBar = tabBarController?.tabBar {
-            borderView.frame = CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 1)
+            borderView.frame = CGRect(
+                x: 0,
+                y: 0,
+                width: tabBar.frame.width,
+                height: 1
+            )
         }
     }
 }

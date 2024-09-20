@@ -18,6 +18,7 @@ struct Tracker: Codable, Hashable {
     let creationDate: Date?
     var isPinned: Bool
     var originalCategoryTitle: String?
+    var isCompleted: Bool
 }
 
 extension Tracker {
@@ -31,6 +32,7 @@ extension Tracker {
         self.creationDate = coreData.creationDate ?? Date()
         self.isPinned = coreData.isPinned
         self.originalCategoryTitle = coreData.originalCategoryTitle
+        self.isCompleted = false
 
         if let scheduleString = coreData.schedule,
            let scheduleData = scheduleString.data(using: .utf8) {
