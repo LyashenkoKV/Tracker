@@ -181,7 +181,6 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         
         let categoryTitle = selectedCategory?.title ?? tracker.categoryTitle
         let scheduleStrings = selectedDays.map { String($0.rawValue) }
-        let isCompleted = completedTrackers?.contains(where: { $0.trackerId == tracker.id }) ?? false
         
         let updatedTracker = Tracker(
             id: tracker.id,
@@ -192,8 +191,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             categoryTitle: categoryTitle,
             isRegularEvent: tracker.isRegularEvent,
             creationDate: tracker.creationDate,
-            isPinned: tracker.isPinned,
-            isCompleted: isCompleted
+            isPinned: tracker.isPinned
         )
         
         let userInfo: [String: Any] = [
@@ -228,8 +226,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
             categoryTitle: categoryTitle,
             isRegularEvent: isRegularEvent,
             creationDate: Date(),
-            isPinned: false,
-            isCompleted: false
+            isPinned: false
         )
 
         let userInfo: [String: Any] = [

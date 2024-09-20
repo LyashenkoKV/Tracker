@@ -16,25 +16,22 @@ enum TrackerFilter: Int {
 
 final class TrackersFilterManager {
     
-    var currentFilter: TrackerFilter = .allTrackers {
-        didSet {
-            onFilterChanged?(currentFilter)
-        }
-    }
-    
-    var onFilterChanged: ((TrackerFilter) -> Void)?
-    
-    func applyFilter(to trackers: [Tracker], for date: Date) -> [Tracker] {
-        switch currentFilter {
+    func createPredicate(for date: Date, filter: TrackerFilter, completedTrackerIds: Set<UUID>) -> NSPredicate {
+        let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        let adjustedIndex = (weekdayIndex + 5) % 7
+        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
+        
+        switch filter {
         case .allTrackers:
-            return trackers
+            return NSPredicate(format: "schedule CONTAINS[cd] %@", selectedDayString)
         case .today:
-            let dayOfWeek = Calendar.current.component(.weekday, from: date)
-            return trackers.filter { $0.schedule.contains(String(dayOfWeek)) }
+            let todayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
+            return NSPredicate(format: "schedule CONTAINS[cd] %@", todayString)
         case .completed:
-            return trackers.filter { $0.isCompleted }
+            return NSPredicate(format: "id IN %@", completedTrackerIds)
         case .uncompleted:
-            return trackers.filter { !$0.isCompleted }
+            return NSPredicate(format: "NOT (id IN %@)", completedTrackerIds)
         }
     }
 }

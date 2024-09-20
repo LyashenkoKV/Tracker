@@ -10,7 +10,7 @@ import CoreData
 
 final class TrackerStore: NSObject {
     private let persistentContainer: NSPersistentContainer
-    private let fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCoreData>
 
     init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
@@ -152,7 +152,10 @@ final class TrackerStore: NSObject {
                     let scheduleData = try JSONEncoder().encode(tracker.schedule)
                     trackerCoreData.schedule = String(data: scheduleData, encoding: .utf8)
                 } catch {
-                    Logger.shared.log(.error, message: "Ошибка сериализации расписания при обновлении трекера: \(tracker.name)", metadata: ["❌": error.localizedDescription])
+                    Logger.shared.log(
+                        .error,
+                        message: "Ошибка сериализации расписания при обновлении трекера: \(tracker.name)", metadata: ["❌": error.localizedDescription]
+                    )
                     throw error
                 }
 
@@ -181,21 +184,22 @@ final class TrackerStore: NSObject {
         }
     }
     
-    func fetchTrackers(for dayOfTheWeek: DayOfTheWeek) -> [TrackerCoreData] {
-        let dayOfWeekString = dayOfTheWeek.rawValue
+    func fetchTrackers(predicate: NSPredicate? = nil) {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchRequest.predicate = predicate
         
-        fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "schedule CONTAINS[cd] %@", dayOfWeekString)
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
         
         do {
             try fetchedResultsController.performFetch()
-            return fetchedResultsController.fetchedObjects ?? []
         } catch {
-            Logger.shared.log(
-                .error,
-                message: "Ошибка при фильтрации трекеров по дню недели",
-                metadata: ["❌": error.localizedDescription]
-            )
-            return []
+            Logger.shared.log(.error, message: "Ошибка при выборке трекеров: \(error.localizedDescription)")
         }
     }
 }

@@ -175,8 +175,11 @@ final class TrackersViewController: BaseViewController {
     }
     
     func updatePlaceholder(isSearchActive: Bool) {
+        Logger.shared.log(.debug, message: "Обновление плейсхолдера. Поиск активен: \(isSearchActive)")
         let categoriesToCheck = isSearchActive ? visibleCategories : categories
         let hasData = categoriesToCheck.contains { !$0.trackers.isEmpty }
+        
+        Logger.shared.log(.debug, message: "Есть данные для отображения: \(hasData)")
         
         self.placeholderImageName = hasData
         ? PHName.trackersPH.rawValue
@@ -205,6 +208,7 @@ final class TrackersViewController: BaseViewController {
     }
     
     @objc private func filterButtonTapped() {
+        Logger.shared.log(.debug, message: "Пользователь открыл окно фильтров")
         let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
         let navController = UINavigationController(rootViewController: filterOptionsVC)
         filterOptionsVC.modalPresentationStyle = .formSheet
@@ -243,6 +247,8 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
+        Logger.shared.log(.debug, message: "Дата изменена: \(selectedDate)")
+        
         presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "", filter: currentFilter)
         
         let isSearchActive = searchController.isActive
@@ -251,6 +257,7 @@ extension TrackersViewController {
         let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
         if previousCompletedTrackersCount != completedTrackers.count {
+            Logger.shared.log(.debug, message: "Изменилось количество завершенных трекеров")
             reloadData()
         }
     }
@@ -275,9 +282,7 @@ extension TrackersViewController {
             let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
             let selectedDayString = String(selectedDay.rawValue)
-            let isCompleted = presenter?.isTrackerCompleted(tracker.id, date: presenter?.dateFormatter.string(from: creationDate) ?? "") ?? false
-
-
+     
             updatedTracker = Tracker(
                 id: tracker.id,
                 name: tracker.name,
@@ -287,8 +292,7 @@ extension TrackersViewController {
                 categoryTitle: categoryTitle,
                 isRegularEvent: tracker.isRegularEvent,
                 creationDate: creationDate, 
-                isPinned: false,
-                isCompleted: isCompleted
+                isPinned: false
             )
         }
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
@@ -372,14 +376,17 @@ extension TrackersViewController: FilterViewControllerDelegate {
     }
     
     private func applyFilter(_ filter: TrackerFilter) {
+        Logger.shared.log(.debug, message: "Фильтр выбран: \(filter)")
         currentFilter = filter
         presenter?.filterTrackers(for: currentDate, searchText: searchController.searchBar.text, filter: currentFilter)
         updatePlaceholder(isSearchActive: searchController.isActive)
         
         if currentFilter != .allTrackers {
             filterButtonItem.setTitleColor(.red, for: .normal)
+            Logger.shared.log(.debug, message: "Фильтр активен. Изменен цвет кнопки.")
         } else {
             filterButtonItem.setTitleColor(.white, for: .normal)
+            Logger.shared.log(.debug, message: "Сброшен фильтр. Показаны все трекеры.")
         }
     }
 }

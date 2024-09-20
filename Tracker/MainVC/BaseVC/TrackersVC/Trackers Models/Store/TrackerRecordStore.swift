@@ -77,4 +77,18 @@ final class TrackerRecordStore {
             return []
         }
     }
+    
+    func fetchCompletedTrackerIds(for dateString: String) -> Set<UUID> {
+        let fetchRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+        
+        fetchRequest.predicate = NSPredicate(format: "date == %@", dateString)
+        
+        do {
+            let completedRecords = try persistentContainer.viewContext.fetch(fetchRequest)
+            return Set(completedRecords.compactMap { $0.trackerId })
+        } catch {
+            Logger.shared.log(.error, message: "Ошибка при загрузке завершенных трекеров: \(error.localizedDescription)")
+            return []
+        }
+    }
 }
