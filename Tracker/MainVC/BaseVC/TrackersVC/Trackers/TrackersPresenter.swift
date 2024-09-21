@@ -62,7 +62,6 @@ final class TrackersPresenter: TrackersPresenterProtocol {
             try categoryStore.addCategory(category)
             try trackerStore.addTracker(tracker)
             loadTrackers()
-            
         } catch {
             Logger.shared.log(
                 .error, 
@@ -133,52 +132,54 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     }
     
     func filterTrackers(for date: Date, searchText: String?, filter: TrackerFilter) {
-        let actualDate: Date
-        if filter == .today {
-            actualDate = Date()
-        } else {
-            actualDate = date
-        }
-        
         let calendar = Calendar.current
-        let weekdayIndex = calendar.component(.weekday, from: actualDate)
+        let weekdayIndex = calendar.component(.weekday, from: date)
         let adjustedIndex = (weekdayIndex + 5) % 7
         let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
-        
+
         let dateString = dateFormatter.string(from: date)
         let completedTrackerIds = recordStore.fetchCompletedTrackerIds(for: dateString)
-        let predicate = filterManager?.createPredicate(for: date, filter: filter, completedTrackerIds: completedTrackerIds)
+        let predicate = filterManager?.createPredicate(
+            for: date,
+            filter: filter,
+            completedTrackerIds: completedTrackerIds
+        )
         
         trackerStore.fetchTrackers(predicate: predicate)
-        
         let filteredTrackers = trackerStore.fetchTrackers()
-
-        Logger.shared.log(.debug, message: "Трекеров после фильтрации: \(filteredTrackers.count)")
 
         var finalFilteredTrackers = filteredTrackers.filter { trackerCoreData in
             let tracker = Tracker(from: trackerCoreData)
-            
+
             if tracker.isRegularEvent {
                 let matchesSchedule = tracker.schedule.contains(selectedDayString)
                 if let searchText = searchText?.lowercased(), !searchText.isEmpty {
-                    return matchesSchedule && (tracker.name.lowercased().contains(searchText))
+                    let matchesSearch = tracker.name.lowercased().contains(searchText)
+                    return matchesSchedule && matchesSearch
                 } else {
                     return matchesSchedule
                 }
             } else {
-                let isToday = calendar.isDate(tracker.creationDate ?? Date(), inSameDayAs: date)
+                guard let creationDate = tracker.creationDate else {
+                    Logger.shared.log(
+                        .error,
+                        message: "Ошибка: у трекера \(tracker.name) нет creationDate."
+                    )
+                    return false
+                }
+                let isSameDay = calendar.isDate(creationDate, inSameDayAs: date)
                 if let searchText = searchText?.lowercased(), !searchText.isEmpty {
-                    return isToday && tracker.name.lowercased().contains(searchText)
+                    let matchesSearch = tracker.name.lowercased().contains(searchText)
+                    return isSameDay && matchesSearch
                 } else {
-                    return isToday
+                    return isSameDay
                 }
             }
         }
-        Logger.shared.log(.debug, message: "Трекеров после ручной фильтрации: \(finalFilteredTrackers.count)")
-
+        
         finalFilteredTrackers.sort { $0.isPinned && !$1.isPinned }
         let categorizedTrackers = categorizeTrackers(finalFilteredTrackers)
-        
+  
         view?.categories = categorizedTrackers
         view?.visibleCategories = categorizedTrackers
         view?.reloadData()
@@ -197,7 +198,10 @@ final class TrackersPresenter: TrackersPresenterProtocol {
 
             filterTrackers(for: view?.currentDate ?? Date(), searchText: nil, filter: .allTrackers)
         } catch {
-            Logger.shared.log(.error, message: "Не удалось закрепить трекер: \(tracker.name)")
+            Logger.shared.log(
+                .error,
+                message: "Не удалось закрепить трекер: \(tracker.name)"
+            )
         }
     }
     

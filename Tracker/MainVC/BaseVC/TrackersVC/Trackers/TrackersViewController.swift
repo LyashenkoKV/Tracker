@@ -205,7 +205,6 @@ final class TrackersViewController: BaseViewController {
     }
     
     @objc private func filterButtonTapped() {
-        Logger.shared.log(.debug, message: "Пользователь открыл окно фильтров")
         let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
         let navController = UINavigationController(rootViewController: filterOptionsVC)
         filterOptionsVC.modalPresentationStyle = .formSheet
@@ -244,8 +243,7 @@ extension TrackersViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
         currentDate = selectedDate
-        Logger.shared.log(.debug, message: "Дата изменена: \(selectedDate)")
-        
+
         presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "", filter: currentFilter)
         
         let isSearchActive = searchController.isActive
@@ -254,7 +252,6 @@ extension TrackersViewController {
         let previousCompletedTrackersCount = completedTrackers.count
         presenter?.loadCompletedTrackers()
         if previousCompletedTrackersCount != completedTrackers.count {
-            Logger.shared.log(.debug, message: "Изменилось количество завершенных трекеров")
             reloadData()
         }
     }
@@ -274,24 +271,20 @@ extension TrackersViewController {
 
         if !tracker.isRegularEvent {
             let creationDate = currentDate
-            let dayOfTheWeek = Calendar.current.component(.weekday, from: creationDate)
-            let adjustedIndex = (dayOfTheWeek + 5) % 7
-            let selectedDay = DayOfTheWeek.allCases[adjustedIndex]
 
-            let selectedDayString = String(selectedDay.rawValue)
-     
             updatedTracker = Tracker(
                 id: tracker.id,
                 name: tracker.name,
                 color: tracker.color,
                 emoji: tracker.emoji,
-                schedule: [selectedDayString],
+                schedule: [],
                 categoryTitle: categoryTitle,
-                isRegularEvent: tracker.isRegularEvent,
-                creationDate: creationDate, 
+                isRegularEvent: false,
+                creationDate: creationDate,
                 isPinned: false
             )
         }
+        
         presenter?.addTracker(updatedTracker, categoryTitle: categoryTitle)
         presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
     }
@@ -373,15 +366,22 @@ extension TrackersViewController: FilterViewControllerDelegate {
     }
     
     private func applyFilter(_ filter: TrackerFilter) {
-        Logger.shared.log(.debug, message: "Фильтр выбран: \(filter)")
         currentFilter = filter
-        presenter?.filterTrackers(for: currentDate, searchText: searchController.searchBar.text, filter: currentFilter)
-        updatePlaceholder(isSearchActive: searchController.isActive)
-        
+
         if currentFilter == .today {
-            datePicker.date = Date()
+            currentDate = Date()
+            datePicker.date = currentDate
+            datePickerValueChanged(datePicker)
+        } else {
+            presenter?.filterTrackers(
+                for: currentDate,
+                searchText: searchController.searchBar.text,
+                filter: currentFilter
+            )
         }
-        
+
+        updatePlaceholder(isSearchActive: searchController.isActive)
+
         if currentFilter != .allTrackers {
             filterButtonItem.setTitleColor(.red, for: .normal)
         } else {

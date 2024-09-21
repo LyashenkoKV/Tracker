@@ -18,23 +18,31 @@ final class TrackersFilterManager {
     
     func createPredicate(for date: Date, filter: TrackerFilter, completedTrackerIds: Set<UUID>) -> NSPredicate {
         let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: date)
+        let adjustedIndex = (weekdayIndex + 5) % 7
+        let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
         
         switch filter {
-        case .allTrackers:
-            let weekdayIndex = calendar.component(.weekday, from: date)
-            let adjustedIndex = (weekdayIndex + 5) % 7
-            let selectedDayString = String(DayOfTheWeek.allCases[adjustedIndex].rawValue)
-            return NSPredicate(format: "schedule CONTAINS[cd] %@", selectedDayString)
-            
-        case .today:
-            let today = Date()
-            let todayWeekdayIndex = calendar.component(.weekday, from: today)
-            let todayAdjustedIndex = (todayWeekdayIndex + 5) % 7
-            let todaySelectedDayString = String(DayOfTheWeek.allCases[todayAdjustedIndex].rawValue)
-            
-            Logger.shared.log(.info, message: "Проверка предиката: \(NSPredicate(format: "(schedule CONTAINS[cd] %@) OR (creationDate == %@)", todaySelectedDayString, today as NSDate))")
+        case .allTrackers, .today:
+            let regularPredicate = NSPredicate(
+                format: "isRegularEvent == YES AND schedule CONTAINS[cd] %@",
+                selectedDayString
+            )
 
-            return NSPredicate(format: "(schedule CONTAINS[cd] %@) OR (creationDate == %@)", todaySelectedDayString, today as NSDate)
+            let startOfDay = calendar.startOfDay(for: date)
+            let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+            
+            let oneTimePredicate = NSPredicate(
+                format: "isRegularEvent == NO AND creationDate >= %@ AND creationDate < %@",
+                startOfDay as NSDate,
+                endOfDay as NSDate
+            )
+            let finalPredicate = NSCompoundPredicate(
+                orPredicateWithSubpredicates: [regularPredicate, oneTimePredicate]
+            )
+
+            return finalPredicate
+
         case .completed:
             return NSPredicate(format: "id IN %@", completedTrackerIds)
         case .uncompleted:

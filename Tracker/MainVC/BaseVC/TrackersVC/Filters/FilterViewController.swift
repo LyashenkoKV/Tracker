@@ -104,7 +104,6 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
         didSelectRowAt indexPath: IndexPath
     ) {
         selectedFilter = filters[indexPath.row].1
-        Logger.shared.log(.debug, message: "Фильтр выбран: \(selectedFilter)")
         delegate?.didSelectFilter(selectedFilter)
         dismiss(animated: true)
     }
