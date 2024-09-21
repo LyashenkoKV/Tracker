@@ -17,7 +17,8 @@ final class TrackerTests: XCTestCase {
         let vc = TrackersViewController()
         vc.loadViewIfNeeded()
         
-        assertSnapshot(of: vc, as: .image)
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
     
 }

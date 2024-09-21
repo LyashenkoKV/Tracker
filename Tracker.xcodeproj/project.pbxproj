@@ -325,6 +325,7 @@
 				243024DA2C525B3500B0F1D3 /* Tracker */,
 				249E17B82C9EEB3100B52DE1 /* TrackerTests */,
 				243024D92C525B3500B0F1D3 /* Products */,
+				24937A5B2C88A06F00EDBAB7 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -340,7 +341,6 @@
 		243024DA2C525B3500B0F1D3 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				24937A5B2C88A06F00EDBAB7 /* README.md */,
 				24937A802C8F1B6800EDBAB7 /* Resources */,
 				2411D6922C6367470031C584 /* Global Extensions + Struct */,
 				24573DAA2C88446300D4D34B /* OnboardingVC */,
