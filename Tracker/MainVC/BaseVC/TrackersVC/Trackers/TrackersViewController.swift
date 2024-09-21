@@ -173,20 +173,23 @@ final class TrackersViewController: BaseViewController {
     }
     
     func updatePlaceholder(isSearchActive: Bool) {
-        let categoriesToCheck = isSearchActive ? visibleCategories : categories
+        let isFilteringActive = currentFilter != .allTrackers && currentFilter != .today
+        let isSearchOrFilteringActive = isSearchActive || isFilteringActive
+        let categoriesToCheck = isSearchOrFilteringActive ? visibleCategories : categories
         let hasData = categoriesToCheck.contains { !$0.trackers.isEmpty }
         
         self.placeholderImageName = hasData
-        ? PHName.trackersPH.rawValue
-        : (isSearchActive
-            ? PHName.searchPH.rawValue
-            : PHName.trackersPH.rawValue)
+            ? PHName.trackersPH.rawValue
+            : (isSearchOrFilteringActive
+                ? PHName.searchPH.rawValue
+                : PHName.trackersPH.rawValue)
+        
         self.placeholderText = NSLocalizedString(
             hasData
-            ? "trackers_placeholder"
-            : (isSearchActive
-               ? "notfound_search_placholder"
-               : "trackers_placeholder"),
+                ? "trackers_placeholder"
+                : (isSearchOrFilteringActive
+                   ? "notfound_search_placholder"
+                   : "trackers_placeholder"),
             comment: "Обновление плейсхолдера в зависимости от состояния"
         )
 
