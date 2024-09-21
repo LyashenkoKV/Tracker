@@ -137,8 +137,6 @@ final class TrackersViewController: BaseViewController {
         addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         presenter?.loadCompletedTrackers()
-        //updateFilterButtonVisibility()
-        
         updatePlaceholder(isSearchActive: false)
     }
     
@@ -244,7 +242,11 @@ extension TrackersViewController {
         let selectedDate = sender.date
         currentDate = selectedDate
 
-        presenter?.filterTrackers(for: selectedDate, searchText: searchController.searchBar.text ?? "", filter: currentFilter)
+        presenter?.filterTrackers(
+            for: selectedDate,
+            searchText: searchController.searchBar.text ?? "",
+            filter: currentFilter
+        )
         
         let isSearchActive = searchController.isActive
         updatePlaceholder(isSearchActive: isSearchActive)
@@ -382,7 +384,7 @@ extension TrackersViewController: FilterViewControllerDelegate {
 
         updatePlaceholder(isSearchActive: searchController.isActive)
 
-        if currentFilter != .allTrackers {
+        if currentFilter != .allTrackers && currentFilter != .today {
             filterButtonItem.setTitleColor(.red, for: .normal)
         } else {
             filterButtonItem.setTitleColor(.white, for: .normal)

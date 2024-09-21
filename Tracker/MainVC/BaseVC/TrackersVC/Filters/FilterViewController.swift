@@ -83,7 +83,8 @@ extension FilterViewController: UITableViewDelegate, UITableViewDataSource {
         let filter = filters[indexPath.row]
         cell.textLabel?.text = filter.0
         
-        if filter.1 == selectedFilter {
+        if (filter.1 == .allTrackers && (selectedFilter == .allTrackers || selectedFilter == .today)) ||
+            (filter.1 == selectedFilter && (selectedFilter == .completed || selectedFilter == .uncompleted)) {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none
