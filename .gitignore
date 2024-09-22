@@ -1,0 +1,50 @@
+# macOS system files
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+
+# Ignore Swift Package Manager artifacts
+.swiftpm/
+Package.resolved
+
+# Ignore Cocoapods artifacts
+Pods/
+Podfile.lock
+
+# Ignore Carthage artifacts
+Carthage/Build/
+
+# Ignore fastlane artifacts
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Ignore temporary and log files
+*.log
+*.tmp
+*.swp
+*.swo
+.lock/
+
+# Ignore IDEs settings
+.idea/
+.vscode/
+
+# Ignore archives
+*.zip
+*.tar.gz
+*.tgz
+*.bz2
+*.dmg
+*.iso
+
+# Ignore iOS build artifacts
+*.ipa
+*.app
+*.dSYM
