@@ -84,7 +84,12 @@ final class CategoryViewModel: TrackerDataProvider {
         return categories.count
     }
     
-    func item(at index: Int) -> String {
+    func item(at index: Int) -> String? {
+        guard index >= 0 && index < categories.count else {
+            Logger.shared.log(.error, message: "Index out of range: \(index), total categories: \(categories.count)")
+            return nil
+        }
         return categories[index].title
     }
+
 }

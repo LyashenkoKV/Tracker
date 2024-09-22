@@ -10,5 +10,5 @@ import Foundation
 // MARK: - TrackerDataProvider
 protocol TrackerDataProvider {
     var numberOfItems: Int { get }
-    func item(at index: Int) -> String
+    func item(at index: Int) -> String?
 }
