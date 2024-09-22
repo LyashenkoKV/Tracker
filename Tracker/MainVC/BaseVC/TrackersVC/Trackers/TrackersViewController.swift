@@ -232,6 +232,9 @@ extension TrackersViewController {
     }
     
     @objc private func leftBarButtonTapped() {
+        let params: AnalyticsEventParam = ["tracker_type": "init"]
+        AnalyticsService.report(event: "tracker_add", params: params)
+        
         let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackerVC)
         navController.modalPresentationStyle = .formSheet
