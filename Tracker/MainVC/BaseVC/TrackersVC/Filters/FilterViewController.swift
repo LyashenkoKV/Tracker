@@ -26,10 +26,10 @@ final class FilterViewController: UIViewController {
     }
     
     private let filters = [
-        (NSLocalizedString("filters_all_trackers", comment: "Все трекеры"), TrackerFilter.allTrackers),
-        (NSLocalizedString("filters_on_today", comment: "Трекеры на сегодня"), TrackerFilter.today),
-        (NSLocalizedString("filters_complete", comment: "Завершённые"), TrackerFilter.completed),
-        (NSLocalizedString("filters+not_complete", comment: "Не завершённые"), TrackerFilter.uncompleted)
+        (LocalizationKey.filtersAllTrackers.localized(), TrackerFilter.allTrackers),
+        (LocalizationKey.filtersOnToday.localized(), TrackerFilter.today),
+        (LocalizationKey.filtersComplete.localized(), TrackerFilter.completed),
+        (LocalizationKey.filtersNotComplete.localized(), TrackerFilter.uncompleted)
     ]
     
     private lazy var tableView: UITableView = {
@@ -45,7 +45,7 @@ final class FilterViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypBackground
         setupUI()
-        title = NSLocalizedString("filtets_title", comment: "Фильтры")
+        title = LocalizationKey.filtersTitle.localized()
     }
     
     private func setupUI() {

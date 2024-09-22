@@ -96,3 +96,8 @@
 
 // StatisticsViewController
 "statistics_placeholder" = "Анализировать пока нечего";
+"best_period" = "Лучший период";
+"ideal_days" = "Идеальные дни";
+"completed_trackers" = "Трекеров завершено";
+"average_value" = "Среднее значение";
+"n_a" = "Недоступно";

@@ -60,10 +60,7 @@ final class TrackersViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
-        searchController.searchBar.placeholder = NSLocalizedString(
-            "search_placeholder",
-            comment: "Плейсхолдер поиска"
-        )
+        searchController.searchBar.placeholder = LocalizationKey.searchPlaceholder.localized()
         searchController.searchBar.delegate = self
         searchController.delegate = self
         searchController.searchBar.barTintColor = .systemBlue
@@ -73,7 +70,7 @@ final class TrackersViewController: BaseViewController {
     
     private lazy var filterButtonItem: UIButton = {
         let button = UIButton()
-        button.setTitle(NSLocalizedString("filters_button", comment: "Фильтры"), for: .normal)
+        button.setTitle(LocalizationKey.filtersButton.localized(), for: .normal)
         button.titleLabel?.font = .systemFont(
             ofSize: 17,
             weight: .regular
@@ -110,10 +107,7 @@ final class TrackersViewController: BaseViewController {
         super.init(
             type: .trackers,
             placeholderImageName: PHName.trackersPH.rawValue,
-            placeholderText: NSLocalizedString(
-                "trackers_placeholder",
-                comment: "Плейсхолдер"
-            )
+            placeholderText: LocalizationKey.trackersPlaceholder.localized()
         )
     }
     
@@ -188,14 +182,13 @@ final class TrackersViewController: BaseViewController {
                 ? PHName.searchPH.rawValue
                 : PHName.trackersPH.rawValue)
         
-        self.placeholderText = NSLocalizedString(
-            hasData
-                ? "trackers_placeholder"
-                : (isSearchOrFilteringActive
-                   ? "notfound_search_placholder"
-                   : "trackers_placeholder"),
-            comment: "Обновление плейсхолдера в зависимости от состояния"
-        )
+        let localizationKey: LocalizationKey = hasData
+        ? .trackersPlaceholder
+        : (isSearchOrFilteringActive
+           ? .notFoundSearchPlaceholder
+           : .trackersPlaceholder)
+        
+        self.placeholderText = localizationKey.localized()
 
         placeholder.update(
             image: UIImage(named: placeholderImageName) ?? UIImage(),
@@ -350,10 +343,7 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
             guard let self else { return }
             if let cancelButton = self.searchController.searchBar.value(forKey: "cancelButton") as? UIButton {
                 cancelButton.setTitle(
-                    NSLocalizedString(
-                        "search_cancel",
-                        comment: "Кнопка отменить"
-                    ),
+                    LocalizationKey.searchCancel.localized(),
                     for: .normal
                 )
             }

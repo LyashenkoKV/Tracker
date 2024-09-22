@@ -16,10 +16,7 @@ final class ScheduleViewController: BaseTrackerViewController {
     weak var delegate: ScheduleSelectionDelegate?
     
     private lazy var addDoneButton = UIButton(
-        title: NSLocalizedString(
-            "done_category_button",
-            comment: "Готово"
-        ),
+        title: LocalizationKey.doneCategoryButton.localized(),
         backgroundColor: .ypBlack,
         titleColor: .ypBackground,
         cornerRadius: 16,

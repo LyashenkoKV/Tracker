@@ -82,8 +82,11 @@
 		24122C0E2CA020F900B2F090 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0B4902CEA03CC2F8101F24 /* Pods_Tracker.framework */; };
 		24122C0F2CA020F900B2F090 /* Pods_Tracker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0B4902CEA03CC2F8101F24 /* Pods_Tracker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		24122C132CA02EC700B2F090 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122C122CA02EC700B2F090 /* KeychainService.swift */; };
+		244F76D12CA0608C00999AD6 /* GradientBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244F76D02CA0608C00999AD6 /* GradientBorderView.swift */; };
+		248D634A2CA05E53007E3E1C /* UIImage + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248D63492CA05E53007E3E1C /* UIImage + Extensions.swift */; };
 		249E17C22C9EEB7200B52DE1 /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 249E17C12C9EEB7200B52DE1 /* InlineSnapshotTesting */; };
 		249E17C42C9EEB7200B52DE1 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 249E17C32C9EEB7200B52DE1 /* SnapshotTesting */; };
+		24A8483B2CA04FA3006BA51C /* StatisticsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A8483A2CA04FA3006BA51C /* StatisticsStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,8 +210,11 @@
 		24122C092CA01D8200B2F090 /* GlobalConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
 		24122C122CA02EC700B2F090 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		243024D82C525B3500B0F1D3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		244F76D02CA0608C00999AD6 /* GradientBorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientBorderView.swift; sourceTree = "<group>"; };
+		248D63492CA05E53007E3E1C /* UIImage + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Extensions.swift"; sourceTree = "<group>"; };
 		24937A5B2C88A06F00EDBAB7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		249E17B72C9EEB3100B52DE1 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		24A8483A2CA04FA3006BA51C /* StatisticsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsStore.swift; sourceTree = "<group>"; };
 		5A9F3483E292D9E3F2264609 /* Pods-TrackerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerTests.release.xcconfig"; path = "Target Support Files/Pods-TrackerTests/Pods-TrackerTests.release.xcconfig"; sourceTree = "<group>"; };
 		7F667EDF588089BF6C97FD39 /* Pods-Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.release.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		A52F91934BD9CA2D7DE14072 /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
@@ -247,7 +253,9 @@
 				24122B4C2CA01C0300B2F090 /* UIButton + Extensions.swift */,
 				24122B4D2CA01C0300B2F090 /* UIColor + Extensions.swift */,
 				24122B4E2CA01C0300B2F090 /* UIView + Extension.swift */,
+				248D63492CA05E53007E3E1C /* UIImage + Extensions.swift */,
 				24122C092CA01D8200B2F090 /* GlobalConstants.swift */,
+				244F76D02CA0608C00999AD6 /* GradientBorderView.swift */,
 			);
 			path = "Global Extensions + Struct";
 			sourceTree = "<group>";
@@ -375,6 +383,7 @@
 				24122B782CA01C0300B2F090 /* TrackerCategoryStore.swift */,
 				24122B792CA01C0300B2F090 /* TrackerRecordStore.swift */,
 				24122B7A2CA01C0300B2F090 /* TrackerStore.swift */,
+				24A8483A2CA04FA3006BA51C /* StatisticsStore.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -764,6 +773,7 @@
 				24122BD82CA01C0300B2F090 /* CreatingTrackerViewController.swift in Sources */,
 				24122BD92CA01C0300B2F090 /* TrackerSection.swift in Sources */,
 				24122BDA2CA01C0300B2F090 /* FilterViewController.swift in Sources */,
+				24A8483B2CA04FA3006BA51C /* StatisticsStore.swift in Sources */,
 				24122BDB2CA01C0300B2F090 /* TrackersFilterManager.swift in Sources */,
 				24122BDC2CA01C0300B2F090 /* ScheduleCell.swift in Sources */,
 				24122BDD2CA01C0300B2F090 /* ScheduleViewController.swift in Sources */,
@@ -781,6 +791,7 @@
 				24122BE82CA01C0300B2F090 /* TrackerCategoryStore.swift in Sources */,
 				24122BE92CA01C0300B2F090 /* TrackerRecordStore.swift in Sources */,
 				24122BEA2CA01C0300B2F090 /* TrackerStore.swift in Sources */,
+				248D634A2CA05E53007E3E1C /* UIImage + Extensions.swift in Sources */,
 				24122BEB2CA01C0300B2F090 /* DayOfTheWeek.swift in Sources */,
 				24122BEC2CA01C0300B2F090 /* Tracker.swift in Sources */,
 				24122BED2CA01C0300B2F090 /* TrackerCategory.swift in Sources */,
@@ -805,6 +816,7 @@
 				24122BFF2CA01C0300B2F090 /* OnboardingHelper.swift in Sources */,
 				24122C002CA01C0300B2F090 /* OnboardingPageViewController.swift in Sources */,
 				24122C012CA01C0300B2F090 /* OnboardingStatus.swift in Sources */,
+				244F76D12CA0608C00999AD6 /* GradientBorderView.swift in Sources */,
 				24122C082CA01D4400B2F090 /* AnalyticsService.swift in Sources */,
 				24122C022CA01C0300B2F090 /* OnboardingViewController.swift in Sources */,
 				24122C032CA01C0300B2F090 /* AppDelegate.swift in Sources */,

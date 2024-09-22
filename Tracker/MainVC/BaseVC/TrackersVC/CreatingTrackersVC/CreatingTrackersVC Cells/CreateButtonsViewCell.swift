@@ -16,10 +16,7 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     private lazy var createButton: UIButton = {
         let button = addButton(
-            with: NSLocalizedString(
-                "create_new_tracker",
-                comment: "Создать"
-            ),
+            with: LocalizationKey.createNewTracker.localized(),
             backgroundColor: .ypGray,
             titleColor: .white,
             action: #selector(createButtonAction)
@@ -29,10 +26,7 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     private lazy var cancelButton: UIButton = {
         let button = addButton(
-            with: NSLocalizedString(
-                "cancel_create_new_tracker",
-                comment: "Отменить"
-            ),
+            with: LocalizationKey.cancelCreateNewTracker.localized(),
             backgroundColor: .clear,
             titleColor: .ypRed,
             action: #selector(cancelButtonAction)
@@ -123,8 +117,8 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     func updateCreateButtonTitle(isEditing: Bool) {
         let title = isEditing
-        ? NSLocalizedString("save_tracker", comment: "Сохранить")
-        : NSLocalizedString("create_new_tracker", comment: "Создать")
+        ? LocalizationKey.saveTracker.localized()
+        : LocalizationKey.createNewTracker.localized()
         
         createButton.setTitle(title, for: .normal)
     }

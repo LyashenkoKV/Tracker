@@ -23,19 +23,13 @@ final class CategoryViewController: BaseTrackerViewController {
     private lazy var placeholder: Placeholder = {
         let placeholder = Placeholder(
             image: UIImage(named: PHName.trackersPH.rawValue),
-            text: NSLocalizedString(
-                "category_placeholder",
-                comment: "Плейсхолдер"
-            )
+            text: LocalizationKey.categoryPlaceholder.localized()
         )
         return placeholder
     }()
     
     private lazy var addCategoryButton = UIButton(
-        title: NSLocalizedString(
-            "add_category",
-            comment: "Добавить категорию"
-        ),
+        title: LocalizationKey.addCategory.localized(),
         backgroundColor: .ypBlack,
         titleColor: .ypBackground,
         cornerRadius: 16,
@@ -145,13 +139,11 @@ final class CategoryViewController: BaseTrackerViewController {
         
         addCategoryButton.isEnabled = !isAddingCategory
         addCategoryButton.backgroundColor = isAddingCategory ? .ypGray : .ypBlack
-        addCategoryButton.setTitle(isAddingCategory ? NSLocalizedString(
-            "done_category_button",
-            comment: "Готово"
-        ) : NSLocalizedString(
-            "add_category",
-            comment: "Добавить категорию"
-        ), for: .normal)
+        addCategoryButton.setTitle(
+            isAddingCategory
+            ? LocalizationKey.doneCategoryButton.localized()
+            : LocalizationKey.addCategory.localized(), for: .normal
+        )
         
         tableView.reloadData()
     }

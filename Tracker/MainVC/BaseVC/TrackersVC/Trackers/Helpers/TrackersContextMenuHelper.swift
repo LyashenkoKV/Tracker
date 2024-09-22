@@ -31,12 +31,12 @@ final class TrackersContextMenuHelper {
         self.viewController = viewController
         self.completedTrackers = completedTrackers
     }
-
+    
     // MARK: - Create Context Menu
     func createContextMenu() -> UIMenu {
         let pinTitle = self.tracker.isPinned
-            ? NSLocalizedString("unpin", comment: "Открепить")
-            : NSLocalizedString("pin", comment: "Закрепить")
+        ? LocalizationKey.unpin.localized()
+        : LocalizationKey.pin.localized()
         
         let pinAction = UIAction(
             title: pinTitle
@@ -46,7 +46,7 @@ final class TrackersContextMenuHelper {
         }
 
         let deleteAction = UIAction(
-            title: NSLocalizedString("delete", comment: "Удалить"),
+            title: LocalizationKey.delete.localized(),
             attributes: .destructive
         ) { _ in
             self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "delete")
@@ -54,7 +54,7 @@ final class TrackersContextMenuHelper {
         }
 
         let editAction = UIAction(
-            title: NSLocalizedString("edit", comment: "Редактировать")
+            title: LocalizationKey.edit.localized()
         ) { _ in
             self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "edit")
             self.showEditTrackerView()
@@ -74,10 +74,7 @@ final class TrackersContextMenuHelper {
         )
         creatingTrackerVC.trackerToEdit = tracker
         creatingTrackerVC.completedTrackers = completedTrackers
-        creatingTrackerVC.title = NSLocalizedString(
-            "edit_tracker",
-            comment: "Редактирование привычки"
-        )
+
         let navController = UINavigationController(rootViewController: creatingTrackerVC)
         navController.modalPresentationStyle = .formSheet
         viewController?.present(navController, animated: true)
@@ -86,29 +83,20 @@ final class TrackersContextMenuHelper {
     // MARK: - Show Delete Confirmation Alert
     private func showDeleteConfirmationAlert() {
         let alertController = UIAlertController(
-            title: NSLocalizedString(
-                "delete_confirmation_message",
-                comment: "Уверены что хотите удалить трекер?"
-            ),
+            title: LocalizationKey.deleteConfirmationMessage.localized(),
             message: nil,
             preferredStyle: .actionSheet
         )
 
         let deleteAction = UIAlertAction(
-            title: NSLocalizedString(
-                "delete",
-                comment: "Удалить"
-            ),
+            title: LocalizationKey.delete.localized(),
             style: .destructive
         ) { _ in
             self.presenter?.deleteTracker(at: self.indexPath)
         }
 
         let cancelAction = UIAlertAction(
-            title: NSLocalizedString(
-                "alert_cancel",
-                comment: "Отменить"
-            ),
+            title: LocalizationKey.alertCancel.localized(),
             style: .cancel
         )
 

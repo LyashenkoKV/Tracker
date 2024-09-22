@@ -6,8 +6,11 @@
   
 */
 
+// TrackerStore
+"pinned_category" = "Fissato";
+
 // Onboarding
-"onboarding_fir_page" = "Monitora solo\n ciò che desideri";
+"onboarding_fir_page" = "Traccia solo\n ciò che desideri";
 "onboarding_sec_page" = "Anche se non sono\n litri d'acqua e yoga";
 "onboarding_button" = "Questa sì che è tecnologia!";
 
@@ -26,13 +29,21 @@
 
 // TrackersVC
 "search_placeholder" = "Cerca";
-"trackers_placeholder" = "Cosa stiamo monitorando?";
+"trackers_placeholder" = "Cosa tracceremo?";
 "notfound_search_placholder" = "Nessun risultato";
 "search_cancel" = "Annulla";
+"filters_button" = "Filtri";
+
+// FilterViewController
+"filtets_title" = "Filtri";
+"filters_all_trackers" = "Tutti i tracker";
+"filters_on_today" = "Tracker per oggi";
+"filters_complete" = "Completati";
+"filters+not_complete" = "Non completati";
 
 // TrackerVCDelegate & ContextMenuHelper
 "pin" = "Fissa";
-"unpin" = "Rimuovi";
+"unpin" = "Sblocca";
 "delete" = "Elimina";
 "edit" = "Modifica";
 "alert_cancel" = "Annulla";
@@ -51,12 +62,12 @@
 // BaseTrackerViewController
 "creating_tracker" = "Creazione del tracker";
 "new_habit" = "Nuova abitudine";
-"creating_habit" = "Creazione dell'abitudine";
+"edit_habit" = "Modifica abitudine";
+"creating_habit" = "Creazione abitudine";
 
 // CreatingTrackerViewController
 "every_day" = "Ogni giorno";
 
-// DayOfTheWeek (Shortened)
 "monday_short" = "Lun";
 "tuesday_short" = "Mar";
 "wednesday_short" = "Mer";
@@ -74,13 +85,19 @@
 "textView_placeholder" = "Inserisci il nome del tracker";
 
 // CreateButtonsViewCell
+"save_tracker" = "Salva";
 "create_new_tracker" = "Crea";
 "cancel_create_new_tracker" = "Annulla";
 
 // CategoryViewController & ScheduleViewController
-"category_placeholder" = "Le abitudini e gli eventi possono\n essere raggruppati per significato";
+"category_placeholder" = "Abitudini ed eventi possono essere\ngruppati logicamente";
 "add_category" = "Aggiungi categoria";
 "done_category_button" = "Fatto";
 
 // StatisticsViewController
-"statistics_placeholder" = "Niente da analizzare ancora";
+"statistics_placeholder" = "Niente da analizzare per ora";
+"best_period" = "Periodo migliore";
+"ideal_days" = "Giorni ideali";
+"completed_trackers" = "Tracker completati";
+"average_value" = "Valore medio";
+"n_a" = "Non disponibile";

@@ -21,15 +21,9 @@ enum TrackerSection: Int, CaseIterable {
         case .buttons:
             return nil
         case .emoji:
-            return NSLocalizedString(
-                "emoji_header",
-                comment: "emoji"
-            )
+            return LocalizationKey.emojiHeader.localized()
         case .color:
-            return NSLocalizedString(
-                "color_header",
-                comment: "Цвет"
-            )
+            return LocalizationKey.colorHeader.localized()
         case .createButtons:
             return nil
         }
@@ -38,10 +32,7 @@ enum TrackerSection: Int, CaseIterable {
     var footerTitle: String? {
         switch self {
         case .textView:
-            return NSLocalizedString(
-                "limit_char",
-                comment: "Ограничение 38 символов"
-            )
+            return LocalizationKey.limitChar.localized()
         case .buttons, .emoji, .color, .createButtons:
             return nil
         }

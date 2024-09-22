@@ -15,10 +15,7 @@ final class StatisticsViewController: BaseViewController {
         super.init(
             type: .statistics,
             placeholderImageName: PHName.statisticPH.rawValue,
-            placeholderText: NSLocalizedString(
-                "statistics_placeholder",
-                comment: "Анализировать пока нечего"
-            )
+            placeholderText: LocalizationKey.statisticsPlaceholder.localized()
         )
     }
     
@@ -28,9 +25,16 @@ final class StatisticsViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePlaceholderView()
+        view.backgroundColor = .ypBackground
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.fetchStatistics()
+        updatePlaceholderView()
+    }
+
     func updatePlaceholderView() {
         let hasData = viewModel.hasStatistics
         
@@ -52,13 +56,12 @@ final class StatisticsViewController: BaseViewController {
     }
 }
 
-// MARK: - UICollectionViewDataSource
 extension StatisticsViewController {
     override func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return 1
+        return 4
     }
     
     override func collectionView(
@@ -71,11 +74,47 @@ extension StatisticsViewController {
         ) as? StatisticCell else {
             return UICollectionViewCell()
         }
+        
+        let statistic = viewModel.getStatistic(for: indexPath.row)
+        
+        let gradientColors: [UIColor] = [.systemRed,.systemGreen, .systemBlue]
+        cell.configure(with: "\(statistic.value)", title: statistic.title, gradientColors: gradientColors)
+        
         return cell
     }
 }
 
-// MARK: - UICollectionViewDelegate
 extension StatisticsViewController {
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width = collectionView.bounds.width
+        return CGSize(width: width, height: 90)
+    }
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
+        let numberOfItems = collectionView.numberOfItems(inSection: section)
+        
+        let cellHeight: CGFloat = 90
+        let minimumLineSpacing: CGFloat = 12
+        let totalCellHeight = (cellHeight * CGFloat(numberOfItems)) + (minimumLineSpacing * CGFloat(numberOfItems - 1))
+        let availableHeight = collectionView.bounds.height
+        let topInset = max((availableHeight - totalCellHeight) / 2, 16)
+        
+        return UIEdgeInsets(top: topInset, left: 16, bottom: 16, right: 16)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        return 12
+    }
 }

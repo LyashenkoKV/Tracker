@@ -19,15 +19,9 @@ final class ConfigureTableViewCellsHelper {
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
             if indexPath.section == 0 {
-                content.text = NSLocalizedString(
-                    "habit",
-                    comment: "Привычка"
-                )
+                content.text = LocalizationKey.habit.localized()
             } else if indexPath.section == 1 {
-                content.text = NSLocalizedString(
-                    "irregular_event",
-                    comment: "Нерегулярное событие"
-                )
+                content.text = LocalizationKey.irregularEvent.localized()
             }
             content.textProperties.alignment = .center
             content.textProperties.color = .ypBackground
@@ -35,15 +29,9 @@ final class ConfigureTableViewCellsHelper {
             cell.contentConfiguration = content
         } else {
             if indexPath.section == 0 {
-                cell.textLabel?.text = NSLocalizedString(
-                    "habit",
-                    comment: "Привычка"
-                )
+                cell.textLabel?.text = LocalizationKey.habit.localized()
             } else if indexPath.section == 1 {
-                cell.textLabel?.text = NSLocalizedString(
-                    "irregular_event",
-                    comment: "Нерегулярное событие"
-                )
+                cell.textLabel?.text = LocalizationKey.irregularEvent.localized()
             }
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -122,22 +110,13 @@ final class ConfigureTableViewCellsHelper {
             
             cell.changeText(categories[editingIndex.row].title, editing: true)
             
-            viewController.title = NSLocalizedString(
-                "edit_category",
-                comment: "Редактирование категории"
-            )
+            viewController.title = LocalizationKey.editCategory.localized()
         } else {
             cell.changeText(
-                NSLocalizedString(
-                    "enter_cat_name",
-                    comment: "Введите название категории"
-                ),
+                LocalizationKey.enterCategoryName.localized(),
                 editing: false
             )
-            viewController.title = NSLocalizedString(
-                "new_category",
-                comment: "Новая категория"
-            )
+            viewController.title = LocalizationKey.newCategory.localized()
         }
         
         configureBaseCell(cell, at: indexPath, totalRows: 1)
@@ -219,8 +198,8 @@ final class ConfigureTableViewCellsHelper {
         if #available(iOS 14.0, *) {
             var content = cell.defaultContentConfiguration()
             content.text = indexPath.row == 0
-            ? NSLocalizedString("category", comment: "Категория")
-            : NSLocalizedString("schedule", comment: "Расписание")
+            ? LocalizationKey.category.localized()
+            : LocalizationKey.schedule.localized()
             content.textProperties.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             content.textProperties.adjustsFontSizeToFitWidth = true
             content.textProperties.minimumScaleFactor = 0.8
@@ -241,8 +220,8 @@ final class ConfigureTableViewCellsHelper {
             cell.contentConfiguration = content
         } else {
             cell.textLabel?.text = indexPath.row == 0
-            ? NSLocalizedString("category", comment: "Категория")
-            : NSLocalizedString("schedule", comment: "Расписание")
+            ? LocalizationKey.category.localized()
+            : LocalizationKey.schedule.localized()
             cell.detailTextLabel?.textColor = .ypGray
             cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
             cell.detailTextLabel?.adjustsFontSizeToFitWidth = true

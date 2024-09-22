@@ -42,28 +42,24 @@ final class MainViewController: UIViewController {
         let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let statisticsStore = StatisticsStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let trackersPresenter = TrackersPresenter(
             trackerStore: trackerStore,
             categoryStore: categoryStore,
             recordStore: recordStore,
+            statisticsStore: statisticsStore,
             filterManager: filterManager
         )
 
         trackersViewController.configure(trackersPresenter)
 
         trackersViewController.tabBarItem = UITabBarItem(
-            title: NSLocalizedString(
-                "trackers_tab_title",
-                comment: "Заголовок"
-            ),
+            title: LocalizationKey.trackersTabTitle.localized(),
             image: UIImage(systemName: "smallcircle.filled.circle.fill"),
             tag: 0
         )
         statisticViewController.tabBarItem = UITabBarItem(
-            title: NSLocalizedString(
-                "statistics_tab_title",
-                comment: "Заголовок"
-            ),
+            title: LocalizationKey.statisticsTabTitle.localized(),
             image: UIImage(systemName: "hare.fill"),
             tag: 1
         )

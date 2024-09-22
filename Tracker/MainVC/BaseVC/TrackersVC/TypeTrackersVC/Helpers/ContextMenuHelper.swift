@@ -24,20 +24,14 @@ final class ContextMenuHelper {
             
             return UIContextMenuConfiguration(actionProvider: { _ in
                 let editAction = UIAction(
-                    title: NSLocalizedString(
-                        "edit",
-                        comment: "Редактировать категорию"
-                    )
+                    title: LocalizationKey.edit.localized()
                 ) { _ in
                     viewController.startEditingCategory(at: indexPath)
                     tableView.reloadRows(at: [indexPath], with: .automatic)
                 }
                 
                 let deleteAction = UIAction(
-                    title: NSLocalizedString(
-                        "delete",
-                        comment: "Удалить категорию"
-                    ),
+                    title: LocalizationKey.delete.localized(),
                     attributes: .destructive) { _ in
                         viewController.deleteCategory(at: indexPath)
                         tableView.reloadRows(at: [indexPath], with: .automatic)

@@ -10,46 +10,31 @@ import UIKit
 final class StatisticCell: UICollectionViewCell {
     static let reuseIdentifier = "StatisticCell"
     
-    private let valueLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 30)
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.textColor = .darkGray
-        return label
-    }()
-    
-    private let containerView: UIView = {
-        let view = UIView()
+    private let borderView: GradientBorderView = {
+        let view = GradientBorderView()
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
+        view.layer.borderWidth = 1
         return view
     }()
     
-    private let gradientLayer: CAGradientLayer = {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
-        gradientLayer.colors = [
-            UIColor.red.cgColor,
-            UIColor.green.cgColor,
-            UIColor.blue.cgColor
-        ]
-        return gradientLayer
+    private let valueLabel: UILabel = {
+        let label = UILabel()
+        label.font = .boldSystemFont(ofSize: 34)
+        label.textAlignment = .left
+        label.textColor = .ypBlack
+        return label
     }()
-    
-    private let borderLayer: CALayer = {
-        let borderLayer = CALayer()
-        borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 16
-        borderLayer.masksToBounds = true
-        return borderLayer
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(
+            ofSize: 12,
+            weight: .medium
+        )
+        label.textAlignment = .left
+        label.textColor = .ypBlack
+        return label
     }()
     
     override init(frame: CGRect) {
@@ -61,44 +46,35 @@ final class StatisticCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        gradientLayer.frame = containerView.bounds
-        borderLayer.frame = containerView.bounds
-        borderLayer.borderWidth = 2
-        borderLayer.cornerRadius = 16
-    }
-    
     private func setupUI() {
-        contentView.addSubview(containerView)
-        containerView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(borderView)
+        
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            borderView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            borderView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            borderView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            borderView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
         
         let stackView = UIStackView(arrangedSubviews: [valueLabel, titleLabel])
         stackView.axis = .vertical
-        stackView.spacing = 8
+        stackView.spacing = 4
+        stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        containerView.addSubview(stackView)
-        
+        borderView.addSubview(stackView)
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-            stackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            stackView.leadingAnchor.constraint(equalTo: borderView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: borderView.trailingAnchor, constant: -16),
+            stackView.centerYAnchor.constraint(equalTo: borderView.centerYAnchor)
         ])
-        
-        containerView.layer.insertSublayer(gradientLayer, at: 0)
-        containerView.layer.addSublayer(borderLayer)
     }
     
-    func configure(with value: String, title: String, colors: [UIColor]) {
+    func configure(with value: String, title: String, gradientColors: [UIColor]) {
         valueLabel.text = value
         titleLabel.text = title
         
-        gradientLayer.colors = colors.map { $0.cgColor }
+        borderView.gradientColors = gradientColors
     }
 }

@@ -76,32 +76,17 @@ class BaseTrackerViewController: UIViewController {
         view.backgroundColor = .ypBackground
         switch trackerViewControllerType {
         case .typeTrackers:
-            self.title = NSLocalizedString(
-                "creating_tracker",
-                comment: "Создание трекера"
-            )
+            self.title = LocalizationKey.creatingTracker.localized()
         case .category:
-            self.title = NSLocalizedString(
-                "category",
-                comment: "Категория"
-            )
+            self.title = LocalizationKey.category.localized()
         case .creatingTracker:
             if trackerToEdit != nil {
-                self.title = NSLocalizedString(
-                    "edit_habit",
-                    comment: "Редактирование привычки"
-                )
+                self.title = LocalizationKey.editHabit.localized()
             } else {
-                self.title = NSLocalizedString(
-                    "new_habit",
-                    comment: "Новая привычка"
-                )
+                self.title = LocalizationKey.newHabit.localized()
             }
         case .schedule:
-            self.title = NSLocalizedString(
-                "schedule",
-                comment: "Расписание"
-            )
+            self.title = LocalizationKey.schedule.localized()
         case .none:
             break
         }
@@ -178,10 +163,7 @@ class BaseTrackerViewController: UIViewController {
         switch trackerViewControllerType {
         case .creatingTracker:
             if trackerToEdit == nil {
-                self.title = NSLocalizedString(
-                    "creating_habit",
-                    comment: "Создание привычки"
-                )
+                self.title = LocalizationKey.creatingHabit.localized()
             }
         default:
             break

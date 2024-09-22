@@ -6,13 +6,16 @@
   
 */
 
+// TrackerStore
+"pinned_category" = "已固定";
+
 // Onboarding
 "onboarding_fir_page" = "只跟踪\n你想要的";
-"onboarding_sec_page" = "即使不是\n水和瑜伽";
+"onboarding_sec_page" = "即使不是\n水的升数和瑜伽";
 "onboarding_button" = "这就是科技！";
 
 // BaseVC & MainVC (TabBar)
-"trackers_tab_title" = "跟踪器";
+"trackers_tab_title" = "追踪器";
 "statistics_tab_title" = "统计";
 
 // DayOfTheWeek
@@ -27,8 +30,16 @@
 // TrackersVC
 "search_placeholder" = "搜索";
 "trackers_placeholder" = "我们要跟踪什么？";
-"notfound_search_placholder" = "未找到内容";
+"notfound_search_placholder" = "未找到任何内容";
 "search_cancel" = "取消";
+"filters_button" = "筛选";
+
+// FilterViewController
+"filtets_title" = "筛选";
+"filters_all_trackers" = "所有追踪器";
+"filters_on_today" = "今日追踪器";
+"filters_complete" = "已完成";
+"filters+not_complete" = "未完成";
 
 // TrackerVCDelegate & ContextMenuHelper
 "pin" = "固定";
@@ -36,27 +47,27 @@
 "delete" = "删除";
 "edit" = "编辑";
 "alert_cancel" = "取消";
-"delete_confirmation_message" = "确定要删除追踪器吗？";
+"delete_confirmation_message" = "您确定要删除此追踪器吗？";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "习惯";
-"irregular_event" = "不规则事件";
+"irregular_event" = "不定期事件";
 "edit_category" = "编辑类别";
 "enter_cat_name" = "输入类别名称";
 "new_category" = "新类别";
 
 "category" = "类别";
-"schedule" = "日程";
+"schedule" = "日程安排";
 
 // BaseTrackerViewController
-"creating_tracker" = "创建跟踪器";
+"creating_tracker" = "创建追踪器";
 "new_habit" = "新习惯";
+"edit_habit" = "编辑习惯";
 "creating_habit" = "创建习惯";
 
 // CreatingTrackerViewController
 "every_day" = "每天";
 
-// DayOfTheWeek (Shortened)
 "monday_short" = "周一";
 "tuesday_short" = "周二";
 "wednesday_short" = "周三";
@@ -68,19 +79,25 @@
 // TrackerSection
 "emoji_header" = "表情符号";
 "color_header" = "颜色";
-"limit_char" = "38个字符限制";
+"limit_char" = "限制38个字符";
 
 // TextViewCell
-"textView_placeholder" = "输入跟踪器名称";
+"textView_placeholder" = "输入追踪器名称";
 
 // CreateButtonsViewCell
+"save_tracker" = "保存";
 "create_new_tracker" = "创建";
 "cancel_create_new_tracker" = "取消";
 
 // CategoryViewController & ScheduleViewController
-"category_placeholder" = "习惯和事件可以\n根据意义分组";
+"category_placeholder" = "习惯和事件可以\n逻辑分组";
 "add_category" = "添加类别";
 "done_category_button" = "完成";
 
 // StatisticsViewController
-"statistics_placeholder" = "还没有可分析的数据";
+"statistics_placeholder" = "还没有可分析的内容";
+"best_period" = "最佳时期";
+"ideal_days" = "理想天数";
+"completed_trackers" = "已完成的追踪器";
+"average_value" = "平均值";
+"n_a" = "不可用";

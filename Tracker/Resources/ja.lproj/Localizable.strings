@@ -6,10 +6,13 @@
   
 */
 
+// TrackerStore
+"pinned_category" = "固定された";
+
 // Onboarding
-"onboarding_fir_page" = "追跡したいことだけ\nを記録";
-"onboarding_sec_page" = "水のリットルやヨガで\nなくても";
-"onboarding_button" = "これが技術だ！";
+"onboarding_fir_page" = "追跡するのは\nあなたが望むものだけ";
+"onboarding_sec_page" = "たとえそれが\n水のリットルやヨガでなくても";
+"onboarding_button" = "これがテクノロジー！";
 
 // BaseVC & MainVC (TabBar)
 "trackers_tab_title" = "トラッカー";
@@ -27,12 +30,20 @@
 // TrackersVC
 "search_placeholder" = "検索";
 "trackers_placeholder" = "何を追跡しますか？";
-"notfound_search_placholder" = "結果が見つかりません";
+"notfound_search_placholder" = "見つかりませんでした";
 "search_cancel" = "キャンセル";
+"filters_button" = "フィルター";
+
+// FilterViewController
+"filtets_title" = "フィルター";
+"filters_all_trackers" = "すべてのトラッカー";
+"filters_on_today" = "今日のトラッカー";
+"filters_complete" = "完了";
+"filters+not_complete" = "未完了";
 
 // TrackerVCDelegate & ContextMenuHelper
 "pin" = "ピン留め";
-"unpin" = "ピン留め解除";
+"unpin" = "ピン解除";
 "delete" = "削除";
 "edit" = "編集";
 "alert_cancel" = "キャンセル";
@@ -40,23 +51,23 @@
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "習慣";
-"irregular_event" = "不規則なイベント";
-"edit_category" = "カテゴリーを編集";
-"enter_cat_name" = "カテゴリー名を入力";
-"new_category" = "新しいカテゴリー";
+"irregular_event" = "不定期イベント";
+"edit_category" = "カテゴリを編集";
+"enter_cat_name" = "カテゴリ名を入力";
+"new_category" = "新しいカテゴリ";
 
-"category" = "カテゴリー";
+"category" = "カテゴリ";
 "schedule" = "スケジュール";
 
 // BaseTrackerViewController
-"creating_tracker" = "トラッカーを作成";
+"creating_tracker" = "トラッカーの作成";
 "new_habit" = "新しい習慣";
-"creating_habit" = "習慣を作成";
+"edit_habit" = "習慣を編集";
+"creating_habit" = "習慣の作成";
 
 // CreatingTrackerViewController
 "every_day" = "毎日";
 
-// DayOfTheWeek (Shortened)
 "monday_short" = "月";
 "tuesday_short" = "火";
 "wednesday_short" = "水";
@@ -68,19 +79,25 @@
 // TrackerSection
 "emoji_header" = "絵文字";
 "color_header" = "色";
-"limit_char" = "38文字の制限";
+"limit_char" = "38文字制限";
 
 // TextViewCell
-"textView_placeholder" = "トラッカーの名前を入力";
+"textView_placeholder" = "トラッカー名を入力";
 
 // CreateButtonsViewCell
+"save_tracker" = "保存";
 "create_new_tracker" = "作成";
 "cancel_create_new_tracker" = "キャンセル";
 
 // CategoryViewController & ScheduleViewController
-"category_placeholder" = "習慣やイベントは\n意味ごとにグループ化できます";
-"add_category" = "カテゴリーを追加";
+"category_placeholder" = "習慣やイベントは\n論理的にグループ化できます";
+"add_category" = "カテゴリを追加";
 "done_category_button" = "完了";
 
 // StatisticsViewController
 "statistics_placeholder" = "まだ分析するものがありません";
+"best_period" = "ベスト期間";
+"ideal_days" = "理想的な日";
+"completed_trackers" = "完了したトラッカー";
+"average_value" = "平均値";
+"n_a" = "利用不可";

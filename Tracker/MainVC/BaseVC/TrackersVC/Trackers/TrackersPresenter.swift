@@ -33,6 +33,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     private let trackerStore: TrackerStore
     private let categoryStore: TrackerCategoryStore
     private let recordStore: TrackerRecordStore
+    private let statisticsStore: StatisticsStore
     private let pinnedCategoryKey = "pinned_category_key"
     private let filterManager: TrackersFilterManager?
     
@@ -50,11 +51,13 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         trackerStore: TrackerStore,
         categoryStore: TrackerCategoryStore,
         recordStore: TrackerRecordStore,
+        statisticsStore: StatisticsStore,
         filterManager: TrackersFilterManager?
     ) {
         self.trackerStore = trackerStore
         self.categoryStore = categoryStore
         self.recordStore = recordStore
+        self.statisticsStore = statisticsStore
         self.filterManager = filterManager
     }
     
@@ -84,6 +87,8 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         do {
             try recordStore.addRecord(newRecord)
             
+            updateStatisticsAfterAction()
+            
             loadCompletedTrackers()
             view.reloadData()
         } catch {
@@ -98,6 +103,8 @@ final class TrackersPresenter: TrackersPresenterProtocol {
     func trackerCompletedUnmark(_ trackerId: UUID, date: String) {
         do {
             try recordStore.removeRecord(for: trackerId, on: date)
+            
+            updateStatisticsAfterAction()
             
             self.loadCompletedTrackers()
             view?.reloadData()
@@ -123,7 +130,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         } else {
             trackerCompletedMark(tracker.id, date: currentDateString)
         }
-        
+  
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.view?.reloadData()
         }
@@ -235,10 +242,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         var categories: [TrackerCategory] = []
         if let pinnedTrackers = groupedTrackers.removeValue(forKey: pinnedCategoryKey) {
             let pinnedCategory = TrackerCategory(
-                title: NSLocalizedString(
-                    "pinned_category",
-                    comment: "Закрепленные"
-                ),
+                title: LocalizationKey.pinnedCategory.localized(),
                 trackers: pinnedTrackers
             )
             categories.append(pinnedCategory)
@@ -310,5 +314,83 @@ extension TrackersPresenter {
             .debug,
             message: "Отправлено событие: \(event), screen: \(screen), item: \(item ?? "N/A")"
         )
+    }
+}
+
+// MARK: - Statistics
+extension TrackersPresenter {
+    private func updateStatisticsAfterAction() {
+        let allRecords = recordStore.fetchRecords()
+        let allTrackers = trackerStore.fetchTrackers()
+        
+        let bestPeriod = calculateBestPeriod(records: allRecords)
+        
+        let idealDays = calculateIdealDays(records: allRecords, trackers: allTrackers)
+        
+        let completedTrackersCount = allRecords.count
+        
+        let averageValue = calculateAverageCompletion(records: allRecords)
+        
+        statisticsStore.saveStatistics(
+            bestPeriod: bestPeriod,
+            idealDays: idealDays,
+            completedTrackers: completedTrackersCount,
+            averageValue: averageValue
+        )
+        
+        view?.reloadData()
+    }
+    
+    private func calculateBestPeriod(records: [TrackerRecordCoreData]) -> Int {
+        var bestPeriod = 0
+        var currentPeriod = 0
+        var previousDate: Date?
+
+        let calendar = Calendar.current
+
+        for record in records.sorted(by: { dateFormatter.date(from: $0.date ?? "") ?? Date() < dateFormatter.date(from: $1.date ?? "") ?? Date() }) {
+            if let prevDate = previousDate, let currentDate = dateFormatter.date(from: record.date ?? "") {
+                let daysBetween = calendar.dateComponents([.day], from: prevDate, to: currentDate).day ?? 0
+                if daysBetween == 1 {
+                    currentPeriod += 1
+                } else {
+                    bestPeriod = max(bestPeriod, currentPeriod)
+                    currentPeriod = 1
+                }
+            } else {
+                currentPeriod = 1
+            }
+            previousDate = dateFormatter.date(from: record.date ?? "")
+        }
+
+        return max(bestPeriod, currentPeriod)
+    }
+    
+    private func calculateIdealDays(records: [TrackerRecordCoreData], trackers: [TrackerCoreData]) -> Int {
+        let calendar = Calendar.current
+ 
+        let groupedByDate = Dictionary(grouping: records, by: { calendar.startOfDay(for: dateFormatter.date(from: $0.date ?? "") ?? Date()) })
+        
+        var idealDays = 0
+
+        for (_, recordsForDay) in groupedByDate {
+            if recordsForDay.count == trackers.count {
+                idealDays += 1
+            }
+        }
+
+        return idealDays
+    }
+    
+    private func calculateAverageCompletion(records: [TrackerRecordCoreData]) -> Int {
+        let calendar = Calendar.current
+
+        let groupedByDate = Dictionary(grouping: records, by: { calendar.startOfDay(for: dateFormatter.date(from: $0.date ?? "") ?? Date()) })
+        
+        let totalDays = groupedByDate.count
+        let totalCompletedTrackers = groupedByDate.reduce(0) { $0 + $1.value.count }
+
+        guard totalDays > 0 else { return 0 }
+        return totalCompletedTrackers / totalDays
     }
 }

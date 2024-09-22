@@ -6,13 +6,16 @@
   
 */
 
+// TrackerStore
+"pinned_category" = "Épinglé";
+
 // Onboarding
 "onboarding_fir_page" = "Suivez uniquement\n ce que vous voulez";
 "onboarding_sec_page" = "Même si ce n'est pas\n des litres d'eau et du yoga";
-"onboarding_button" = "Ça c'est de la technologie !";
+"onboarding_button" = "C'est de la technologie !";
 
 // BaseVC & MainVC (TabBar)
-"trackers_tab_title" = "Suivi";
+"trackers_tab_title" = "Trackers";
 "statistics_tab_title" = "Statistiques";
 
 // DayOfTheWeek
@@ -25,10 +28,18 @@
 "sunday" = "Dimanche";
 
 // TrackersVC
-"search_placeholder" = "Rechercher";
-"trackers_placeholder" = "Qu'allons-nous suivre?";
-"notfound_search_placholder" = "Rien trouvé";
+"search_placeholder" = "Recherche";
+"trackers_placeholder" = "Que allons-nous suivre ?";
+"notfound_search_placholder" = "Aucun résultat";
 "search_cancel" = "Annuler";
+"filters_button" = "Filtres";
+
+// FilterViewController
+"filtets_title" = "Filtres";
+"filters_all_trackers" = "Tous les trackers";
+"filters_on_today" = "Trackers pour aujourd'hui";
+"filters_complete" = "Terminés";
+"filters+not_complete" = "Non terminés";
 
 // TrackerVCDelegate & ContextMenuHelper
 "pin" = "Épingler";
@@ -36,7 +47,7 @@
 "delete" = "Supprimer";
 "edit" = "Modifier";
 "alert_cancel" = "Annuler";
-"delete_confirmation_message" = "Êtes-vous sûr de vouloir supprimer le tracker?";
+"delete_confirmation_message" = "Êtes-vous sûr de vouloir supprimer le tracker ?";
 
 // ConfigureTableViewCellsHelper & HandleActionsHelper
 "habit" = "Habitude";
@@ -46,17 +57,17 @@
 "new_category" = "Nouvelle catégorie";
 
 "category" = "Catégorie";
-"schedule" = "Horaire";
+"schedule" = "Calendrier";
 
 // BaseTrackerViewController
-"creating_tracker" = "Création de suivi";
+"creating_tracker" = "Création du tracker";
 "new_habit" = "Nouvelle habitude";
-"creating_habit" = "Création d'habitude";
+"edit_habit" = "Modifier l'habitude";
+"creating_habit" = "Création de l'habitude";
 
 // CreatingTrackerViewController
-"every_day" = "Tous les jours";
+"every_day" = "Chaque jour";
 
-// DayOfTheWeek (Shortened)
 "monday_short" = "Lun";
 "tuesday_short" = "Mar";
 "wednesday_short" = "Mer";
@@ -71,16 +82,22 @@
 "limit_char" = "Limite de 38 caractères";
 
 // TextViewCell
-"textView_placeholder" = "Entrez le nom du suivi";
+"textView_placeholder" = "Entrez le nom du tracker";
 
 // CreateButtonsViewCell
+"save_tracker" = "Enregistrer";
 "create_new_tracker" = "Créer";
 "cancel_create_new_tracker" = "Annuler";
 
 // CategoryViewController & ScheduleViewController
-"category_placeholder" = "Les habitudes et événements peuvent\n être regroupés par sens";
+"category_placeholder" = "Les habitudes et événements peuvent être\ngroupés logiquement";
 "add_category" = "Ajouter une catégorie";
 "done_category_button" = "Terminé";
 
 // StatisticsViewController
 "statistics_placeholder" = "Rien à analyser pour le moment";
+"best_period" = "Meilleure période";
+"ideal_days" = "Jours idéaux";
+"completed_trackers" = "Trackers terminés";
+"average_value" = "Valeur moyenne";
+"n_a" = "Indisponible";

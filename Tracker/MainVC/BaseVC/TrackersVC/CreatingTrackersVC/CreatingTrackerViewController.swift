@@ -362,10 +362,7 @@ extension CreatingTrackerViewController {
         let selectedSet = Set(selectedDays)
         
         if selectedSet == fullWeek {
-            return NSLocalizedString(
-                "every_day",
-                comment: "Каждый день"
-            )
+            return LocalizationKey.everyDay.localized()
         }
         
         let sortedDays = selectedDays.sorted {
@@ -375,22 +372,21 @@ extension CreatingTrackerViewController {
         let dayShortcuts = sortedDays.map { day in
             switch day {
             case .monday:
-                return NSLocalizedString("monday_short", comment: "Понедельник сокращённо")
+                return LocalizationKey.mondayShort.localized()
             case .tuesday:
-                return NSLocalizedString("tuesday_short", comment: "Вторник сокращённо")
+                return LocalizationKey.tuesdayShort.localized()
             case .wednesday:
-                return NSLocalizedString("wednesday_short", comment: "Среда сокращённо")
+                return LocalizationKey.wednesday.localized()
             case .thursday:
-                return NSLocalizedString("thursday_short", comment: "Четверг сокращённо")
+                return LocalizationKey.thursdayShort.localized()
             case .friday:
-                return NSLocalizedString("friday_short", comment: "Пятница сокращённо")
+                return LocalizationKey.fridayShort.localized()
             case .saturday:
-                return NSLocalizedString("saturday_short", comment: "Суббота сокращённо")
+                return LocalizationKey.saturdayShort.localized()
             case .sunday:
-                return NSLocalizedString("sunday_short", comment: "Воскресенье сокращённо")
+                return LocalizationKey.sundayShort.localized()
             }
         }
-        
         return dayShortcuts.joined(separator: ", ")
     }
 }

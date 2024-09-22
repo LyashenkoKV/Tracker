@@ -20,10 +20,7 @@ final class HandleActionsHelper {
             viewController.present(navController, animated: true)
         } else if indexPath.section == 1 {
             let irregularEventVC = CreatingTrackerViewController(type: .creatingTracker, isRegularEvent: false)
-            irregularEventVC.title = NSLocalizedString(
-                "irregular_event",
-                comment: "Нерегулярное событие"
-            )
+            irregularEventVC.title = LocalizationKey.irregularEvent.localized()
             let navController = UINavigationController(rootViewController: irregularEventVC)
             navController.modalPresentationStyle = .formSheet
             viewController.present(navController, animated: true)

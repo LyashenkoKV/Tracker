@@ -19,19 +19,19 @@ enum DayOfTheWeek: String, Codable, CaseIterable {
     func localized() -> String {
         switch self {
         case .monday:
-            return NSLocalizedString("monday", comment: "Понедельник")
+            return LocalizationKey.monday.localized()
         case .tuesday:
-            return NSLocalizedString("tuesday", comment: "Вторник")
+            return LocalizationKey.tuesday.localized()
         case .wednesday:
-            return NSLocalizedString("wednesday", comment: "Среда")
+            return LocalizationKey.wednesday.localized()
         case .thursday:
-            return NSLocalizedString("thursday", comment: "Четверг")
+            return LocalizationKey.thursday.localized()
         case .friday:
-            return NSLocalizedString("friday", comment: "Пятница")
+            return LocalizationKey.friday.localized()
         case .saturday:
-            return NSLocalizedString("saturday", comment: "Суббота")
+            return LocalizationKey.saturday.localized()
         case .sunday:
-            return NSLocalizedString("sunday", comment: "Воскресенье")
+            return LocalizationKey.sunday.localized()
         }
     }
 }
