@@ -71,5 +71,12 @@ extension TrackersViewController {
             trackersCell.layer.masksToBounds = true
         }
     }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        presenter?.logEvent(event: "click", screen: "TrackersVC", item: "tap_track")
+    }
 }
 

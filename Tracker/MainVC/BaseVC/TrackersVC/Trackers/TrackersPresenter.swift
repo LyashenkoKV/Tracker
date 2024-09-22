@@ -24,6 +24,8 @@ protocol TrackersPresenterProtocol: AnyObject {
     func deleteTracker(at indexPath: IndexPath)
     func togglePin(for tracker: Tracker)
     func updateTracker(_ updatedTracker: Tracker)
+    func showContextMenu(for tracker: Tracker, at indexPath: IndexPath)
+    func logEvent(event: String, screen: String, item: String?)
 }
 
 // MARK: - Object
@@ -276,5 +278,37 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         } catch {
             Logger.shared.log(.error, message: "Ошибка при обновлении трекера \(updatedTracker.name)")
         }
+    }
+    
+    func showContextMenu(for tracker: Tracker, at indexPath: IndexPath) {
+        guard let completedTrackers = view?.completedTrackers else { return }
+        let contextMenuHelper = TrackersContextMenuHelper(
+            tracker: tracker,
+            indexPath: indexPath,
+            presenter: self,
+            viewController: TrackersViewController(),
+            completedTrackers: completedTrackers
+        )
+        _ = contextMenuHelper.createContextMenu()
+    }
+}
+
+// MARK: - Analytics
+extension TrackersPresenter {
+
+    func logEvent(event: String, screen: String, item: String? = nil) {
+        var params: AnalyticsEventParam = [
+            "event": event,
+            "screen": screen
+        ]
+        if let item = item {
+            params["item"] = item
+        }
+        AnalyticsService.report(event: event, params: params)
+        
+        Logger.shared.log(
+            .debug,
+            message: "Отправлено событие: \(event), screen: \(screen), item: \(item ?? "N/A")"
+        )
     }
 }

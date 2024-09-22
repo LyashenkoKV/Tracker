@@ -81,6 +81,7 @@
 		24122C0A2CA01D8200B2F090 /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122C092CA01D8200B2F090 /* GlobalConstants.swift */; };
 		24122C0E2CA020F900B2F090 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0B4902CEA03CC2F8101F24 /* Pods_Tracker.framework */; };
 		24122C0F2CA020F900B2F090 /* Pods_Tracker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0B4902CEA03CC2F8101F24 /* Pods_Tracker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		24122C132CA02EC700B2F090 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122C122CA02EC700B2F090 /* KeychainService.swift */; };
 		249E17C22C9EEB7200B52DE1 /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 249E17C12C9EEB7200B52DE1 /* InlineSnapshotTesting */; };
 		249E17C42C9EEB7200B52DE1 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 249E17C32C9EEB7200B52DE1 /* SnapshotTesting */; };
 /* End PBXBuildFile section */
@@ -204,6 +205,7 @@
 		24122BBD2CA01C0300B2F090 /* TrackerCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreData.xcdatamodel; sourceTree = "<group>"; };
 		24122C072CA01D4400B2F090 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		24122C092CA01D8200B2F090 /* GlobalConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
+		24122C122CA02EC700B2F090 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		243024D82C525B3500B0F1D3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24937A5B2C88A06F00EDBAB7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		249E17B72C9EEB3100B52DE1 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -481,6 +483,7 @@
 		24122BBC2CA01C0300B2F090 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				24122C112CA02EAF00B2F090 /* Keychain */,
 				24122C062CA01D2B00B2F090 /* Analytics */,
 				24122B4F2CA01C0300B2F090 /* Global Extensions + Struct */,
 				24122B952CA01C0300B2F090 /* MainVC */,
@@ -496,6 +499,14 @@
 				24122C072CA01D4400B2F090 /* AnalyticsService.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		24122C112CA02EAF00B2F090 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				24122C122CA02EC700B2F090 /* KeychainService.swift */,
+			);
+			path = Keychain;
 			sourceTree = "<group>";
 		};
 		243024CF2C525B3500B0F1D3 = {
@@ -783,6 +794,7 @@
 				24122BF52CA01C0300B2F090 /* TrackerDataProvider.swift in Sources */,
 				24122BF62CA01C0300B2F090 /* BaseTrackerViewController.swift in Sources */,
 				24122BF72CA01C0300B2F090 /* LayoutConfigurator.swift in Sources */,
+				24122C132CA02EC700B2F090 /* KeychainService.swift in Sources */,
 				24122BF82CA01C0300B2F090 /* LayoutConfiguratorFactory.swift in Sources */,
 				24122BF92CA01C0300B2F090 /* TrackerViewControllerType.swift in Sources */,
 				24122BFA2CA01C0300B2F090 /* TypeTrackersLayoutConfigurator.swift in Sources */,

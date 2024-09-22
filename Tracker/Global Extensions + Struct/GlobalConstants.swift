@@ -8,5 +8,5 @@
 import Foundation
 
 enum GlobalConstants {
-    static let appMetricaApiKey = "1f223b95-a149-4bfd-b3fe-905866840858"
+    static let appMetricaApiKey = "apiKey"
 }

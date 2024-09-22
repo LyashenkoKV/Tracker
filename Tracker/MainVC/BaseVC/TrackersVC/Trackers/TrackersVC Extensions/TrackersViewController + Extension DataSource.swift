@@ -68,7 +68,7 @@ extension TrackersViewController {
         )
         
         cell.longPressHandler = { [weak self] in
-            self?.showContextMenu(for: tracker, at: indexPath)
+            self?.presenter?.showContextMenu(for: tracker, at: indexPath)
         }
         
         cell.selectButtonTappedHandler = { [weak self] in

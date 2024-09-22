@@ -122,6 +122,8 @@ final class TrackersViewController: BaseViewController {
     }
     
     deinit {
+        presenter?.logEvent(event: "close", screen: "TrackersVC", item: nil)
+        
         NotificationCenter.default.removeObserver(
             self,
             name: .trackerCreated,
@@ -138,6 +140,8 @@ final class TrackersViewController: BaseViewController {
         presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         presenter?.loadCompletedTrackers()
         updatePlaceholder(isSearchActive: false)
+        
+        presenter?.logEvent(event: "open", screen: "TrackersVC", item: nil)
     }
     
     override func setupUI() {
@@ -206,6 +210,8 @@ final class TrackersViewController: BaseViewController {
     }
     
     @objc private func filterButtonTapped() {
+        presenter?.logEvent(event: "click", screen: "TrackersVC", item: "filter")
+        
         let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
         let navController = UINavigationController(rootViewController: filterOptionsVC)
         filterOptionsVC.modalPresentationStyle = .formSheet
@@ -232,8 +238,7 @@ extension TrackersViewController {
     }
     
     @objc private func leftBarButtonTapped() {
-        let params: AnalyticsEventParam = ["tracker_type": "init"]
-        AnalyticsService.report(event: "tracker_add", params: params)
+        presenter?.logEvent(event: "click", screen: "TrackersVC", item: "add_track")
         
         let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackerVC)
@@ -341,7 +346,8 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
     }
     
     private func updateCancelButtonTitle() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            guard let self else { return }
             if let cancelButton = self.searchController.searchBar.value(forKey: "cancelButton") as? UIButton {
                 cancelButton.setTitle(
                     NSLocalizedString(
@@ -352,19 +358,6 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
                 )
             }
         }
-    }
-}
-
-extension TrackersViewController {
-    func showContextMenu(for tracker: Tracker, at indexPath: IndexPath) {
-        let contextMenuHelper = TrackersContextMenuHelper(
-            tracker: tracker,
-            indexPath: indexPath,
-            presenter: presenter,
-            viewController: self,
-            completedTrackers: completedTrackers
-        )
-        _ = contextMenuHelper.createContextMenu()
     }
 }
 

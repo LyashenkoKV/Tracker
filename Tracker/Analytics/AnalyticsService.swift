@@ -12,7 +12,8 @@ typealias AnalyticsEventParam = [AnyHashable: Any]
 
 enum AnalyticsService {
     static func activate() {
-        guard let configuration = AppMetricaConfiguration(apiKey: GlobalConstants.appMetricaApiKey) else {
+        guard let apiKey = KeychainService.shared.get(valueFor: GlobalConstants.appMetricaApiKey),
+              let configuration = AppMetricaConfiguration(apiKey: apiKey) else {
             Logger.shared.log(.error, message: "Ошибка инициализации AppMetrica")
             return
         }

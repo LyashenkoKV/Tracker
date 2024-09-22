@@ -49,12 +49,14 @@ final class TrackersContextMenuHelper {
             title: NSLocalizedString("delete", comment: "Удалить"),
             attributes: .destructive
         ) { _ in
+            self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "delete")
             self.showDeleteConfirmationAlert()
         }
 
         let editAction = UIAction(
             title: NSLocalizedString("edit", comment: "Редактировать")
         ) { _ in
+            self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "edit")
             self.showEditTrackerView()
         }
         
