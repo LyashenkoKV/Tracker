@@ -136,6 +136,8 @@ final class TrackersViewController: BaseViewController {
         updatePlaceholder(isSearchActive: false)
         
         presenter?.logEvent(event: "open", screen: "TrackersVC", item: nil)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
     }
     
     override func setupUI() {
