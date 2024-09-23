@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseViewController: UIViewController {
+class LaunchViewController: UIViewController {
     
     // MARK: - Properties
     var placeholderImageName: String
@@ -24,13 +24,10 @@ class BaseViewController: UIViewController {
         return collectionView
     }()
     
-    lazy var placeholder: Placeholder = {
-        let placeholder = Placeholder(
-            image: UIImage(named: placeholderImageName),
-            text: placeholderText
-        )
-        return placeholder
-    }()
+    lazy var placeholder = Placeholder(
+        image: UIImage(named: placeholderImageName),
+        text: placeholderText
+    )
     
     // MARK: - Initializer
     init(type: ViewControllerType,
@@ -43,6 +40,7 @@ class BaseViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,8 +63,8 @@ class BaseViewController: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -116,7 +114,7 @@ class BaseViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDelegate & UICollectionViewDataSource
-extension BaseViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension LaunchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -137,7 +135,7 @@ extension BaseViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 }
 
-extension BaseViewController: UICollectionViewDelegateFlowLayout {
+extension LaunchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Placeholder {
+final class Placeholder: UIView {
     
     let view: UIView
     let imageView: UIImageView
@@ -44,7 +44,13 @@ struct Placeholder {
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        super.init(frame: .zero)
     }
+    
+    @available(*, unavailable)
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
     
     func update(image: UIImage, text: String) {
         label.text = text

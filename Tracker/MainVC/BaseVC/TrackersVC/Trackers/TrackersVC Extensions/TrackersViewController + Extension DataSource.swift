@@ -80,6 +80,11 @@ extension TrackersViewController {
                     isCompleted: isCompletedToday,
                     date: self.currentDate
                 )
+                AnalyticsService.logEvent(
+                    event: AnalyticsReport.AnalyticsEventInfo.clickButton,
+                    screen: AnalyticsReport.AnalyticsScreenInfo.main,
+                    item: AnalyticsReport.AnalyticsItemListInfo.trackItems
+                )
                 collectionView.reloadItems(at: [indexPath])
             }
         }

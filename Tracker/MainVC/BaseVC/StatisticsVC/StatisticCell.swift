@@ -42,6 +42,7 @@ final class StatisticCell: UICollectionViewCell {
         setupUI()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -59,7 +60,7 @@ final class StatisticCell: UICollectionViewCell {
         
         let stackView = UIStackView(arrangedSubviews: [valueLabel, titleLabel])
         stackView.axis = .vertical
-        stackView.spacing = 4
+        stackView.spacing = 7
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         

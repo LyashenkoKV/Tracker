@@ -9,8 +9,6 @@ import UIKit
 
 final class MainViewController: UIViewController {
     
-    private let trackersViewController = TrackersViewController()
-    private let statisticViewController = StatisticsViewController()
     private var borderView = UIView()
     
     override func viewDidLoad() {
@@ -35,14 +33,17 @@ final class MainViewController: UIViewController {
     }
     
     private func createTabBarController() -> UITabBarController {
-        let trackersNavigationController = trackersViewController.setupNavigationBar()
-        let statisticsNavigationController = statisticViewController.setupNavigationBar()
-
         let filterManager = TrackersFilterManager()
         let trackerStore = TrackerStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let categoryStore = TrackerCategoryStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let recordStore = TrackerRecordStore(persistentContainer: CoreDataStack.shared.persistentContainer)
         let statisticsStore = StatisticsStore(persistentContainer: CoreDataStack.shared.persistentContainer)
+        let trackersViewController = TrackersViewController()
+        let statisticViewModel = StatisticsViewModel(statisticsStore: statisticsStore)
+        let statisticViewController = StatisticsViewController(viewModel: statisticViewModel)
+        let trackersNavigationController = trackersViewController.setupNavigationBar()
+        let statisticsNavigationController = statisticViewController.setupNavigationBar()
+
         let trackersPresenter = TrackersPresenter(
             trackerStore: trackerStore,
             categoryStore: categoryStore,

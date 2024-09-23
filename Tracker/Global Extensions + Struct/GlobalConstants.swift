@@ -9,6 +9,8 @@ import Foundation
 
 enum GlobalConstants {
     static let appMetricaApiKey = "apiKey"
+    static let logSubsystem = "ru.yandex.practicum.Tracker"
+    static let logCategory = "network"
 }
 
 enum LocalizationKey: String {

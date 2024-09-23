@@ -7,11 +7,13 @@
 
 import UIKit
 
-final class StatisticsViewController: BaseViewController {
+final class StatisticsViewController: LaunchViewController {
     
-    private let viewModel = StatisticsViewModel()
+    private let viewModel: StatisticsViewModel
     
-    init() {
+    init(viewModel: StatisticsViewModel) {
+        self.viewModel = viewModel
+        
         super.init(
             type: .statistics,
             placeholderImageName: PHName.statisticPH.rawValue,
@@ -19,6 +21,7 @@ final class StatisticsViewController: BaseViewController {
         )
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -107,7 +110,7 @@ extension StatisticsViewController {
         let availableHeight = collectionView.bounds.height
         let topInset = max((availableHeight - totalCellHeight) / 2, 16)
         
-        return UIEdgeInsets(top: topInset, left: 16, bottom: 16, right: 16)
+        return UIEdgeInsets(top: topInset, left: 15, bottom: 16, right: 15)
     }
     
     func collectionView(

@@ -19,7 +19,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
 }
 
 // MARK: - Object
-final class TrackersViewController: BaseViewController {
+final class TrackersViewController: LaunchViewController {
     
     var presenter: TrackersPresenterProtocol?
     var categories: [TrackerCategory] = []
@@ -112,13 +112,12 @@ final class TrackersViewController: BaseViewController {
         )
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     deinit {
-        presenter?.logEvent(event: "close", screen: "TrackersVC", item: nil)
-        
         NotificationCenter.default.removeObserver(
             self,
             name: .trackerCreated,
@@ -129,15 +128,31 @@ final class TrackersViewController: BaseViewController {
     // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupUI()
         addNotification()
         presenter?.filterTrackers(for: currentDate, searchText: nil, filter: currentFilter)
         presenter?.loadCompletedTrackers()
         updatePlaceholder(isSearchActive: false)
         
-        presenter?.logEvent(event: "open", screen: "TrackersVC", item: nil)
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AnalyticsService.logEvent(
+            event: AnalyticsReport.AnalyticsEventInfo.openScreen,
+            screen: AnalyticsReport.AnalyticsScreenInfo.main,
+            item: nil
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        AnalyticsService.logEvent(
+            event: AnalyticsReport.AnalyticsEventInfo.closeScreen,
+            screen: AnalyticsReport.AnalyticsScreenInfo.main,
+            item: nil
+        )
     }
     
     override func setupUI() {
@@ -184,13 +199,17 @@ final class TrackersViewController: BaseViewController {
                 ? PHName.searchPH.rawValue
                 : PHName.trackersPH.rawValue)
         
-        let localizationKey: LocalizationKey = hasData
-        ? .trackersPlaceholder
-        : (isSearchOrFilteringActive
-           ? .notFoundSearchPlaceholder
-           : .trackersPlaceholder)
+        let placeholderLocalizationKey: LocalizationKey
         
-        self.placeholderText = localizationKey.localized()
+        if hasData {
+            placeholderLocalizationKey = .trackersPlaceholder
+        } else {
+            placeholderLocalizationKey = isSearchOrFilteringActive
+            ? .notFoundSearchPlaceholder
+            : .trackersPlaceholder
+        }
+        
+        self.placeholderText = placeholderLocalizationKey.localized()
 
         placeholder.update(
             image: UIImage(named: placeholderImageName) ?? UIImage(),
@@ -201,11 +220,13 @@ final class TrackersViewController: BaseViewController {
     
     func updateFilterButtonVisibility() {
         let hasTrackers = !visibleCategories.flatMap { $0.trackers }.isEmpty
-        filterButtonItem.isHidden = !hasTrackers
+        let isCompleteOrNotCompleteFilterActive = currentFilter == .completed || currentFilter == .uncompleted
+
+        filterButtonItem.isHidden = !(hasTrackers || isCompleteOrNotCompleteFilterActive)
     }
     
     @objc private func filterButtonTapped() {
-        presenter?.logEvent(event: "click", screen: "TrackersVC", item: "filter")
+        AnalyticsService.logEvent(event: "click", screen: "TrackersVC", item: "filter")
         
         let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
         let navController = UINavigationController(rootViewController: filterOptionsVC)
@@ -233,7 +254,7 @@ extension TrackersViewController {
     }
     
     @objc private func leftBarButtonTapped() {
-        presenter?.logEvent(event: "click", screen: "TrackersVC", item: "add_track")
+        AnalyticsService.logEvent(event: "click", screen: "TrackersVC", item: "add_track")
         
         let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackerVC)
@@ -336,7 +357,8 @@ extension TrackersViewController: UISearchControllerDelegate, UISearchBarDelegat
     }
     
     func willPresentSearchController(_ searchController: UISearchController) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
             self.updateCancelButtonTitle()
         }
     }

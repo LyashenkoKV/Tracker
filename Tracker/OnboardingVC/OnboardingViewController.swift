@@ -45,6 +45,7 @@ final class OnboardingViewController: UIViewController {
         label.text = content.greeting
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

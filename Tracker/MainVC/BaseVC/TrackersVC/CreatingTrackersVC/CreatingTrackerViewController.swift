@@ -37,6 +37,7 @@ final class CreatingTrackerViewController: BaseTrackerViewController {
         super.init(type: type)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

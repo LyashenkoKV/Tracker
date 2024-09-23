@@ -15,8 +15,8 @@ final class Logger {
     
     private init() {
         logger = OSLog(
-            subsystem: "ru.yandex.practicum.Tracker",
-            category: "network"
+            subsystem: GlobalConstants.logSubsystem,
+            category: GlobalConstants.logCategory
         )
     }
     

@@ -55,6 +55,7 @@ final class CreateButtonsViewCell: UITableViewCell {
         contentView.backgroundColor = .ypBackground
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -117,9 +118,9 @@ final class CreateButtonsViewCell: UITableViewCell {
     
     func updateCreateButtonTitle(isEditing: Bool) {
         let title = isEditing
-        ? LocalizationKey.saveTracker.localized()
-        : LocalizationKey.createNewTracker.localized()
+        ? LocalizationKey.saveTracker
+        : LocalizationKey.createNewTracker
         
-        createButton.setTitle(title, for: .normal)
+        createButton.setTitle(title.localized(), for: .normal)
     }
 }

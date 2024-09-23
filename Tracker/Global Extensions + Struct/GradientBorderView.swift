@@ -8,7 +8,8 @@
 import UIKit
 
 final class GradientBorderView: UIView {
-    var gradientColors: [UIColor] = [.systemRed, .systemBlue] {
+    
+    var gradientColors: [UIColor] = [] {
         didSet {
             setNeedsLayout()
         }
@@ -21,3 +22,4 @@ final class GradientBorderView: UIView {
         layer.borderColor = UIColor(patternImage: gradient).cgColor
     }
 }
+

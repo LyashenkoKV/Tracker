@@ -48,15 +48,25 @@ final class TrackersContextMenuHelper {
         let deleteAction = UIAction(
             title: LocalizationKey.delete.localized(),
             attributes: .destructive
-        ) { _ in
-            self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "delete")
+        ) { [weak self] _ in
+            guard let self else { return }
+            AnalyticsService.logEvent(
+                event: AnalyticsReport.AnalyticsEventInfo.clickButton,
+                screen: AnalyticsReport.AnalyticsScreenInfo.main,
+                item: AnalyticsReport.AnalyticsItemListInfo.deleteTrackItems
+            )
             self.showDeleteConfirmationAlert()
         }
 
         let editAction = UIAction(
             title: LocalizationKey.edit.localized()
-        ) { _ in
-            self.presenter?.logEvent(event: "click", screen: "TrackersVC", item: "edit")
+        ) { [weak self] _ in
+            guard let self else { return }
+            AnalyticsService.logEvent(
+                event: AnalyticsReport.AnalyticsEventInfo.clickButton,
+                screen: AnalyticsReport.AnalyticsScreenInfo.main,
+                item: AnalyticsReport.AnalyticsItemListInfo.editTrackItems
+            )
             self.showEditTrackerView()
         }
         

@@ -58,6 +58,7 @@ final class EmojiesAndColorsTableViewCell: UITableViewCell {
         contentView.backgroundColor = .ypBackground
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
