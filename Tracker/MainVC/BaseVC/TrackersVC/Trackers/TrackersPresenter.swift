@@ -189,6 +189,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         finalFilteredTrackers.sort { $0.isPinned && !$1.isPinned }
         let categorizedTrackers = categorizeTrackers(finalFilteredTrackers)
   
+        view?.updateFilterButtonVisibility()
         view?.categories = categorizedTrackers
         view?.visibleCategories = categorizedTrackers
         view?.reloadData()
@@ -295,6 +296,7 @@ final class TrackersPresenter: TrackersPresenterProtocol {
         )
         _ = contextMenuHelper.createContextMenu()
     }
+    
 }
 
 // MARK: - Analytics

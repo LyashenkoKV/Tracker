@@ -15,6 +15,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
     
     func updatePlaceholder(isSearchActive: Bool)
     func reloadData()
+    func updateFilterButtonVisibility()
 }
 
 // MARK: - Object
@@ -316,6 +317,7 @@ extension TrackersViewController: TrackersViewControllerProtocol {
     func reloadData() {
         collectionView.reloadData()
         updatePlaceholder(isSearchActive: false)
+        updateFilterButtonVisibility()
     }
 }
 
