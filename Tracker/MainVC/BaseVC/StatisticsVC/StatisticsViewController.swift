@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StatisticsViewController: LaunchViewController {
+final class StatisticsViewController: BaseViewController {
     
     private let viewModel: StatisticsViewModel
     
@@ -42,7 +42,7 @@ final class StatisticsViewController: LaunchViewController {
         let hasData = viewModel.hasStatistics
         
         collectionView.isHidden = !hasData
-        placeholder.view.isHidden = hasData
+        placeholder.isHidden = hasData
         
         if hasData {
             collectionView.reloadData()
@@ -80,8 +80,17 @@ extension StatisticsViewController {
         
         let statistic = viewModel.getStatistic(for: indexPath.row)
         
-        let gradientColors: [UIColor] = [.systemRed,.systemGreen, .systemBlue]
-        cell.configure(with: "\(statistic.value)", title: statistic.title, gradientColors: gradientColors)
+        let gradientColors: [UIColor] = [
+            .ypBorderStatRed,
+            .ypBorderStatGreen,
+            .ypBorderStatBlue
+        ]
+        
+        cell.configure(
+            with: "\(statistic.value)",
+            title: statistic.title,
+            gradientColors: gradientColors
+        )
         
         return cell
     }

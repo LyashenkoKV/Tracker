@@ -92,13 +92,13 @@ final class CategoryViewController: BaseTrackerViewController {
         }
         
         viewModel.onPlaceholderStateUpdated = { [weak self] isVisible in
-            self?.placeholder.view.isHidden = !isVisible
+            self?.placeholder.isHidden = !isVisible
         }
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        [stack, placeholder.view].forEach {
+        [stack, placeholder].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -109,8 +109,8 @@ final class CategoryViewController: BaseTrackerViewController {
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             stack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             
-            placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             addCategoryButton.heightAnchor.constraint(equalToConstant: 60)
         ])
@@ -126,7 +126,7 @@ final class CategoryViewController: BaseTrackerViewController {
             let categoryName = (tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? TextViewCell)?.getText().text ?? ""
             viewModel.addCategory(named: categoryName)
             isAddingCategory = false
-            placeholder.view.isHidden = true
+            placeholder.isHidden = true
         } else {
             isAddingCategory.toggle()
         }

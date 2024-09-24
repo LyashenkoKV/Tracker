@@ -67,9 +67,9 @@
 		24122BF92CA01C0300B2F090 /* TrackerViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B8C2CA01C0300B2F090 /* TrackerViewControllerType.swift */; };
 		24122BFA2CA01C0300B2F090 /* TypeTrackersLayoutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B8D2CA01C0300B2F090 /* TypeTrackersLayoutConfigurator.swift */; };
 		24122BFB2CA01C0300B2F090 /* TypeTrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B8E2CA01C0300B2F090 /* TypeTrackersViewController.swift */; };
-		24122BFC2CA01C0300B2F090 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B912CA01C0300B2F090 /* LaunchViewController.swift */; };
+		24122BFC2CA01C0300B2F090 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B912CA01C0300B2F090 /* BaseViewController.swift */; };
 		24122BFD2CA01C0300B2F090 /* ViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B922CA01C0300B2F090 /* ViewControllerType.swift */; };
-		24122BFE2CA01C0300B2F090 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B942CA01C0300B2F090 /* MainViewController.swift */; };
+		24122BFE2CA01C0300B2F090 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B942CA01C0300B2F090 /* LaunchViewController.swift */; };
 		24122BFF2CA01C0300B2F090 /* OnboardingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B962CA01C0300B2F090 /* OnboardingHelper.swift */; };
 		24122C002CA01C0300B2F090 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B972CA01C0300B2F090 /* OnboardingPageViewController.swift */; };
 		24122C012CA01C0300B2F090 /* OnboardingStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24122B982CA01C0300B2F090 /* OnboardingStatus.swift */; };
@@ -172,9 +172,9 @@
 		24122B8C2CA01C0300B2F090 /* TrackerViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewControllerType.swift; sourceTree = "<group>"; };
 		24122B8D2CA01C0300B2F090 /* TypeTrackersLayoutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeTrackersLayoutConfigurator.swift; sourceTree = "<group>"; };
 		24122B8E2CA01C0300B2F090 /* TypeTrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeTrackersViewController.swift; sourceTree = "<group>"; };
-		24122B912CA01C0300B2F090 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
+		24122B912CA01C0300B2F090 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		24122B922CA01C0300B2F090 /* ViewControllerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerType.swift; sourceTree = "<group>"; };
-		24122B942CA01C0300B2F090 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		24122B942CA01C0300B2F090 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		24122B962CA01C0300B2F090 /* OnboardingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHelper.swift; sourceTree = "<group>"; };
 		24122B972CA01C0300B2F090 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		24122B982CA01C0300B2F090 /* OnboardingStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatus.swift; sourceTree = "<group>"; };
@@ -453,7 +453,7 @@
 			children = (
 				24122B552CA01C0300B2F090 /* StatisticsVC */,
 				24122B902CA01C0300B2F090 /* TrackersVC */,
-				24122B912CA01C0300B2F090 /* LaunchViewController.swift */,
+				24122B912CA01C0300B2F090 /* BaseViewController.swift */,
 				24122B922CA01C0300B2F090 /* ViewControllerType.swift */,
 			);
 			path = BaseVC;
@@ -463,7 +463,7 @@
 			isa = PBXGroup;
 			children = (
 				24122B932CA01C0300B2F090 /* BaseVC */,
-				24122B942CA01C0300B2F090 /* MainViewController.swift */,
+				24122B942CA01C0300B2F090 /* LaunchViewController.swift */,
 			);
 			path = MainVC;
 			sourceTree = "<group>";
@@ -817,9 +817,9 @@
 				24122BF92CA01C0300B2F090 /* TrackerViewControllerType.swift in Sources */,
 				24122BFA2CA01C0300B2F090 /* TypeTrackersLayoutConfigurator.swift in Sources */,
 				24122BFB2CA01C0300B2F090 /* TypeTrackersViewController.swift in Sources */,
-				24122BFC2CA01C0300B2F090 /* LaunchViewController.swift in Sources */,
+				24122BFC2CA01C0300B2F090 /* BaseViewController.swift in Sources */,
 				24122BFD2CA01C0300B2F090 /* ViewControllerType.swift in Sources */,
-				24122BFE2CA01C0300B2F090 /* MainViewController.swift in Sources */,
+				24122BFE2CA01C0300B2F090 /* LaunchViewController.swift in Sources */,
 				24122BFF2CA01C0300B2F090 /* OnboardingHelper.swift in Sources */,
 				24122C002CA01C0300B2F090 /* OnboardingPageViewController.swift in Sources */,
 				24122C012CA01C0300B2F090 /* OnboardingStatus.swift in Sources */,

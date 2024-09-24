@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
         if onboardingStatus.hasSeenOnboarding() {
-            let mainViewController = MainViewController()
+            let mainViewController = LaunchViewController()
             window.rootViewController = mainViewController
         } else {
             let onboardingPageViewController = OnboardingPageViewController(

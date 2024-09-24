@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainViewController: UIViewController {
+final class LaunchViewController: UIViewController {
     
     private var borderView = UIView()
     

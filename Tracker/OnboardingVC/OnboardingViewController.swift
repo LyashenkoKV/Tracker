@@ -86,7 +86,7 @@ final class OnboardingViewController: UIViewController {
         
         guard let window = UIApplication.shared.windows.first else { return }
         
-        let mainViewController = MainViewController()
+        let mainViewController = LaunchViewController()
         window.rootViewController = mainViewController
         window.makeKeyAndVisible()
     }

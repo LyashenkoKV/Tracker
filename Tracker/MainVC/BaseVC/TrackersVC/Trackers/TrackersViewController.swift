@@ -19,7 +19,7 @@ protocol TrackersViewControllerProtocol: AnyObject {
 }
 
 // MARK: - Object
-final class TrackersViewController: LaunchViewController {
+final class TrackersViewController: BaseViewController {
     
     var presenter: TrackersPresenterProtocol?
     var categories: [TrackerCategory] = []

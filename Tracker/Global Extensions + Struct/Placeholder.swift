@@ -9,25 +9,30 @@ import UIKit
 
 final class Placeholder: UIView {
     
-    let view: UIView
-    let imageView: UIImageView
-    let label: UILabel
+    private let imageView: UIImageView
+    private let label: UILabel
     
     init(image: UIImage?, text: String) {
-        view = UIView()
-        view.isHidden = true
-        
         imageView = UIImageView(image: image)
+        label = UILabel()
+        
+        super.init(frame: .zero)
+        
+        configureView(text: text)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configureView(text: String) {
         imageView.contentMode = .scaleAspectFit
         imageView.frame.size.height = 80
         imageView.frame.size.width = 80
         
-        label = UILabel()
         label.text = text
-        label.font = .systemFont(
-            ofSize: 12,
-            weight: .medium
-        )
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypBlack
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -37,20 +42,14 @@ final class Placeholder: UIView {
         stackView.alignment = .center
         stackView.spacing = 10
         
-        view.addSubview(stackView)
+        addSubview(stackView)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        super.init(frame: .zero)
     }
-    
-    @available(*, unavailable)
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
     
     func update(image: UIImage, text: String) {
         label.text = text

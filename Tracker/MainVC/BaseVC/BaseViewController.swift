@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LaunchViewController: UIViewController {
+class BaseViewController: UIViewController {
     
     // MARK: - Properties
     var placeholderImageName: String
@@ -55,7 +55,7 @@ class LaunchViewController: UIViewController {
     
     // MARK: - Setup UI
     func setupUI() {
-        [collectionView, placeholder.view].forEach {
+        [collectionView, placeholder].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -66,8 +66,8 @@ class LaunchViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            placeholder.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholder.view.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
@@ -109,12 +109,12 @@ class LaunchViewController: UIViewController {
     // MARK: - Update Placeholder
     func updatePlaceholderView(hasData: Bool) {
         collectionView.isHidden = !hasData
-        placeholder.view.isHidden = hasData
+        placeholder.isHidden = hasData
     }
 }
 
 // MARK: - UICollectionViewDelegate & UICollectionViewDataSource
-extension LaunchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension BaseViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -135,7 +135,7 @@ extension LaunchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 }
 
-extension LaunchViewController: UICollectionViewDelegateFlowLayout {
+extension BaseViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
