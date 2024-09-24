@@ -258,7 +258,11 @@ extension TrackersViewController {
     }
     
     @objc private func leftBarButtonTapped() {
-        AnalyticsService.logEvent(event: "click", screen: "TrackersVC", item: "add_track")
+        AnalyticsService.logEvent(
+            event: AnalyticsReport.AnalyticsEventInfo.clickButton,
+            screen: AnalyticsReport.AnalyticsScreenInfo.main,
+            item: AnalyticsReport.AnalyticsItemListInfo.addTrackItems
+        )
         
         let typeTrackerVC = TypeTrackersViewController(type: .typeTrackers)
         let navController = UINavigationController(rootViewController: typeTrackerVC)
