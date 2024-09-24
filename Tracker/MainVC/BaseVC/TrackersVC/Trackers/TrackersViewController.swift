@@ -226,7 +226,11 @@ final class TrackersViewController: LaunchViewController {
     }
     
     @objc private func filterButtonTapped() {
-        AnalyticsService.logEvent(event: "click", screen: "TrackersVC", item: "filter")
+        AnalyticsService.logEvent(
+            event: AnalyticsReport.AnalyticsEventInfo.clickButton,
+            screen: AnalyticsReport.AnalyticsScreenInfo.main,
+            item: AnalyticsReport.AnalyticsItemListInfo.filterTrackItems
+        )
         
         let filterOptionsVC = FilterViewController(selectedFilter: currentFilter)
         let navController = UINavigationController(rootViewController: filterOptionsVC)
