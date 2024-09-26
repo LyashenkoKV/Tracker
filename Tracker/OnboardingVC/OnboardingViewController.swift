@@ -25,7 +25,7 @@ final class OnboardingViewController: UIViewController {
     
     private lazy var button: UIButton = {
         return UIButton(
-            title: "Вот это технологии!",
+            title: LocalizationKey.onboardingButton.localized(),
             backgroundColor: .ypBlack,
             titleColor: .ypBackground,
             cornerRadius: 20,
@@ -45,6 +45,7 @@ final class OnboardingViewController: UIViewController {
         label.text = content.greeting
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -85,7 +86,7 @@ final class OnboardingViewController: UIViewController {
         
         guard let window = UIApplication.shared.windows.first else { return }
         
-        let mainViewController = MainViewController()
+        let mainViewController = LaunchViewController()
         window.rootViewController = mainViewController
         window.makeKeyAndVisible()
     }

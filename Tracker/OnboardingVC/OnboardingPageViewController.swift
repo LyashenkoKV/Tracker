@@ -39,6 +39,7 @@ final class OnboardingPageViewController: UIPageViewController {
         delegate = self
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -66,11 +67,11 @@ final class OnboardingPageViewController: UIPageViewController {
     
     private func makePages() -> [OnboardingHelper] {
         let firstPage = OnboardingHelper(
-            greeting: "Отслеживайте только\n то, что хотите",
+            greeting: LocalizationKey.onboardingFirstPage.localized(),
             image: UIImage(named: "1") ?? UIImage()
         )
         let secondPage = OnboardingHelper(
-            greeting: "Даже если это\n не литры воды и йога",
+            greeting: LocalizationKey.onboardingSecondPage.localized(),
             image: UIImage(named: "2") ?? UIImage()
         )
         return [firstPage, secondPage]

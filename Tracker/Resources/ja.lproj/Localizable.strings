@@ -1,0 +1,103 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Konstantin Lyashenko on 09.09.2024.
+  
+*/
+
+// TrackerStore
+"pinned_category" = "固定された";
+
+// Onboarding
+"onboarding_fir_page" = "追跡するのは\nあなたが望むものだけ";
+"onboarding_sec_page" = "たとえそれが\n水のリットルやヨガでなくても";
+"onboarding_button" = "これがテクノロジー！";
+
+// BaseVC & MainVC (TabBar)
+"trackers_tab_title" = "トラッカー";
+"statistics_tab_title" = "統計";
+
+// DayOfTheWeek
+"monday" = "月曜日";
+"tuesday" = "火曜日";
+"wednesday" = "水曜日";
+"thursday" = "木曜日";
+"friday" = "金曜日";
+"saturday" = "土曜日";
+"sunday" = "日曜日";
+
+// TrackersVC
+"search_placeholder" = "検索";
+"trackers_placeholder" = "何を追跡しますか？";
+"notfound_search_placholder" = "見つかりませんでした";
+"search_cancel" = "キャンセル";
+"filters_button" = "フィルター";
+
+// FilterViewController
+"filtets_title" = "フィルター";
+"filters_all_trackers" = "すべてのトラッカー";
+"filters_on_today" = "今日のトラッカー";
+"filters_complete" = "完了";
+"filters+not_complete" = "未完了";
+
+// TrackerVCDelegate & ContextMenuHelper
+"pin" = "ピン留め";
+"unpin" = "ピン解除";
+"delete" = "削除";
+"edit" = "編集";
+"alert_cancel" = "キャンセル";
+"delete_confirmation_message" = "トラッカーを削除してもよろしいですか？";
+
+// ConfigureTableViewCellsHelper & HandleActionsHelper
+"habit" = "習慣";
+"irregular_event" = "不定期イベント";
+"edit_category" = "カテゴリを編集";
+"enter_cat_name" = "カテゴリ名を入力";
+"new_category" = "新しいカテゴリ";
+
+"category" = "カテゴリ";
+"schedule" = "スケジュール";
+
+// BaseTrackerViewController
+"creating_tracker" = "トラッカーの作成";
+"new_habit" = "新しい習慣";
+"edit_habit" = "習慣を編集";
+"creating_habit" = "習慣の作成";
+
+// CreatingTrackerViewController
+"every_day" = "毎日";
+
+"monday_short" = "月";
+"tuesday_short" = "火";
+"wednesday_short" = "水";
+"thursday_short" = "木";
+"friday_short" = "金";
+"saturday_short" = "土";
+"sunday_short" = "日";
+
+// TrackerSection
+"emoji_header" = "絵文字";
+"color_header" = "色";
+"limit_char" = "38文字制限";
+
+// TextViewCell
+"textView_placeholder" = "トラッカー名を入力";
+
+// CreateButtonsViewCell
+"save_tracker" = "保存";
+"create_new_tracker" = "作成";
+"cancel_create_new_tracker" = "キャンセル";
+
+// CategoryViewController & ScheduleViewController
+"category_placeholder" = "習慣やイベントは\n論理的にグループ化できます";
+"add_category" = "カテゴリを追加";
+"done_category_button" = "完了";
+
+// StatisticsViewController
+"statistics_placeholder" = "まだ分析するものがありません";
+"best_period" = "ベスト期間";
+"ideal_days" = "理想的な日";
+"completed_trackers" = "完了したトラッカー";
+"average_value" = "平均値";
+"n_a" = "利用不可";
